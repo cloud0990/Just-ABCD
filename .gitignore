@@ -94,8 +94,13 @@ replay_pid*
 .classpath
 .xml
 .springBeans
+.mvn
+/mvnw
+/mvnw.cmd
+/pom.xml
+.gitignore
 
-TEKASpring/src/main/resources/config/spring/context/context-7-socialLogin.xml
-TEKASpring/src/main/resources/config/spring/context/context-8-emailAuth.xml
-TEKASpring/src/main/resources/config/mybatis/db.properties
-TEKASpring/target/
+TestProjects/target/
+TestProjects/mvnw.cmd
+TestProjects/pom.xml
+TestProjects/mvnw

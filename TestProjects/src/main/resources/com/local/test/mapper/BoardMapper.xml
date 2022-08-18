@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.local.test.board.mapper.BoardMapper">
+	<!-- 게시물전체 조회 : 작성일자 최신순 정렬-->
+	<select id="selectAllBoard" resultType="hashmap">
+		SELECT * FROM BOARD ORDER BY bDate DESC
+	</select>
+	<!-- 내 게시글 조회 -->
+	<select id="selectMyBoard" parameterType="int" resultType="hashmap">
+		SELECT * FROM BOARD WHERE uIdx=#{uIdx}
+	</select>
+	<!-- 게시물 작성 -->
+	<insert id="createItem" parameterType="hashmap">
+		INSERT INTO BOARD(bSubject, bContent, uIdx, uNm, bDate)
+		VALUES(#{bSubject}, #{bContent}, #{uIdx}, #{uNm}, now()) 
+	</insert>
+	<!-- 게시물 수정 -->
+	<update id="updateItem" parameterType="hashmap">
+		UPDATE BOARD SET
+			bSubject=#{bSubject}, bContent=#{bContent}, bDate=now()
+		WHERE uIdx=#{uIdx}
+	</update>
+	
+</mapper>
