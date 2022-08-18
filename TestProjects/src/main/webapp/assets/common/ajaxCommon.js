@@ -1,9 +1,9 @@
 function callAjax(target, form, callback) {
 	jQuery.ajax({
-		type:"POST",
+		type:'POST',
 		url : target,
 		data : form,
-		dataType : "json",
+		dataType : 'json',
 		cache: false,
 		success : function(data) {
 			if(data.resultCode=='S000') {
