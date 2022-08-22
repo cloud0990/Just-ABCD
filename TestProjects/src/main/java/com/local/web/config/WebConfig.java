@@ -14,7 +14,7 @@ import com.local.web.common.interceptor.TestInterceptor;
 
 @SuppressWarnings("deprecation") //경고 무시
 @Configuration	
-@ComponentScan("com.local.test")
+@ComponentScan("com.local.web")
 //@EnableWebMvc : 스프링부트의 기본적인 웹 MVC기능들을 제외하고 처음부터 생성한다.
 public class WebConfig extends WebMvcConfigurerAdapter implements WebMvcConfigurer {
 
@@ -58,6 +58,7 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebMvcConfigur
 		.excludePathPatterns("/assets/css/**")
 		.excludePathPatterns("/assets/dev/**")
 		.excludePathPatterns("/login")
+		.excludePathPatterns("/autoComplete")
 		.excludePathPatterns("/logout")
 		.excludePathPatterns("/checkLoginUser") // 회원체크
 		.excludePathPatterns("/signUp/view") //회원가입 페이지 forword

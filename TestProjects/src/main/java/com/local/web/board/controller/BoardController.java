@@ -102,7 +102,7 @@ public class BoardController {
 			result.setResultMsg("게시글 수정 성공.\n게시판 홈으로 이동합니다.");
 		}else {
 			result.setResultCode("S999");
-			result.setResultMsg("오류 발생...");
+			result.setResultMsg("오류 발생");
 		}
 		return result;
 	}

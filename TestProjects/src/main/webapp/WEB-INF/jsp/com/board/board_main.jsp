@@ -47,7 +47,7 @@ $(function(){
 </script>
 </head>
 <body>
-<header>
+<header id="header">
   <nav class="navbar navbar-expand-lg navbar-light bg-white">
     <div class="container-fluid">
       <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarExample01" aria-controls="navbarExample01" aria-expanded="false" aria-label="Toggle navigation">

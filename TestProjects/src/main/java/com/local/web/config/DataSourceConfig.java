@@ -11,16 +11,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 @Configuration
-@MapperScan(value="com.local.test.mapper.*xml")
+//@MapperScan(value="com.local.web.mapper.*xml")
 public class DataSourceConfig {
 	
 	@Bean
 	public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
-		
 		SqlSessionFactoryBean sqlSessionFactory = new SqlSessionFactoryBean();
-		
 		sqlSessionFactory.setDataSource(dataSource);
-		sqlSessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:/com/local/test/mapper/*.xml"));
+		sqlSessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath:/com/local/web/*/mapper/*.xml"));
 		return sqlSessionFactory.getObject();
 	}
 	

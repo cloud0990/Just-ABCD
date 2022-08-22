@@ -3,12 +3,29 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>로그인</title>
+<title>LOGIN</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.3.0/mdb.min.css" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+<style type="text/css">
+.divider:after,
+.divider:before {
+content: "";
+flex: 1;
+height: 1px;
+background: #eee;
+}
+.h-custom {
+height: calc(100% - 73px);
+}
+@media (max-width: 450px) {
+	.h-custom {
+		height: 100%;
+	}
+}
+</style>
 <script type="text/javascript">
 $(function(){
 	$("#login").click(function(){
@@ -93,33 +110,67 @@ function getCookie(cookieName) {
 </script>
 </head>
 <body>
-
-<form>
-<h3 style="text-align: center; margin-top: 100px;">로그인</h3>
-<hr>
-<div style=" margin:auto; margin-top:100px; width:500px;">
-  <!-- 아이디 -->
-  <div class="form-outline mb-4" >
-    <label class="form-label" for="uId">아이디</label>
-    <input type="text" id="uId" class="form-control" style="border:1px solid gray;" placeholder="Id"/>
+<!-- 로그인폼2 -->
+<section class="vh-100">
+  <div class="container-fluid h-custom">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-md-9 col-lg-6 col-xl-5">
+        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid" alt="Sample image">
+      </div>
+      <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+        <form>
+		  <!-- 회원가입 API -->        
+          <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+            <p class="lead fw-normal mb-0 me-3">Sign in with</p>
+            <button type="button" class="btn btn-primary btn-floating mx-1">
+              <i class="fab fa-twitter"></i>
+            </button>
+            <button type="button" class="btn btn-primary btn-floating mx-1">
+              <i class="fab fa-google"></i>
+            </button>
+          </div> 
+          <div class="divider d-flex align-items-center my-4">
+            <p class="text-center fw-bold mx-3 mb-0">Or</p>
+          </div>
+          <!-- ID input -->
+          <div class="form-outline mb-4">
+            <label class="form-label" for="uId">ID</label>
+            <input id="uId" class="form-control form-control-lg" placeholder="Enter a valid ID" style="border:1px solid gray;"/>
+          </div>
+          <div class="form-check mb-0">
+            <input class="form-check-input me-2" type="checkbox" value="" id="rememberId" />
+            <label class="form-check-label" for="rememberId">Remember ID</label>
+          </div>
+          <br>
+          <!-- Password input -->
+          <div class="form-outline mb-3">
+            <label class="form-label" for="uPwd">Password</label>
+            <input type="password" id="uPwd" class="form-control form-control-lg" placeholder="Enter Password" style="border:1px solid gray;" />
+          </div>
+          <div class="text-center text-lg-start mt-4 pt-2">
+            <button type="button" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;" id="login">LOGIN</button>
+            <p class="small fw-bold mt-2 pt-1 mb-0">Not a member? <a href="/signUp/view" class="link-danger">SIGN UP</a></p>
+          </div><br>
+          <div class="d-flex justify-content-between align-items-center">
+            <a href="#!" class="text-body">Forgot password?</a> 
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
-  <div>
-    <input class="form-check-input" type="checkbox" id="rememberId" checked/>
-  	<label class="form-check-label" for="user_id"> 아이디 저장</label>
-  </div><br>
-  <!-- 비밀번호 -->
-  <div class="form-outline mb-4">
-    <label class="form-label" for="uPwd">비밀번호</label>
-    <input type="password" id="uPwd" class="form-control" style="border:1px solid gray;" placeholder="Password"/>
+  <div class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
+    <div class="text-white mb-3 mb-md-0">Copyright © 2020. All rights reserved.</div>
+    <!-- 로그인 API -->
+    <div>
+      <a href="#!" class="text-white me-4">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="#!" class="text-white me-4">
+        <i class="fab fa-google"></i>
+      </a>
+    </div>
   </div>
-  <!-- 로그인 -->
-  <button type="button" class="btn btn-primary btn-block mb-4" id="login">로그인</button>
-  <!-- 회원가입 -->
-  <div class="text-center">
-    <p><a href="/signUp/view">회원가입</a></p>
-  </div>
-</div>  
-</form>
+</section>
 
 </body>
 </html>

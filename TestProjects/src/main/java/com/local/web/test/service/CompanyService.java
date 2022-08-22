@@ -6,7 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.local.web.domain.CompanyVo;
+import com.local.web.test.domain.CompanyVo;
 import com.local.web.test.mapper.CompanyMapper;
 
 @Service("companyService")
