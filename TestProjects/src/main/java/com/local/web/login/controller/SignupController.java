@@ -22,7 +22,7 @@ public class SignupController {
 	
 	@RequestMapping(value="/view")
 	public String signUpPage() {
-		return "login/signUpPage";
+		return "signUp";
 	}
 	
 	//회원가입
