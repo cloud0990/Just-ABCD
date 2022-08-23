@@ -3,6 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<!-- <meta name="description" content=""> -->
 <title>LOGIN</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
@@ -41,7 +42,7 @@ $(function(){
 				var code = data.resultCode;
 				var msg  = data.resultMsg;
 				if(code=='S000') {
-					location.href='/main';
+					location.href='/main/view';
 					alert(msg);
 				} else if(code=='S999') {
 					$("#uId").focus();

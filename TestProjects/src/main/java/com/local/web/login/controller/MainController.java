@@ -17,16 +17,17 @@ import com.local.web.common.domain.PageingVo;
 import com.local.web.login.service.UserService;
 
 @Controller
+@RequestMapping("/main")
 public class MainController {
 	
 	@Resource(name="userService")
 	private UserService mapper;
 	
-	@RequestMapping("/main")
+	@RequestMapping("/view")
 	public String mainPage() {
 		return "mainPage";
 	}
-	@RequestMapping(value="/main/selectUserList", method=RequestMethod.POST)
+	@RequestMapping(value="/selectUserList", method=RequestMethod.POST)
 	public @ResponseBody HashMap<String, Object> selectUserList(@ModelAttribute("pageing") PageingVo pageing, @RequestParam HashMap<String, Object> hashmapParam) throws Exception {
 		
 		List<HashMap<String, Object>> userList = new ArrayList<HashMap<String, Object>>();
@@ -71,7 +72,7 @@ public class MainController {
 		return "login/loginHist";
 	}
 	
-	@RequestMapping(value="/main/selectLoginHist", method=RequestMethod.POST)
+	@RequestMapping(value="/selectLoginHist", method=RequestMethod.POST)
 	public @ResponseBody HashMap<String, Object> getLoginHist(@ModelAttribute("pageing") PageingVo pageing, @RequestParam HashMap<String, Object> hashmapParam) throws Exception {
 		List<HashMap<String, Object>> loginHist = new ArrayList<HashMap<String, Object>>();
 		HashMap<String, Object>   hashmapResult = new HashMap<String, Object>();
@@ -102,6 +103,5 @@ public class MainController {
 		}
 		return hashmapResult;
 	}
-	
 	
 }

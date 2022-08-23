@@ -28,7 +28,7 @@ public class BoardController {
 	
 	@RequestMapping("/main")
 	public String boardPage() {
-		return "board/board_main"; //view jsp 위치
+		return "board/boardMain"; //view jsp 위치
 	}
 	@RequestMapping("/main/myMain")
 	public ModelAndView myBoardListPage(HttpServletRequest request, ModelAndView mv) {
@@ -36,7 +36,7 @@ public class BoardController {
 		HttpSession session = request.getSession(false);
 		//세션이 비어있는 경우
 		if(session==null) {
-			mv.setViewName("board/board_main");
+			mv.setViewName("board/boardMain");
 			return mv;
 		}
 		SessionVo sessionVo = (SessionVo) session.getAttribute("S_USER");
@@ -44,7 +44,7 @@ public class BoardController {
 		List<HashMap<String, Object>> resultList = new ArrayList<>();
 		resultList = mapper.selectMyBoard(sessionVo.getuIdx());
 		mv.addObject("list", resultList);
-		mv.setViewName("board/board_my");
+		mv.setViewName("board/boardMy");
 		return mv;
 	}
 	//@PostMapping(value="/main/selectAllBoard")
@@ -58,7 +58,7 @@ public class BoardController {
 	//@GetMapping
 	@RequestMapping("/createBoard")
 	public String createBoardPage() {
-		return "board/board_create"; //view jsp 위치
+		return "board/boardCreate"; //view jsp 위치
 	}
 	@RequestMapping("/updateBoard")
 	public ModelAndView updateBoardPage(HttpServletRequest request, ModelAndView mv) {
@@ -66,7 +66,7 @@ public class BoardController {
 		HttpSession session = request.getSession(false); //session 객체 생성 : request.getSession()을 호출하여 생성한다.
 		//세션이 비어있는 경우
 		if(session==null) {
-			mv.setViewName("board/board_main");
+			mv.setViewName("board/boardMain");
 			return mv;
 		}
 		SessionVo sessionVo = (SessionVo) session.getAttribute("S_USER");
@@ -74,7 +74,7 @@ public class BoardController {
 		List<HashMap<String, Object>> resultList = new ArrayList<>();
 		resultList = mapper.selectMyBoard(sessionVo.getuIdx());
 		mv.addObject("list", resultList);
-		mv.setViewName("board/board_update");
+		mv.setViewName("board/boardUpdate");
 		return mv;
 	}
 	
