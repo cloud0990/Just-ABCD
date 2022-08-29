@@ -9,9 +9,10 @@
 	<!-- 전체 회원 조회 -->
 	<select id="selectUserList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
 		SELECT  SQL_CALC_FOUND_ROWS
-				USER.* FROM
+				USER.*
+		FROM
 				(SELECT * FROM USER ORDER BY uIDX) AS USER
-		LIMIT #{start}, #{end}
+		LIMIT ${start}, ${end}
 	</select>
 	<!-- 회원가입 -->
 	<insert id="signUpUser" parameterType="java.util.HashMap">
@@ -19,22 +20,25 @@
 	</insert>
 	<!-- 로그인 -->
 	<select id="checkLoginUser" parameterType="java.util.HashMap" resultType="com.local.web.common.domain.SessionVo">
-		SELECT * FROM USER WHERE uId=#{uId} AND uPwd=#{uPwd}
+		SELECT * FROM USER
+		WHERE uId=#{uId}
+		AND uPwd=#{uPwd}
 	</select>
 	<!-- 로그인 기록 -->
-	<insert id="createloginHist" parameterType="hashmap">
+	<insert id="createloginHist" parameterType="hashMap">
 		INSERT INTO USER_CNCT_LOG VALUES(#{uId}, #{ip}, now())
 	</insert>
 	<!-- 로그인 기록 조회 -->
-	<select id="selectLoginHist" parameterType="hashmap" resultType="hashmap">
+	<select id="selectLoginHist" parameterType="hashMap" resultType="hashMap">
 		SELECT  SQL_CALC_FOUND_ROWS
-				LOG.* FROM 
+				LOG.*
+		FROM 
 				(SELECT * FROM USER_CNCT_LOG ORDER BY logDate DESC) AS LOG
-		LIMIT #{start}, #{end}
+		LIMIT ${start}, ${end}
 	</select>
 	
 	<!-- 현재 사용자 검색 -->
-	<select id="srchUserListRetrieve" parameterType="hashmap" resultType="hashmap">
+	<select id="srchUserListRetrieve" parameterType="hashMap" resultType="hashMap">
 		SELECT   uNm  AS uNm
 			   , uId  AS uId
 			   , uIdx AS uIdx

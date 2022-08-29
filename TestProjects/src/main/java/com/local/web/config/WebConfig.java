@@ -54,14 +54,15 @@ public class WebConfig extends WebMvcConfigurerAdapter implements WebMvcConfigur
 		.addPathPatterns("/**")
 		.excludePathPatterns("*.css")
 		.excludePathPatterns("*.js")
-		.excludePathPatterns("/assets/plugin/js/**")
+		.excludePathPatterns("/assets/plugin/js/jqgird/**")
 		.excludePathPatterns("/assets/css/**")
+		.excludePathPatterns("/assets/common/**")
 		.excludePathPatterns("/assets/dev/**")
 		.excludePathPatterns("/login")
 		.excludePathPatterns("/autoComplete")
 		.excludePathPatterns("/logout")
-		.excludePathPatterns("/checkLoginUser") // 회원체크
-		.excludePathPatterns("/signUp/view") //회원가입 페이지 forword
-		.excludePathPatterns("/signUp/**"); //insertUser
+		.excludePathPatterns("/checkLoginUser") //회원체크
+		.excludePathPatterns("/signUp/view")    //회원가입 페이지 forword
+		.excludePathPatterns("/signUp/**");     //insertUser
 	}
 }

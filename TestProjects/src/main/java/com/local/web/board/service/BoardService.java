@@ -14,9 +14,13 @@ public class BoardService {
 	
 	@Resource(name="boardMapper")
 	private BoardMapper mapper;
+	
+	public int getQueryTotalCnt() {
+		return mapper.getQueryTotalCnt();
+	}
 	//게시판 전체조회
-	public List<HashMap<String, Object>> selectAllBoard() {
-		return mapper.selectAllBoard();
+	public List<HashMap<String, Object>> selectAllBoard(HashMap<String, Object> hashmapParam) {
+		return mapper.selectAllBoard(hashmapParam);
 	}
 	//내 게시글 조회
 	public List<HashMap<String, Object>> selectMyBoard(int uIdx) {
