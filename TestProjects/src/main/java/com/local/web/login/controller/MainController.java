@@ -33,7 +33,7 @@ public class MainController {
 		List<HashMap<String, Object>> userList = new ArrayList<HashMap<String, Object>>();
 		HashMap<String, Object>  hashmapResult = new HashMap<String, Object>();
 		
-		//페이징 처리
+		//페이징 처리 (페이징 처리 시, 반드시 try~catch로 예외처리 할 것)
 		try {
 			Integer page = pageing.getPage();
 			if(page == 0) page = (Integer) 1;
@@ -52,8 +52,6 @@ public class MainController {
 			userList = mapper.selectUserList(hashmapParam);
 			int records = mapper.getQueryTotalCnt();
 
-			System.out.println(records);
-				
 			pageing.setRecords(records);
 			pageing.setTotal( (int) Math.ceil((double)records / (double)pageing.getRows()));
 			

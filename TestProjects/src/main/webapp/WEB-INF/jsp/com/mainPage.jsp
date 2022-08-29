@@ -1,11 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <c:set var="sessionVo" value="${sessionScope.S_USER}"></c:set>
-<%
-	response.setHeader("Cache-Control", "no-cache");
-	response.setHeader("Pragma", "no-cache");
-	response.setDateHeader("Expires", 0);
-%>   
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,21 +14,21 @@ $(function(){
 		loadtext:"로딩 중..",
 		datatype:"json",
 		mtype:"POST",
-		height:200,
-		//width:700,
-		autowidth:true, //width와 동시 사용불가
+		height:630,
+		width:1530,
+		//autowidth:true, //width와 동시 사용불가
 		shrinkToFit: true,
 		colNames:['회원번호', '아이디', '비밀번호', '닉네임'],
 		colModel: [
-					{name:'uIdx', index:'uIdx', align:"left"},
-					{name:'uId',  index:'uId',  align:"left"},
-					{name:'uPwd', index:'uPwd', align:"left"},
-					{name:'uNm',  index:'uNm',  align:"left"}
+					{name:'uIdx', index:'uIdx', align:"center"},
+					{name:'uId',  index:'uId',  align:"center"},
+					{name:'uPwd', index:'uPwd', align:"center"},
+					{name:'uNm',  index:'uNm',  align:"center"}
 	              ],
-	    rowNum: 5,
-	    rowList: [5, 10, 15],
+	    rowNum: 10,
+	    rowList: [10, 20, 30],
 	    rownumbers: true,
-	    pager : '#page_user_list',
+	    pager : '#pager',
 	    pgbuttons: true,
 	    viewrecords: true,
 	    onSelectRow: function(index) { //index = 선택된 row의 index
@@ -57,10 +52,10 @@ $(function(){
 
 <div id="content">
 	<div role="content">
-		<div class="widget-body" style="padding:50px;">
+		<div class="widget-body" style="padding:30px;">
 			<fieldset>
 				<div class="form-group" style="flex:center;">
-					<label><span class="widget-icon"><i class="fa fa-list-ul"></i>&nbsp;&nbsp;&nbsp;User List</span></label>
+					<label><span class="widget-icon"><i class="fa fa-list-ul"></i>&nbsp;&nbsp;&nbsp;USER LIST</span></label>
 					<!-- <label class="control-labelcol-md-1" id="load_time"></label> -->
 				</div>
 			</fieldset>
@@ -68,7 +63,7 @@ $(function(){
 			<fieldset>		
 				<div class="row" id="tableWrap">
 					<table id="mainGrid"></table>
-					<div id="page_user_list"></div>
+					<div id="pager"></div>
 				</div>
 			</fieldset>	
 		</div>

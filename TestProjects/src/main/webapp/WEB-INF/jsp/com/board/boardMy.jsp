@@ -1,22 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
 <c:set var="sessionVo" value="${sessionScope.S_USER}"></c:set>
-<%
-	response.setHeader("Cache-Control", "no-cache");
-	response.setHeader("Pragma", "no-cache");
-	response.setDateHeader("Expires", 0);
-%>  
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>게시판 홈 : 내 게시글</title>
-<script type="text/javascript">
-function updateItem(f) {
-	var b_idx = f.b_idx.value
-	alert(b_idx);
-}
-</script>
 </head>
 <body>
 <div style="margin-left:300px; margin-top: 50px;">

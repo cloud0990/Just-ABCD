@@ -7,8 +7,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository("boardMapper")
 public interface BoardMapper {
+	//직전 결과 처리 행수
+	int getQueryTotalCnt();
 	//게시물 전체 조회
-	List<HashMap<String, Object>> selectAllBoard();
+	List<HashMap<String, Object>> selectAllBoard(HashMap<String, Object> hashmapParam);
 	//내 게시글 조회
 	List<HashMap<String, Object>> selectMyBoard(int uIdx);
 	//게시물 작성
