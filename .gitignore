@@ -99,7 +99,7 @@ replay_pid*
 /mvnw.cmd
 /pom.xml
 .gitignore
-
+.properties
 TestProjects/target/
 TestProjects/mvnw.cmd
 TestProjects/pom.xml

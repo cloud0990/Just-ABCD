@@ -23,7 +23,7 @@ function updateItem(f) {
 <form>
 <table style="margin-left:50px; width:1000px;">
 	<tr>
-		<th>번호</th>
+		<th>게시글번호</th>
 		<th>작성자</th>
 		<th>제목</th>
 		<th>내용</th>
