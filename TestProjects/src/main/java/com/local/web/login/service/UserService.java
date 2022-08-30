@@ -38,4 +38,10 @@ public class UserService {
 	public List<HashMap<String, Object>> srchUserListRetrieve(HashMap<String, Object> hashmapParam) {
 		return mapper.srchUserListRetrieve(hashmapParam);
 	}
+	public int deleteUser(HashMap<String, Object> hashmapParam) {
+		return mapper.deleteUser(hashmapParam);
+	}
+	public int updateUser(HashMap<String, Object> hashmapParam) {
+		return mapper.updateUser(hashmapParam);
+	}
 }

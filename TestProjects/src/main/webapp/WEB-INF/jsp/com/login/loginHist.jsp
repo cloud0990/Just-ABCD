@@ -1,16 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
-<%
-	response.setHeader("Cache-Control", "no-cache");
-	response.setHeader("Pragma", "no-cache");
-	response.setDateHeader("Expires", 0);
-%>
 <c:set var="sessionVo" value="${sessionScope.S_USER}"></c:set>   
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Login History</title>
+<title>HOME : LOGIN HISTORY</title>
 <script type="text/javascript">
 $(function(){
 	$("#mainGrid").jqGrid({
@@ -19,7 +14,7 @@ $(function(){
 	    loadtext:"로딩 중..",
 		datatype:"json", //데이터 타입(그리드를 채우는 데이터의 형식)
 		mtype:"POST", //데이터 전송방식(요청메소드 정의)
-		height : 650, //'auto' 로 자동 높이 설정 가능
+		height : 'auto', //'auto' 로 자동 높이 설정 가능
 		width : 1530,
 		shrinkToFit: true,
 		//autowidth: true,
@@ -34,7 +29,6 @@ $(function(){
         rowNum: 25,            //한 화면에 보여줄 행 수
 	    rowList: [25, 50, 75], //5개보기, 10개보기, 15개보기 선택해서 보기 가능
 		viewrecords: true,
-		pgbuttons: true,
 		//pagerpos: 'center',
 		//gridComplete: function(){
 			//$("#mainGrid").css("vertical-align", "middle");

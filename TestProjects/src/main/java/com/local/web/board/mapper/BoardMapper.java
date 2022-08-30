@@ -12,9 +12,11 @@ public interface BoardMapper {
 	//게시물 전체 조회
 	List<HashMap<String, Object>> selectAllBoard(HashMap<String, Object> hashmapParam);
 	//내 게시글 조회
-	List<HashMap<String, Object>> selectMyBoard(int uIdx);
+	List<HashMap<String, Object>> selectMyBoard(HashMap<String, Object> hashmapParam);
 	//게시물 작성
-	int createItem(HashMap<String, String> hashmapParam);
+	int createItem(HashMap<String, Object> hashmapParam);
 	//게시물 수정
-	int updateItem(HashMap<String, String> hashmapParam);
+	int updateItem(HashMap<String, Object> hashmapParam);
+	//게시글 삭제
+	int deleteItem(HashMap<String, Object> hashmapParam);
 }

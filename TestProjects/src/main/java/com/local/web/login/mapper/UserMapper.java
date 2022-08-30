@@ -25,5 +25,8 @@ public interface UserMapper {
 	List<HashMap<String, Object>> selectLoginHist(HashMap<String, Object> hashmapParam);
 	//현재 사용자 검색
 	List<HashMap<String, Object>> srchUserListRetrieve(HashMap<String, Object> hashmapParam);
-	
+	//사용자 삭제
+	int deleteUser(HashMap<String, Object> hashmapParam);
+	//사용자 수정
+	int updateUser(HashMap<String, Object> hashmapParam);
 }	

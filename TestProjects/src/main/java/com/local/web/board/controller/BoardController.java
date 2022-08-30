@@ -3,12 +3,15 @@ package com.local.web.board.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,22 +36,55 @@ public class BoardController {
 		return "board/boardMain"; //view jsp 위치
 	}
 	@RequestMapping("/main/myMain")
-	public ModelAndView myBoardListPage(HttpServletRequest request, ModelAndView mv) {
-		//getSession(false) = session이 있으면 현재 sessino 반환 / 없으면 null 반환
-		HttpSession session = request.getSession(false);
-		//세션이 비어있는 경우
-		if(session==null) {
-			mv.setViewName("board/boardMain");
-			return mv;
-		}
-		SessionVo sessionVo = (SessionVo) session.getAttribute("S_USER");
-		//System.out.println(sessionVo.getuIdx());
-		List<HashMap<String, Object>> resultList = new ArrayList<>();
-		resultList = mapper.selectMyBoard(sessionVo.getuIdx());
-		mv.addObject("list", resultList);
-		mv.setViewName("board/boardMy");
-		return mv;
+	public String myMainPage() {
+		return "board/boardMy";
 	}
+	
+	/**
+	 * 내 게시글 조회
+	 * @param hashmapParam
+	 * @param PageingVo
+	 * @return HashMap
+	 */
+	@RequestMapping(value="/main/selectMyBoard", method=RequestMethod.POST)
+	public @ResponseBody HashMap<String, Object> selectMyBoard(@ModelAttribute("pageing") PageingVo pageing, @RequestParam HashMap<String, Object> hashmapParam, HttpSession session) {
+		List<HashMap<String, Object>> resultList = new ArrayList<>();
+		HashMap<String, Object> hashmapResult = new HashMap<>();
+		SessionVo member = (SessionVo) session.getAttribute("S_USER");
+		try {
+			Integer page = pageing.getPage();
+			if(page == 0) page = (Integer) 1;
+			
+			Integer rows  = pageing.getRows();
+			Integer start = (page - 1) * rows;
+			Integer end   = rows;
+			
+			hashmapParam.put("start", start);
+			hashmapParam.put("end", end);
+			hashmapParam.put("uIdx", member.getuIdx());
+
+			resultList = mapper.selectMyBoard(hashmapParam);
+			int records = mapper.getQueryTotalCnt();
+			
+			pageing.setRecords(records);
+			pageing.setTotal( (int) Math.ceil((double)records / (double)pageing.getRows()));
+			
+			hashmapResult.put("page", pageing.getPage());
+			hashmapResult.put("total", pageing.getTotal());
+			hashmapResult.put("records", pageing.getRecords());
+			hashmapResult.put("rows", resultList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return hashmapResult;
+	}
+	
+	/**
+	 * 전체 게시글 조회
+	 * @param hashmapParam
+	 * @param PageingVo
+	 * @return HashMap
+	 */
 	//@PostMapping(value="/main/selectAllBoard")
 	@RequestMapping(value="/main/selectAllBoard", method=RequestMethod.POST)
 	public @ResponseBody HashMap<String, Object> selectAllBoard(@ModelAttribute("pageing") PageingVo pageing, @RequestParam HashMap<String, Object> hashmapParam) {
@@ -80,55 +116,70 @@ public class BoardController {
 		}
 		return hashmapResult;
 	}
-	//@GetMapping
+	
 	@RequestMapping("/createBoard")
 	public String createBoardPage() {
 		return "board/boardCreate"; //view jsp 위치
 	}
-	@RequestMapping("/updateBoard")
-	public ModelAndView updateBoardPage(HttpServletRequest request, ModelAndView mv) {
-		//getSession(false) = session이 있으면 현재 sessino 반환 / 없으면 null 반환
-		HttpSession session = request.getSession(false); //session 객체 생성 : request.getSession()을 호출하여 생성한다.
-		//세션이 비어있는 경우
-		if(session==null) {
-			mv.setViewName("board/boardMain");
-			return mv;
+	
+	/**
+	 * 게시글 작성
+	 * @param hashmapParam
+	 * @return ReturnDataVo
+	 */
+	@Transactional
+	@RequestMapping(value="/createItem", method=RequestMethod.POST) //param : bSubject, bContent, uIdx
+	public @ResponseBody ReturnDataVo createItem(@RequestParam HashMap<String, Object> hashmapParam, HttpSession session) {
+		ReturnDataVo result = new ReturnDataVo();
+		SessionVo member = (SessionVo) session.getAttribute("S_USER");
+		hashmapParam.put("uIdx", member.getuIdx());
+		hashmapParam.put("uNm", member.getuNm());
+		try {
+			mapper.createItem(hashmapParam);
+			result.setResultCode("S000");
+		} catch (Exception e) {
+			result.setResultCode("S999");
+			e.printStackTrace();
 		}
-		SessionVo sessionVo = (SessionVo) session.getAttribute("S_USER");
-		//System.out.println(sessionVo.getuIdx());
-		List<HashMap<String, Object>> resultList = new ArrayList<>();
-		resultList = mapper.selectMyBoard(sessionVo.getuIdx());
-		mv.addObject("list", resultList);
-		mv.setViewName("board/boardUpdate");
-		return mv;
+		return result;
 	}
 	
-	//@PostMapping(value="/createItem")
-	@RequestMapping(value="/createItem", method=RequestMethod.POST) //param : bSubject, bContent, uIdx
-	public @ResponseBody ReturnDataVo createItem(@RequestParam HashMap<String,String> param) {
-		ReturnDataVo result = new ReturnDataVo();
-		int resultParam = mapper.createItem(param);	
-		if(resultParam!=0) {
-			result.setResultCode("S000");
-			result.setResultMsg("게시글 작성 성공.\n게시판 홈으로 이동합니다.");
-		}else {
-			result.setResultCode("S999");
-			result.setResultMsg("오류 발생...");
-		}
-		return result;
-	}
-	//@PostMapping(value="/updateItem")
+	/**
+	 * 게시글 수정
+	 * @param hashmapParam
+	 * @return ReturnDataVo
+	 */
+	@Transactional
 	@RequestMapping(value="/updateItem", method=RequestMethod.POST) //param : bSubject, bContent, uIdx
-	public @ResponseBody ReturnDataVo updateItem(@RequestParam HashMap<String,String> param) {
+	public @ResponseBody ReturnDataVo updateItem(@RequestParam HashMap<String, Object> hashmapParam) {
 		ReturnDataVo result = new ReturnDataVo();
-		int resultParam = mapper.createItem(param);	
-		if(resultParam!=0) {
+		try {
+			mapper.updateItem(hashmapParam);
 			result.setResultCode("S000");
-			result.setResultMsg("게시글 수정 성공.\n게시판 홈으로 이동합니다.");
-		}else {
+		} catch (Exception e) {
 			result.setResultCode("S999");
-			result.setResultMsg("오류 발생");
+			e.printStackTrace();
 		}
 		return result;
 	}
+	
+	/**
+	 * 게시글 삭제
+	 * @param hashmapParam
+	 * @return ReturnDataVo
+	 */
+	@Transactional
+	@RequestMapping(value="/deleteItem", method=RequestMethod.POST)
+	public @ResponseBody ReturnDataVo deleteItem(@RequestParam HashMap<String, Object> hashmapParam) {
+		ReturnDataVo result = new ReturnDataVo();
+		try {
+			mapper.deleteItem(hashmapParam);
+			result.setResultCode("S000");
+		} catch (Exception e) {
+			result.setResultCode("S999");
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
 }

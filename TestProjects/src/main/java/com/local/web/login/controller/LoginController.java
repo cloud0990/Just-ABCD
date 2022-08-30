@@ -33,6 +33,12 @@ public class LoginController implements Serializable {
 	public String loginPage() throws Exception {
 		return "login";
 	}
+	
+	/**
+	 * 로그인
+	 * @param hashmapParam
+	 * @return ReturnDataVo
+	 */
 	//param = uId, uPwd
 	@RequestMapping(value="/checkLoginUser", method=RequestMethod.POST)
 	public @ResponseBody ReturnDataVo checkLoginUser(@RequestParam HashMap<String, String> param, HttpServletRequest request) throws Exception {
@@ -58,6 +64,10 @@ public class LoginController implements Serializable {
 		return result;
 	}
 	
+	/**
+	 * 로그아웃
+	 * @return 
+	 */
 	@RequestMapping("/logout")
 	public String logout(HttpServletRequest request, HttpServletResponse response , RedirectAttributes redirectAttributes) {
 		HttpSession session = request.getSession(true); //=request.getSession();
