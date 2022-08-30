@@ -5,67 +5,68 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>게시판 : 게시글 작성</title>
-<script type="text/javascript">
-$(function(){
-	$("#logoutBtn").click(function(){
-		location.href="/logout";		
-	});
-});
-</script>
+<title>HOME : CREATE CONTENT</title>
 <script type="text/javascript">
 $(function(){
 	$("#createBtn").click(function(){
-		var bSubject = $("#bSubject").val().trim();
-		var bContent = $("#bContent").val().trim();
-		var uIdx     = '${sessionVo.uIdx}';
-		var uNm      = '${sessionVo.uNm}';
+		var bSubject = $("#view_bSubject").val().trim();
+		var bContent = $("#view_bContent").val().trim();
 		if(bSubject=='' || bContent=='') {
 			$('input[type="text"]').css("border", "2px solid red");
 			$('input[type="text"]').css("box-shadow", "0 0 3px red");
 			alert('제목을 입력해주세요');
 		}else {
-			$.post("/board/createItem", {bSubject:bSubject, bContent:bContent, uIdx:uIdx, uNm:uNm},
-			function(data) {
-				var code = data.resultCode;
-				var msg  = data.resultMsg;
-				if(code=="S000") {
-					location.href='/board/main';
-					alert(msg);
-				}else if(code=="S999") {
-					$("#bSubject").focus();
-					$("#bSubject").attr("style", "border: 2px solid red;");
-					$("#bContent").focus();
-					$("#bContent").attr("style", "border: 2px solid red;");
-					alert(msg);
+			$.post("/board/createItem"
+			, $("#frm_create_board").serialize()
+			, function(data) {
+				if(data.resultCode=="S000") {
+					alert("게시글 작성이 완료되었습니다.\n홈 화면으로 돌아갑니다.");
+					location.href='/board/main/myMain';
+				}else if(data.resultCode=="S999"){
+					//$("#view_bSubject").focus();
+					$("#view_bSubject").attr("style", "border: 2px solid red;");
+					//$("#view_bContent").focus();
+					$("#view_bContent").attr("style", "border: 2px solid red;");
 					return false;
 				}
 			});
 		}
 	});
 });
+function fn_cancel_create() {
+	$("#view_bSubject").val('');
+	$("#view_bContent").val('');
+}
 </script>
 </head>
 <body>
-<form>
-<h3 style="text-align: center; margin-top: 100px;">게시글 작성</h3>
-<hr>
-<div style=" margin:auto; margin-top:100px; width:700px;">
-  <div class="form-outline mb-4">
-    <label class="form-label" for="uId">제목</label>
-    <input type="text" id="bSubject" class="form-control" style="border:1px solid gray;" placeholder="Subject"/>
-  </div>
 
-  <div class="form-outline mb-4">
-    <label class="form-label" for="uId">내용</label>
-    <input type="text" id="bContent" class="form-control" style="border:1px solid gray;" placeholder="Content"/>
-  </div>
-
-  <button type="button" class="btn btn-primary btn-block mb-4" id="createBtn">작성</button>
-  <div class="text-center">
-  	<p><a href="/board/main">게시판 홈</a></p>
-  </div>
-</div>  
+<form class="form-horizontal" id="frm_create_board" name="frm_create_board" onsubmit="return false">
+	<div class="board_create" id="content" style="width:1000px; height:500px; margin:auto; margin-top:100px;">
+		<div class="widget-body" style="padding:30px;">
+			<fieldset>
+				<div style="flex:center;">
+					<label><span class="widget-icon"><i class="fa fa-list-alt txt-color-white"></i>&nbsp;&nbsp;&nbsp;CREATE CONTENT</span></label>
+				</div>
+			</fieldset>
+			<hr style="margin-top:0px;">
+			<fieldset>	
+				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">TITLE</legend>
+				<div>
+					<input type="text" class="form-control input-sm" id="view_bSubject" name="bSubject"/>					
+				</div>
+				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">CONTENT</legend>
+				<div>
+					<input type="text" class="form-control input-sm" id="view_bContent" name="bContent"/>					
+				</div>
+				<br>
+				<div style="text-align: right;">
+					<button type='button' id="createBtn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;">작성</button>		
+					<button type='button' class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_cancel_create();">취소</button>		
+				</div>
+			</fieldset>	
+		</div>
+	</div>
 </form>
 
 </body>

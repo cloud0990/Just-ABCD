@@ -15,11 +15,11 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
      <nav aria-label="breadcrumb">
 	     <ol class="breadcrumb">
-	        <li class="breadcrumb-item"><a href="/main/view">UserList</a></li>
-	        <li class="breadcrumb-item"><a href="/main/loginhist">Login History</a></li>
-	        <li class="breadcrumb-item"><a href="/board/main">Board</a></li>
-	        <li class="breadcrumb-item"><a href="/board/main/myMain">My Board</a></li>
-	        <li class="breadcrumb-item"><a href="/board/createBoard">Write</a></li>
+	        <li class="breadcrumb-item"><a href="/main/view">USER</a></li>
+	        <li class="breadcrumb-item"><a href="/main/loginhist">LOGIN HISTORY</a></li>
+	        <li class="breadcrumb-item"><a href="/board/main">BOARD</a></li>
+	        <li class="breadcrumb-item"><a href="/board/main/myMain">MY CONTENT</a></li>
+	        <li class="breadcrumb-item"><a href="/board/createBoard">CREATE CONTENT</a></li>
 	        <!-- <li class="breadcrumb-item active" aria-current="page"><a href="#">Data</a></li> -->
 	      </ol>
       </nav>

@@ -10,32 +10,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="description" content="">
-<!-- <link href="/assets/dev/css/ui.jqgrid.css" media="screen" rel="stylesheet" /> -->
-<!-- jqGrid css --> 
-<link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/5.7.0/css/ui.jqgrid.min.css"/>
-<link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/5.7.0/css/ui.jqgrid-bootstrap-ui.min.css"/>
-<link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/5.7.0/css/ui.jqgrid-bootstrap5.min.css"/>
-<!-- <link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/5.7.0/css/ui.jqgrid-bootstrap.min.css"/> -->
+
 <!-- BootStrap css -->
 <link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 <link rel="stylesheet" media="screen" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
 <link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.3.0/mdb.min.css" />
+
+<!-- jqGrid css --> 
+<link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/5.7.0/css/ui.jqgrid.min.css"/>
+<link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/5.7.0/css/ui.jqgrid-bootstrap-ui.min.css"/>
+<link rel="stylesheet" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/5.7.0/css/ui.jqgrid-bootstrap5.min.css"/>
+
+<!-- sweetAlert css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.css"/> 
+
 <!-- select2 -->
 <link rel="stylesheet" media="screen" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" />
+
 <!-- jQuery Ajax -->
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script type="text/javascript" src="/assets/common/ajaxCommon.js"></script>
 <script type="text/javascript" src="/assets/common/jquery.form.js"></script>
+
+<!-- sweetAlert2 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script> 
+
 <!-- jgGrid -->
 <script type="text/javascript" src="/assets/plugin/js/jqgrid/jquery.jqGrid.min.js"></script>
 <script type="text/javascript" src="/assets/plugin/js/jqgrid/grid.locale-en.min.js"></script>
 
-<!-- jqGrid -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/5.7.0/js/i18n/grid.locale-en.min.js" type="text/javascript"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/5.7.0/js/jquery.jqGrid.min.js" type="text/javascript"></script> -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/5.7.0/js/i18n/grid.locale-kr.min.js" type="text/javascript"></script> -->
-<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/5.7.0/js/grid.base.min.js" type="text/javascript"></script> 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/5.7.0/js/grid.utils.min.js" type="text/javascript"></script>-->
 <style type="text/css">
 * {
 margin:0px;
@@ -62,6 +65,15 @@ font-size:15px;
 }
 #pager {
 	height:40px;
+}
+.ui-jqgrid-btable tr:hover {
+	background-color: #EAEAEA;
+}
+.ui-jqgrid .ui-jqgrid-titlebar {
+	background-image: -webkit-linear-gradient(top, #FFFFFF, #CCCCCC);
+}
+.ui-jqgrid tr .ui-row-ltr td {
+	padding: 3px 4px;
 }
 </style>
 </head>
@@ -101,9 +113,13 @@ $(function(){
 	$(".ui-icon.ui-icon-seek-end").wrap("<div class='btn btn-sm btn-default'></div>");
 	$(".ui-icon.ui-icon-seek-end").removeClass().addClass("fa fa-fast-forward");
 	
-/* 	$(".ui-jqgrid-htable").each(function(){
+/* 
+
+$(".ui-jqgrid-htable").each(function(){
 		$(this).css("width", "" + eval($(this).width()+3.5)+"px");		
-	}); */
+	}); 
+	
+	*/
 });	
 </script>
 

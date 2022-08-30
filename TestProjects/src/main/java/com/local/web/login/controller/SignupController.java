@@ -25,11 +25,14 @@ public class SignupController {
 		return "signUp";
 	}
 	
-	//회원가입
+	/**
+	 * 회원가입
+	 * @param hashmapParam
+	 * @return ReturnDataVo
+	 */
 	@RequestMapping(value="/insertUser", method=RequestMethod.POST)
 	public @ResponseBody ReturnDataVo signUp(@RequestParam HashMap<String, Object> hashmapParam) {
 		ReturnDataVo result = new ReturnDataVo();
-		//회원가입
 		int resultSignUp = 0;
 		try {
 			resultSignUp = service.signUpUser(hashmapParam);

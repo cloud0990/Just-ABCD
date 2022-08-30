@@ -1,33 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
 <mapper namespace="com.local.web.board.mapper.BoardMapper">
-	<!-- 직전 결과처리 행 수 반환 -->
 	<select id="getQueryTotalCnt" resultType="int">
 		SELECT FOUND_ROWS()
 	</select>
-	<!-- 게시물전체 조회 : 작성일자 최신순 정렬-->
-	<select id="selectAllBoard" resultType="hashmap">
+
+	<select id="selectAllBoard" resultType="hashMap">
+		/* BoardMapper.selectAllBoard */
 		SELECT SQL_CALC_FOUND_ROWS
 			   board.*
 	    FROM  
 	    	   (SELECT * FROM BOARD ORDER BY bDate DESC) AS board
    	    LIMIT ${start}, ${end}
 	</select>
-	<!-- 내 게시글 조회 -->
-	<select id="selectMyBoard" parameterType="int" resultType="hashmap">
-		SELECT * FROM BOARD WHERE uIdx=#{uIdx}
+
+	<select id="selectMyBoard" parameterType="hashMap" resultType="hashMap">
+		/* BoardMapper.selectMyBoard */
+		SELECT SQL_CALC_FOUND_ROWS 
+			   board.*
+		FROM 
+			   (SELECT * FROM BOARD WHERE uIdx=#{uIdx} ORDER BY bDate DESC) AS board
+		LIMIT ${start}, ${end}	   
 	</select>
-	<!-- 게시물 작성 -->
-	<insert id="createItem" parameterType="hashmap">
-		INSERT INTO BOARD(bSubject, bContent, uIdx, uNm, bDate)
-		VALUES(#{bSubject}, #{bContent}, #{uIdx}, #{uNm}, now()) 
+
+	<insert id="createItem" parameterType="hashMap">
+		/* BoardMapper.createItem */
+		INSERT INTO
+		BOARD(bSubject, bContent, uIdx, uNm, bDate)
+		VALUES(
+				  #{bSubject}
+				, #{bContent}
+				, #{uIdx}
+				, #{uNm}
+				, now()
+			  ) 
 	</insert>
-	<!-- 게시물 수정 -->
-	<update id="updateItem" parameterType="hashmap">
-		UPDATE BOARD SET
-			bSubject=#{bSubject}, bContent=#{bContent}, bDate=now()
-		WHERE uIdx=#{uIdx}
+
+	<update id="updateItem" parameterType="hashMap">
+		/* BoardMapper.updateItem */
+		UPDATE BOARD
+		SET
+		<if test="bSubject != null and bSubject != ''">
+			  bSubject = #{bSubject}		
+		</if>
+		<if test="bContent != null and bContent != ''">
+			, bContent=#{bContent}
+		</if>
+			, bDate=now()
+		WHERE
+		bIdx = #{bIdx}
 	</update>
+	
+	<delete id="deleteItem" parameterType="hashMap">
+		/* BoardMapper.deleteItem */
+		DELETE FROM BOARD
+		WHERE bIdx = #{bIdx}
+	</delete>
 	
 </mapper>
