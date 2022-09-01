@@ -110,7 +110,7 @@ function fn_log_srch() {
 		</div>
 	</div>
 </div>
-<div class="user_info" id="content" style="float:right; width:720px;">
+<div class="user_info" id="content" style="float:right; width:710px;">
 	<div class="widget-body" style="padding:30px;">
 		<fieldset>
 			<div style="flex:center;">
@@ -132,7 +132,7 @@ function fn_log_srch() {
 				<input class="form-control input-sm" id="view_log_user_ip" disabled="disabled"/>					
 			</div>
 			
-			<div style="float:left; width:135px;">
+			<div style="float:left; width:130px;">
 			<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">접속 성공 여부</legend>
 				<input class="form-control input-sm" id="view_log_tp_yn" disabled="disabled"/>					
 			</div>

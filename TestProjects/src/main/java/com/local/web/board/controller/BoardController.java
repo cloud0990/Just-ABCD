@@ -119,11 +119,11 @@ public class BoardController {
 
 	/**
 	 * 게시글 작성
-	 * @param hashmapParam
+	 * @param hashmapParam b_subject, b_content, user_idx
 	 * @return ReturnDataVo
 	 */
 	@Transactional
-	@RequestMapping(value="/createItem", method=RequestMethod.POST) //param : bSubject, bContent, uIdx
+	@RequestMapping(value="/createItem", method=RequestMethod.POST)
 	public @ResponseBody ReturnDataVo createItem(@RequestParam HashMap<String, Object> hashmapParam, HttpSession session) {
 		ReturnDataVo result = new ReturnDataVo();
 		SessionVo member = (SessionVo) session.getAttribute("S_USER");
@@ -141,11 +141,11 @@ public class BoardController {
 	
 	/**
 	 * 게시글 수정
-	 * @param hashmapParam
+	 * @param hashmapParam b_subject, b_content, user_idx
 	 * @return ReturnDataVo
 	 */
 	@Transactional
-	@RequestMapping(value="/updateItem", method=RequestMethod.POST) //param : bSubject, bContent, uIdx
+	@RequestMapping(value="/updateItem", method=RequestMethod.POST)
 	public @ResponseBody ReturnDataVo updateItem(@RequestParam HashMap<String, Object> hashmapParam) {
 		ReturnDataVo result = new ReturnDataVo();
 		try {

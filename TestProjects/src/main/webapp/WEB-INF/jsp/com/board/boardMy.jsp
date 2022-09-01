@@ -43,7 +43,7 @@ $(function(){
 		datatype:"json",
 		mtype:"POST",
 		height:650,
-		width:830,
+		width:800,
 		shrinkToFit: true,
 		colNames:['번호', '닉네임', '제목', '내용', 'b_date', 'b_upd_date', ''],
 		colModel:[
@@ -132,7 +132,12 @@ function fn_board_update(board_id) {
 function fn_update_result(data) {
 	if(data.resultCode=="S000") {
 		alert("수정을 완료하였습니다.");
-		$("#mainGrid").setGridParam({url:"/board/main/selectMyBoard", page:1, datatype:"json"}).trigger("reloadGrid");					
+		$("#mainGrid").setGridParam({url:"/board/main/selectMyBoard", page:1, datatype:"json"}).trigger("reloadGrid");
+		
+		$("#view_b_subject").val('');
+		$("#view_b_content").val('');
+		$("#view_b_date").val('');
+		$("#view_b_upd_date").val('');
 	}else {
 		alert("작업수행에 실패하였습니다.");
 	}
@@ -144,7 +149,12 @@ function fn_board_delete(board_id) {
 		, "board_id=" + board_id         
 		, function(data) {       
 			if(data.resultCode=="S000") {
-				$("#mainGrid").setGridParam({url:"/board/main/selectMyBoard", page:1, datatype:"json"}).trigger("reloadGrid");					
+				$("#mainGrid").setGridParam({url:"/board/main/selectMyBoard", page:1, datatype:"json"}).trigger("reloadGrid");	
+				
+				$("#view_b_subject").val('');
+				$("#view_b_content").val('');
+				$("#view_b_date").val('');
+				$("#view_b_upd_date").val('');
 			}else {
 				alert("작업수행에 실패하였습니다.");
 			}
