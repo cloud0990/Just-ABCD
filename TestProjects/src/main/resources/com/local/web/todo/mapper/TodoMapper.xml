@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.local.web.todo.mapper.TodoMapper">
+	<select id="getQueryTotalCnt" resultType="int">
+		SELECT FOUND_ROWS()
+	</select>
+
+	<select id="getTodoPreListRetrieve" resultType="hashMap">
+	/* TodoMapper.getTodoPreListRetrieve */		
+		SELECT SQL_CALC_FOUND_ROWS
+			   TODO.*
+	    FROM 
+	    	(SELECT
+					TD_ID AS td_id
+				  , TD_NM AS td_nm
+				  , TD_TP AS td_tp
+				  , DATE_FORMAT(TD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_date
+				  , DATE_FORMAT(TD_UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_upd_date
+				  , USER_NM AS user_nm
+				  , USER_IDX AS user_idx
+			FROM TB_TODO
+			ORDER BY TD_DATE DESC) AS TODO	
+		WHERE 1=1
+		AND USER_IDX = #{user_idx}
+		AND TD_TP = '00'
+		LIMIT #{start}, #{end}			
+	</select>
+	
+	<select id="getTodoNowListRetrieve" resultType="hashMap">
+	/* TodoMapper.getTodoNowListRetrieve */	
+		SELECT SQL_CALC_FOUND_ROWS
+			   TODO.*
+	    FROM 
+	    	(SELECT
+					TD_ID AS td_id
+				  , TD_NM AS td_nm
+				  , TD_TP AS td_tp
+				  , DATE_FORMAT(TD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_date
+				  , DATE_FORMAT(TD_UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_upd_date
+				  , USER_NM AS user_nm
+				  , USER_IDX AS user_idx
+			FROM TB_TODO
+			ORDER BY TD_DATE DESC) AS TODO	
+		WHERE 1=1
+		AND USER_IDX = #{user_idx}
+		AND TD_TP = '01'
+		LIMIT #{start}, #{end}			
+	</select>
+
+	<select id="getTodoSuccessListRetrieve" resultType="hashMap">
+	/* TodoMapper.getTodoSuccessListRetrieve */
+		SELECT SQL_CALC_FOUND_ROWS
+			   TODO.*
+	    FROM 
+	    	(SELECT
+					TD_ID AS td_id
+				  , TD_NM AS td_nm
+				  , TD_TP AS td_tp
+				  , DATE_FORMAT(TD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_date
+				  , DATE_FORMAT(TD_UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_upd_date
+				  , USER_NM AS user_nm
+				  , USER_IDX AS user_idx
+			FROM TB_TODO
+			ORDER BY TD_DATE DESC) AS TODO	
+		WHERE 1=1
+		AND USER_IDX = #{user_idx}
+		AND TD_TP = '02'
+		LIMIT #{start}, #{end}			
+	</select>
+
+	<select id="getTodoRestListRetrieve" resultType="hashMap">
+	/* TodoMapper.getTodoRestListRetrieve */
+		SELECT SQL_CALC_FOUND_ROWS
+			   TODO.*
+	    FROM 
+	    	(SELECT
+					TD_ID AS td_id
+				  , TD_NM AS td_nm
+				  , TD_TP AS td_tp
+				  , DATE_FORMAT(TD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_date
+				  , DATE_FORMAT(TD_UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_upd_date
+				  , USER_NM AS user_nm
+				  , USER_IDX AS user_idx
+			FROM TB_TODO
+			ORDER BY TD_DATE DESC) AS TODO	
+		WHERE 1=1
+		AND USER_IDX = #{user_idx}
+		AND TD_TP = '99'
+		LIMIT #{start}, #{end}			
+	</select>	
+
+	<update id="updateTodo" parameterType="hashMap">
+	/* TodoMapper.updateTodo */
+		UPDATE TB_TODO
+		SET
+		  TD_NM = #{td_nm}
+		, TD_UPD_DATE = NOW()
+		<choose>
+			<when test="td_tp=='00'">
+				, TD_TP = '00'
+			</when>
+			<when test="td_tp=='01'">
+				, TD_TP = '01'
+			</when>			
+			<when test="td_tp=='02'">
+				, TD_TP = '02'
+			</when>		
+			<when test="td_tp=='99'">
+				, TD_TP = '99'
+			</when>		
+		</choose>
+		WHERE 1=1
+		AND TD_ID = #{td_id}
+	</update>
+	
+	<delete id="deleteTodo" parameterType="hashMap">
+	/* TodoMapper.deleteTodo */
+		DELETE FROM TB_TODO 
+		WHERE TD_ID = #{td_id} 
+	</delete>
+	
+	<insert id="createTodo" parameterType="hashMap">
+	/* TodoMapper.createTodo */
+		INSERT INTO
+		TB_TODO(TD_NM, TD_TP, TD_DATE ,USER_IDX, USER_NM)
+		VALUES(
+					#{td_nm}
+				  , #{td_tp}
+				  , NOW()
+				  , #{user_idx}
+				  , #{user_nm}
+			  )
+	</insert>
+	
+</mapper>
