@@ -36,30 +36,37 @@ public class LoginController implements Serializable {
 	
 	/**
 	 * 로그인
-	 * @param hashmapParam
+	 * @param hashmapParam(user_id, user_pwd)
 	 * @return ReturnDataVo
 	 */
-	//param = uId, uPwd
 	@RequestMapping(value="/checkLoginUser", method=RequestMethod.POST)
-	public @ResponseBody ReturnDataVo checkLoginUser(@RequestParam HashMap<String, String> param, HttpServletRequest request) throws Exception {
+	public @ResponseBody ReturnDataVo checkLoginUser(@RequestParam HashMap<String, String> hashmapParam, HttpServletRequest request) throws Exception {
 		ReturnDataVo  result = new ReturnDataVo();
 		HttpSession  session = request.getSession(true);//현재 session이 있으면 반환, 없으면 생성해서 반환 (=request.getSession() )
 		//HttpSession session = request.getSession(false); : 현재 session이 있으면 반환, 없으면 null반환
 		SessionVo loginUserVo = new SessionVo();
-		loginUserVo = mapper.checkLoginUser(param);
-		
+		loginUserVo = mapper.checkLoginUser(hashmapParam);
+		HashMap<String, Object> loginHist = new HashMap<>();
 		if(loginUserVo != null) {
-			HashMap<String, Object> loginHist = new HashMap<>();
-			loginHist.put("uId", param.get("uId"));
-			loginHist.put("ip", request.getRemoteAddr());
-			mapper.createloginHist(loginHist);
 			result.setResultCode("S000");
-			result.setResultMsg("로그인 성공");
+			result.setResultMsg("로그인에 성공하셨습니다.");
 			session.setAttribute("S_USER", loginUserVo);
 			session.setAttribute("S_LOGIN_YN", "Y");
+			//로그인 성공 시 로그인 기록
+			loginHist.put("log_user_id", hashmapParam.get("user_id"));
+			loginHist.put("log_user_nm", loginUserVo.getUser_nm());
+			loginHist.put("log_user_ip", request.getRemoteAddr());
+			loginHist.put("log_tp_yn", session.getAttribute("S_LOGIN_YN"));
+			mapper.createloginHist(loginHist);
 		}else {
 			result.setResultCode("S999");
 			result.setResultMsg("아이디/패스워드가 등록되어있지 않습니다.");
+			//로그인 실패 시
+			loginHist.put("log_user_id", hashmapParam.get("user_id"));
+			loginHist.put("log_user_nm", "미등록 사용자");
+			loginHist.put("log_user_ip", "");
+			loginHist.put("log_tp_yn", "N");
+			mapper.createloginHist(loginHist);
 		}
 		return result;
 	}
@@ -79,7 +86,7 @@ public class LoginController implements Serializable {
 		SessionVo loginUserVo = (SessionVo) session.getAttribute("S_USER");
 		
 		//로그인이 되어있는 경우(세션에 로그인 정보가 저장되어있는 경우), session 값 삭제, 쿠키 삭제
-		if(isLogin != null && isLogin.equals("Y") && loginUserVo != null && !("").equals(loginUserVo.getuId())) {
+		if(isLogin != null && "Y".equals(isLogin) && loginUserVo != null && !"".equals(loginUserVo.getUser_id())) {
 			
 			//session.setAttribute(key, session값) -> key값은 문자열, session값은 Object
 			session.setAttribute("S_USER", null);

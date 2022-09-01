@@ -44,8 +44,7 @@ public class MainController {
 	 */
 	@RequestMapping(value="/selectUserList", method=RequestMethod.POST)
 	public @ResponseBody HashMap<String, Object> selectUserList(@ModelAttribute("pageing") PageingVo pageing, @RequestParam HashMap<String, Object> hashmapParam) throws Exception {
-		
-		List<HashMap<String, Object>> userList = new ArrayList<HashMap<String, Object>>();
+		List<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
 		HashMap<String, Object>  hashmapResult = new HashMap<String, Object>();
 		
 		//페이징 처리 시, 반드시 try~catch로 예외처리 할 것
@@ -59,7 +58,7 @@ public class MainController {
 			hashmapParam.put("start", start);
 			hashmapParam.put("end", end);
 			
-			userList = mapper.selectUserList(hashmapParam);
+			resultList = mapper.selectUserList(hashmapParam);
 			int records = mapper.getQueryTotalCnt();
 
 			pageing.setRecords(records);
@@ -68,7 +67,7 @@ public class MainController {
 			hashmapResult.put("page", pageing.getPage());
 			hashmapResult.put("total", pageing.getTotal());
 			hashmapResult.put("records", pageing.getRecords());
-			hashmapResult.put("rows", userList);
+			hashmapResult.put("rows", resultList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -83,7 +82,7 @@ public class MainController {
 	 */
 	@RequestMapping(value="/selectLoginHist", method=RequestMethod.POST)
 	public @ResponseBody HashMap<String, Object> getLoginHist(@ModelAttribute("pageing") PageingVo pageing, @RequestParam HashMap<String, Object> hashmapParam) throws Exception {
-		List<HashMap<String, Object>> loginHist = new ArrayList<HashMap<String, Object>>();
+		List<HashMap<String, Object>> resultList = new ArrayList<HashMap<String, Object>>();
 		HashMap<String, Object>   hashmapResult = new HashMap<String, Object>();
 		
 		try {
@@ -97,7 +96,7 @@ public class MainController {
 			hashmapParam.put("start", start);
 			hashmapParam.put("end", end);
 			
-			loginHist = mapper.selectLoginHist(hashmapParam);
+			resultList = mapper.selectLoginHist(hashmapParam);
 			int records = mapper.getQueryTotalCnt();
 			
 			pageing.setRecords(records);
@@ -106,7 +105,7 @@ public class MainController {
 			hashmapResult.put("page", pageing.getPage());
 			hashmapResult.put("total", pageing.getTotal());
 			hashmapResult.put("records", pageing.getRecords());
-			hashmapResult.put("rows", loginHist);
+			hashmapResult.put("rows", resultList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

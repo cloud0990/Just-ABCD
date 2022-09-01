@@ -8,96 +8,132 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/4.3.0/mdb.min.css" rel="stylesheet"/>
+<style type="text/css">
+.gradient-custom-2 {
+/* fallback for old browsers */
+background: #fccb90;
+
+/* Chrome 10-25, Safari 5.1-6 */
+background: -webkit-linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+
+/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+}
+
+@media (min-width: 768px) {
+.gradient-form {
+height: 100vh !important;
+}
+}
+@media (min-width: 769px) {
+	.gradient-custom-2 {
+	border-top-right-radius: .3rem;
+	border-bottom-right-radius: .3rem;
+	}
+}
+</style>
 <script type="text/javascript">
 $(function(){
-	$("#signUp").click(function(){
-		var uId  = $("#uId").val();
-		var uPwd = $("#uPwd").val();
-		var uNm  = $("#uNm").val();
-
-		if(uId=='' || uPwd=='' || uNm=='') {
-			$('input[type="text"], input[type="password"]').css("border", "2px solid red");
-			$('input[type="text"], input[type="password"]').css("box-shadow", "0 0 3px red");
-			alert('아이디를 입력해주세요');
-		}else {
-			$.post("/signUp/insertUser", {uId:uId, uPwd:uPwd, uNm:uNm},
-			function(data){
-				var code = data.resultCode;
-				var msg  = data.resultMsg;
-				
-				if(code='S000'){
-					location.href='/login';
-					alert(msg);
-				}else if(code='S999'){
-					$("#uId").focus();
-					$("#uId").attr("style", "border: 2px solid red;");
-					$("#uPwd").focus();
-					$("#uPwd").attr("style", "border: 2px solid red;");					
-					$("#uNm").focus();
-					$("#uNm").attr("style", "border: 2px solid red;");
-					alert(msg);
-					return false;
-				}
-			});
+	/* 회원가입 엔터 처리 */
+	$("#user_pwd").keypress(function(e){
+		if(e.keyCode && e.keyCode == 13) {
+			if(!confirm('회원가입 하시겠습니까?')) return;			
+			$("#signUp").trigger('click'); //trigger() : 이벤트 강제 발생
 		}
+	});
+	/* 아이디 저장 엔터 처리 */
+	$("#rememberId").keypress(function(e){
+		if(e.keyCode && e.keyCode == 13) {
+			$("#rememberId").trigger('click'); //trigger() : 이벤트 강제 발생
+		}
+	});
+	
+	$("#signUp").click(function(){
+		if(!confirm('회원가입 하시겠습니까?')) return;
+
+		var user_id  = $("#user_id").val();
+		var user_pwd = $("#user_pwd").val();
+		var user_nm  = $("#user_nm").val();
+
+		if(user_nm == '') {
+			$("#user_nm").css("border", "2px solid red");
+			$("#user_nm").css("box-shadow", "0 0 3px red");
+			alert('닉네임을 입력해주세요');
+			return;
+		}
+		if(user_id == '') {
+			$("#user_id").css("border", "2px solid red");
+			$("#user_id").css("box-shadow", "0 0 3px red");
+			alert('아이디를 입력해주세요');
+			return;
+		}
+		if(user_pwd == '') {
+			$("#user_pwd").css("border", "2px solid red");
+			$("#user_pwd").css("box-shadow", "0 0 3px red");
+			alert('비밀번호를 입력해주세요');
+			return;
+		}
+		$.post("/signUp/insertUser"
+				, {user_id:user_id, user_pwd:user_pwd, user_nm:user_nm}
+				, function(data){
+					var resultCode = data.resultCode;
+					var resultMsg  = data.resultMsg;
+					if(resultCode=='S000'){
+						location.href='/login';
+						alert(resultMsg);
+					}else if(resultCode=='S999'){
+						$("#user_id").focus();
+						$("#user_id").attr("style", "border: 2px solid red;");
+						$("#user_pwd").focus();
+						$("#user_pwd").attr("style", "border: 2px solid red;");					
+						$("#user_nm").focus();
+						$("#user_nm").attr("style", "border: 2px solid red;");
+						alert(resultMsg);
+						return false;
+				   }
+		});
 	});
 }); //end : function
 </script>
 </head>
 <body>
-<section>
-  <div class="p-5 bg-image" style="background-image: url('https://mdbootstrap.com/img/new/textures/full/171.jpg'); height: 300px;"></div>
-  <div class="card mx-4 mx-md-5 shadow-5-strong" style="margin-top: -100px; background: hsla(0, 0%, 100%, 0.8); backdrop-filter: blur(30px);">
-    <div class="card-body py-5 px-md-5">
-      <div class="row d-flex justify-content-center">
-        <div class="col-lg-8"><h3 class="fw-bold mb-5" style="text-align: center;">Sign Up Now</h3>
-          <form>
-            <!-- Nickname input -->
-            <div class="form-outline mb-4">
-              <label class="form-label" for="uNm">Nickname</label>
-              <input id="uNm" class="form-control" style="border:1px solid gray;" placeholder="Enter a Nickname"/>
+<section class="vh-100" style="background-color: #508bfc;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card shadow-2-strong" style="border-radius: 1rem;">
+          <div class="card-body p-5 text-center">
+            <h5 class="mb-5" style="font-weight: 700">회원가입</h5>
+            <div class="form-outline mb-4" style="text-align: left;">
+              <label class="form-label" for="user_nm" style="font-size: 14px; font-weight: 700;">닉네임</label>
+              <input type="text" id="user_nm" class="form-control form-control-lg" style="border:1px solid gray;" />
             </div>
-            <!-- Email input -->
-            <div class="form-outline mb-4">
-              <label class="form-label" for="uId">ID</label>
-              <input id="uId" class="form-control" style="border:1px solid gray;" placeholder="Enter a Valid ID"/>
+            <div class="form-outline mb-4" style="text-align: left;">
+              <label class="form-label" for="user_id" style="font-size: 14px; font-weight: 700;">아이디</label>
+              <input type="text" id="user_id" class="form-control form-control-lg" style="border:1px solid gray;"/>
             </div>
-            <!-- Password input -->
-            <div class="form-outline mb-4">
-              <label class="form-label" for="uPwd">Password</label>
-              <input type="password" id="uPwd" class="form-control" style="border:1px solid gray;" placeholder="Enter Password"/>
+            <div class="form-outline mb-4" style="text-align: left;">
+              <label class="form-label" for="user_pwd" style="font-size: 14px; font-weight: 700;">비밀번호</label>
+              <input type="password" id="user_pwd" class="form-control form-control-lg" style="border:1px solid gray;"/>
             </div>
-            <!-- Checkbox 
-            <div class="form-check d-flex justify-content-center mb-4">
-              <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked />
-              <label class="form-check-label" for="form2Example33">Subscribe to our newsletter</label>
-            </div>-->
-            <!-- Submit button -->
-             <div class="text-center text-lg-start mt-4 pt-2">
-            <button type="button" class="btn btn-primary btn-block mb-4" id="signUp" style="font-size: 15px;">SIGN UP</button>
-            <p class="small fw-bold mt-2 pt-1 mb-0">Already a member? <a href="/login" class="link-danger">LOGIN</a></p>
+            <!-- Checkbox -->
+            <div class="form-check d-flex justify-content-start mb-4">
+              <input class="form-check-input" type="checkbox" value="" id="rememberId" />
+              <label class="form-check-label" for="rememberId" style="font-size: 14px; color: gray; margin-top:3px;"> 아이디 저장 </label>
+            </div>
+            <div class="text-center text-lg-start mt-4 pt-2">
+	            <button type="button" class="btn btn-primary btn-block mb-4" id="signUp" style="font-size: 15px;">회원가입</button>
+	            <p class="small fw-bold mt-2 pt-1 mb-0">이미 가입하셨습니까? <a href="/login" class="link-danger">로그인</a></p>
+            </div>
+            <hr class="my-4">
+            <button class="btn btn-lg btn-block btn-primary" style="background-color: #dd4b39;" type="submit"><i class="fab fa-google me-2"></i> 구글 회원가입</button>
+            <button class="btn btn-lg btn-block btn-primary mb-2" style="background-color: #3b5998;" type="submit"><i class="fab fa-facebook-f me-2"></i> 페이스북 회원가입</button>
           </div>
-            <!-- Register buttons 
-            <div class="text-center">
-              <p>or sign up with:</p>
-              <button type="button" class="btn btn-link btn-floating mx-1">
-                <i class="fab fa-facebook-f"></i>
-              </button>
-              <button type="button" class="btn btn-link btn-floating mx-1">
-                <i class="fab fa-google"></i>
-              </button>
-              <button type="button" class="btn btn-link btn-floating mx-1">
-                <i class="fab fa-twitter"></i>
-              </button>
-              <button type="button" class="btn btn-link btn-floating mx-1">
-                <i class="fab fa-github"></i>
-              </button>
-            </div>-->
-          </form>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 </body>
 </html>

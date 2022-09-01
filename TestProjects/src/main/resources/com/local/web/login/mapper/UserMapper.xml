@@ -11,81 +11,119 @@
 		SELECT  SQL_CALC_FOUND_ROWS
 				USER.*
 		FROM
-				(SELECT * FROM USER ORDER BY uIDX) AS USER
+				(SELECT
+						  USER_IDX AS user_idx
+						, USER_ID AS user_id
+						, USER_PWD AS user_pwd
+						, USER_NM AS user_nm
+						, DATE_FORMAT(USER_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS user_date
+						, DATE_FORMAT(UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS upd_date
+				FROM TB_USER
+				ORDER BY USER_DATE DESC) AS USER
+		WHERE 1=1
+		<if test="srch_user != null and srch_user != ''">
+			<choose>
+				<when test="srch_user.equals('srch_user_nm')">
+					AND USER_NM LIKE CONCAT('%', #{srch_user_text} ,'%')		
+				</when>
+				<when test="srch_user.equals('srch_user_id')">
+					AND USER_ID LIKE CONCAT('%', #{srch_user_text} ,'%')		
+				</when>
+			</choose>
+		</if>
 		LIMIT ${start}, ${end}
 	</select>
-
 	<insert id="signUpUser" parameterType="java.util.HashMap">
 		/* UserMapper.signUpUser */
 		INSERT INTO
-		USER(uId, uNm, uPwd)
+		TB_USER(USER_ID, USER_NM, USER_PWD, USER_DATE)
 		VALUES( 
-				 #{uId}
-				, #{uNm}
-				, #{uPwd}
+				  #{user_id}
+				, #{user_nm}
+				, #{user_pwd}
+				, NOW()
 			  )
 	</insert>
 
 	<select id="checkLoginUser" parameterType="java.util.HashMap" resultType="com.local.web.common.domain.SessionVo">
 		/* UserMapper.checkLoginUser */
-		SELECT *
-		FROM USER
+		SELECT 
+				  USER_IDX AS user_idx
+				, USER_ID AS user_id 
+				, USER_PWD AS user_pwd
+				, USER_NM AS user_nm
+		FROM 
+			TB_USER
 		WHERE 1=1 
-		AND uId=#{uId}
-		AND uPwd=#{uPwd}
+		AND USER_ID = #{user_id}
+		AND USER_PWD = #{user_pwd}
 	</select>
 
 	<insert id="createloginHist" parameterType="hashMap">
 		/* UserMapper.createloginHist */
 		INSERT INTO
-		USER_CNCT_LOG
+		TB_LOGIN_LOG(LOG_USER_ID, LOG_USER_IP, LOG_USER_NM, LOG_TP_YN , LOG_DATE)
 		VALUES(
-				  #{uId}
-				, #{ip}
-				, now()
+				  #{log_user_id}
+				, #{log_user_ip}
+				, #{log_user_nm}
+				, #{log_tp_yn}
+				, NOW()
 			   )
 	</insert>
-
 	<select id="selectLoginHist" parameterType="hashMap" resultType="hashMap">
 		/* UserMapper.selectLoginHist */
 		SELECT  SQL_CALC_FOUND_ROWS
 				LOG.*
 		FROM 
-				(SELECT * FROM USER_CNCT_LOG ORDER BY logDate DESC) AS LOG
-		LIMIT ${start}, ${end}
-	</select>
-
-	<select id="srchUserListRetrieve" parameterType="hashMap" resultType="hashMap">
-		/* UserMapper.srchUserListRetrieve */
-		SELECT   uNm  AS uNm
-			   , uId  AS uId
-			   , uIdx AS uIdx
-		FROM USER
+				(SELECT
+						  LOG_ID AS log_id
+						, LOG_USER_ID AS log_user_id
+						, LOG_USER_NM AS log_user_nm
+						, LOG_USER_IP AS log_user_ip
+						, LOG_TP_YN AS log_tp_yn
+						, DATE_FORMAT(LOG_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS log_date
+				FROM TB_LOGIN_LOG
+				ORDER BY LOG_DATE DESC) AS LOG
 		WHERE 1=1
-		AND uNm LIKE CONCAT('%', #{srch_user_nm} ,'%')
+		<if test="srch_log != null and srch_log != ''">
+			<choose>
+				<when test="srch_log.equals('srch_user_nm')">
+					AND LOG_USER_NM LIKE CONCAT('%', #{srch_text} ,'%')		
+				</when>
+				<when test="srch_log.equals('srch_user_id')">
+					AND LOG_USER_ID LIKE CONCAT('%', #{srch_text} ,'%')		
+				</when>
+				<when test="srch_log.equals('srch_log_tp_yn')">
+					AND LOG_TP_YN = #{srch_text}
+				</when>
+			</choose>
+		</if>
+		LIMIT ${start}, ${end}
 	</select>
 
 	<update id="updateUser" parameterType="hashMap">
 		/* UserMapper.updateUser */
-		UPDATE USER
+		UPDATE TB_USER
 		SET
-		<if test="uNm != null and uNm != ''">
-		  uNm = #{uNm}
+		<if test="user_nm != null and user_nm != ''">
+		  USER_NM = #{user_nm}
 		</if>
-		<if test="uPwd != null and uPwd != ''">
-		, uPwd = #{uPwd}
+		<if test="user_pwd != null and user_pwd  != ''">
+		, USER_PWD = #{user_pwd}
 		</if> 
-		<if test="uId != null and uId != ''">
-		, uId = #{uId}
+		<if test="user_id != null and user_id != ''">
+		, USER_ID = #{user_id}
 		</if>
+		, UPD_DATE = NOW()
 		WHERE
-			uIdx = #{uIdx}		
+			USER_IDX = #{user_idx}		
 	</update>
 
 	<delete id="deleteUser" parameterType="hashMap">
 		/* UserMapper.deleteUser */
-		DELETE FROM USER
-		WHERE uIdx=#{uIdx}
+		DELETE FROM TB_USER
+		WHERE USER_IDX = #{user_idx}
 	</delete>
 	
 	

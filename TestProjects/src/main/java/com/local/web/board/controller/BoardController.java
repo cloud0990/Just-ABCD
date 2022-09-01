@@ -61,7 +61,7 @@ public class BoardController {
 			
 			hashmapParam.put("start", start);
 			hashmapParam.put("end", end);
-			hashmapParam.put("uIdx", member.getuIdx());
+			hashmapParam.put("user_idx", member.getUser_idx());
 
 			resultList = mapper.selectMyBoard(hashmapParam);
 			int records = mapper.getQueryTotalCnt();
@@ -116,12 +116,7 @@ public class BoardController {
 		}
 		return hashmapResult;
 	}
-	
-	@RequestMapping("/createBoard")
-	public String createBoardPage() {
-		return "board/boardCreate"; //view jsp 위치
-	}
-	
+
 	/**
 	 * 게시글 작성
 	 * @param hashmapParam
@@ -132,8 +127,8 @@ public class BoardController {
 	public @ResponseBody ReturnDataVo createItem(@RequestParam HashMap<String, Object> hashmapParam, HttpSession session) {
 		ReturnDataVo result = new ReturnDataVo();
 		SessionVo member = (SessionVo) session.getAttribute("S_USER");
-		hashmapParam.put("uIdx", member.getuIdx());
-		hashmapParam.put("uNm", member.getuNm());
+		hashmapParam.put("user_idx", member.getUser_idx());
+		hashmapParam.put("user_nm", member.getUser_nm());
 		try {
 			mapper.createItem(hashmapParam);
 			result.setResultCode("S000");
