@@ -15,7 +15,7 @@ function callAjax(target, form, callback) {
 	});
 }
 
-function ConfirmDialogToAjax(text, target, form, callback) {
+function ConfirmAjax(text, target, form, callback) {
 	if(text=="create") {
 		text = "등록하시겠습니까?";
 	}else if(text=="update") {

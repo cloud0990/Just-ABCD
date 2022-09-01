@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>HOME : USER</title>
+<title>HOME : USERS</title>
 <style type="text/css">
 input:focus{
 	-webkit-box-shadow: none;
@@ -15,24 +15,43 @@ input:focus{
 </style>
 <script type="text/javascript">
 $(function(){
+	$("#srch_user_text").keypress(function(e){
+		if(e.keyCode && e.keyCode == 13) {
+			if($("#srch_user_text").val()=='') {
+				$("#srch_user option:eq(0)").prop("selected", true);
+			}
+			$("#srch_user_btn").trigger('click'); //trigger() : 이벤트 강제 발생
+		}
+	});
+	/* 검색필터 */
+	$("#srch_user_btn").click(function(){
+		if($("#srch_user_text").val()=='') {
+			$("#srch_user option:eq(0)").prop("selected", true);
+		}
+		fn_user_srch();
+	});
+	
+	/* 메인 그리드 */
 	$("#mainGrid").jqGrid({
 		url:"/main/selectUserList",
 		loadtext:"로딩 중..",
 		datatype:"json",
 		mtype:"POST",
 		height:'auto',
-		width:800,
+		width:1000,
 		shrinkToFit: true,
-		colNames:['회원번호', '아이디', '비밀번호', '닉네임', ''],
+		colNames:['회원번호', '닉네임', '아이디', '비밀번호', '가입일', '수정일' ,''],
 		colModel: [
-					{name:'uIdx', index:'uIdx', align:"center", width:"30px"},
-					{name:'uId',  index:'uId',  align:"center", width:"70px"},
-					{name:'uPwd', index:'uPwd', align:"center", width:"70px"},
-					{name:'uNm',  index:'uNm',  align:"center", width:"70px"},
+					{name:'user_idx', index:'user_idx', align:"center", width:"30px"},
+					{name:'user_nm',  index:'user_nm',  align:"center", width:"50px"},
+					{name:'user_id',  index:'user_id',  align:"center", width:"60px"},
+					{name:'user_pwd', index:'user_pwd', align:"center", width:"60px"},
+					{name:'user_date', index:'user_date', align:"center", width:"60px"},
+					{name:'upd_date', index:'upd_date', align:"center", width:"60px"},
 					{name:'empty',  index:'empty',  align:"center", formatter:formatOpt, width:40 }
 	              ],
-	    rowNum: 30,
-	    rowList: [30, 60, 90],
+	    rowNum: 25,
+	    rowList: [25, 50, 75],
 	    rownumbers: true,
 	    pager : '#pager',
 	    viewrecords: true,
@@ -40,13 +59,15 @@ $(function(){
 			$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
 		},
  		onSelectRow: function(index, row) { //index = 선택된 row의 index
- 			$("#view_uIdx").val('');
+ 			$("#view_user_idx").val('');
  			if(index) {
  				var row = $("#mainGrid").jqGrid('getRowData', index);
- 				$("#view_uIdx").val(row.uIdx);
- 				$("#view_uId").val(row.uId);
- 				$("#view_uPwd").val(row.uPwd);
- 				$("#view_uNm").val(row.uNm);
+ 				$("#view_user_idx").val(row.user_idx);
+ 				$("#view_user_id").val(row.user_id);
+ 				$("#view_user_pwd").val(row.user_pwd);
+ 				$("#view_user_nm").val(row.user_nm);
+ 				$("#view_user_date").val(row.user_date);
+ 				$("#view_upd_date").val(row.upd_date);
  			}
 	    },
 	    gridComplete: function() {
@@ -62,13 +83,14 @@ function formatOpt(cellvalue, options, rowObject) {
 	var str = "";
 	str += "<div class=\"btn-group\">";
 	str += "<button type='button' class='btn btn-default btn-sm' style='padding:2px 10px 2px; border:1px solid gray; z-index:1;' onclick=\"javascript:fn_update_allow()\">수정</button>";
-	str += "<button type='button' class='btn btn-default btn-sm' style='padding:2px 10px 2px; border:1px solid gray; z-index:1;' onclick=\"javascript:fn_user_delete('" + rowObject.uIdx + "')\">삭제</button>";
+	str += "<button type='button' class='btn btn-default btn-sm' style='padding:2px 10px 2px; border:1px solid gray; z-index:1;' onclick=\"javascript:fn_user_delete('" + rowObject.user_idx + "')\">삭제</button>";
 	str += "</div>"
 	return str;
 }
 
 /* 사용자 수정 */
-function fn_user_update(uIdx) {
+function fn_user_update(user_idx) {
+	if(!confirm("수정하시겠습니까?")) return;
 	callAjax("/main/updateUser", $("#frm_update_user").serialize(), fn_update_result);
 }
 function fn_update_result(data) {
@@ -85,24 +107,23 @@ function fn_update_result(data) {
 
 function fn_update_allow() {
 	$("#updateCancel_btn").show();
-	$("#view_uId").prop("readonly", false);
-	$("#view_uPwd").prop("readonly", false);
-	$("#view_uNm").prop("readonly", false);
+	$("#view_user_id").prop("disabled", false);
+	$("#view_user_pwd").prop("disabled", false);
+	$("#view_user_nm").prop("disabled", false);
 }
-
 function fn_update_cancel() {
-	$("#view_uId").prop("readonly", true);
-	$("#view_uPwd").prop("readonly", true);
-	$("#view_uNm").prop("readonly", true);
+	$("#view_user_id").prop("disabled", true);
+	$("#view_user_pwd").prop("disabled", true);
+	$("#view_user_nm").prop("disabled", true);
 	$("#updateCancel_btn").hide();
 }
 
 /* 사용자 삭제 */
-function fn_user_delete(uIdx) {
-	ConfirmDialogToAjax("delete" //text
-		, "/main/deleteUser"     //target
-		, "uIdx=" + uIdx         //form
-		, function(data) {       //callback
+function fn_user_delete(user_idx) {
+	ConfirmAjax("delete"         //text
+		, "/main/deleteUser"             //target
+		, "user_idx=" + user_idx         //form
+		, function(data) {               //callback
 			var resultCode = data.resultCode;
 			if(resultCode=="S000") {
 				alert("삭제가 완료되었습니다.");
@@ -113,6 +134,19 @@ function fn_user_delete(uIdx) {
 		}		
 	);
 }
+
+/* 사용자 검색 */
+function fn_user_srch() {
+	$("#mainGrid").clearGridData();
+	$("#mainGrid").setGridParam({
+		   url:"/main/selectUserList"
+		 , postData: {
+				  srch_user: $("#srch_user").val()
+		   		, srch_user_text : $("#srch_user_text").val()	
+		   }
+		 , datatype:"json"
+	}).trigger('reloadGrid');
+}
 </script>
 </head>
 <body>
@@ -121,7 +155,19 @@ function fn_user_delete(uIdx) {
 		<div class="widget-body" style="padding:30px;">
 			<fieldset>
 				<div class="form-group" style="flex:center;">
-					<label><span class="widget-icon"><i class="fa fa-list-ul"></i>&nbsp;&nbsp;&nbsp;USERS</span></label>
+					<label style="float:left;"><span class="widget-icon"><i class="fa fa-list-ul"></i>&nbsp;&nbsp;&nbsp;사용자</span></label>
+				</div>
+				<!-- 검색 -->
+				<div class="input-group rounded" style="width:500px; float: right;">
+				  <select id="srch_user" name="srch_user" style="border-radius: 3px; font-size: 13px; outline:none; border:none; margin-right:3px; width:100px;">
+				  	<option value='srch_all'>전 체</option>
+				  	<option value='srch_user_nm'>닉네임</option>
+				  	<option value='srch_user_id'>아이디</option>
+				  </select>
+				  <input type="search" id="srch_user_text" name="srch_user_text" class="form-control rounded" placeholder="검색" aria-label="Search" aria-describedby="search-addon"/>
+				  <button type="button" class="btn btn-default btn-sm" style="padding:2px 10px 2px; box-shadow: none;" id="srch_user_btn">
+				 	 <span class="input-group-text border-0" id="search-addon"><i class="fas fa-search"></i></span>
+				  </button>
 				</div>
 			</fieldset>
 			<hr style="margin-top:0px;">
@@ -135,34 +181,42 @@ function fn_user_delete(uIdx) {
 	</div>
 </div>
 <form class="form-horizontal" id="frm_update_user" name="frm_update_user" onsubmit="return false">
-	<div class="user_info" id="content" style="float:right; width:730px; height:500px;">
+	<div class="user_info" id="content" style="float:right; width:530px;">
 		<div class="widget-body" style="padding:30px;">
 			<fieldset>
 				<div style="flex:center;">
-					<label><span class="widget-icon"><i class="fa fa-list-alt txt-color-white"></i>&nbsp;&nbsp;&nbsp;USER DETAIL</span></label>
+					<label><span class="widget-icon"><i class="fa fa-list-alt txt-color-white"></i>&nbsp;&nbsp;&nbsp;사용자 상세정보</span></label>
 				</div>
 			</fieldset>
 			<hr style="margin-top:0px;">
-			<input type="hidden" id="view_uIdx" name="uIdx">
+			<input type="hidden" id="view_user_idx" name="user_idx">
 			<fieldset>		
-				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">ID</legend>
+				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">닉네임</legend>
 				<div>
-					<input class="form-control input-sm" id="view_uId" name="uId" readonly="readonly"/>					
+					<input class="form-control input-sm" id="view_user_nm" name="user_nm" disabled="disabled"/>					
 				</div>
-				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">Password</legend>
+				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">아이디</legend>
 				<div>
-					<input class="form-control input-sm" id="view_uPwd" name="uPwd" readonly="readonly"/>					
+					<input class="form-control input-sm" id="view_user_id" name="user_id" disabled="disabled"/>					
 				</div>
-				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">Nickname</legend>
+				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">비밀번호</legend>
 				<div>
-					<input class="form-control input-sm" id="view_uNm" name="uNm" readonly="readonly"/>					
+					<input class="form-control input-sm" id="view_user_pwd" name="user_pwd" disabled="disabled"/>					
 				</div>
-				<br>
-				<div id="updateCancel_btn" style="text-align: right; display:none; clear:both;">
-					<button type='button' class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_user_update($('#view_uidx').val())">수정</button>		
-					<button type='button' class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_update_cancel();">취소</button>		
+				<div style="float:left; width:232px;">
+				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">가입일</legend>
+					<input class="form-control input-sm" id="view_user_date" disabled="disabled"/>					
 				</div>
-			</fieldset>	
+				<div style="float:right; width:234px;">
+				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">수정일</legend>
+					<input class="form-control input-sm" id="view_upd_date" disabled="disabled"/>					
+				</div>
+			</fieldset>
+			<!-- 수정 삭제 버튼 -->	
+			<div id="updateCancel_btn" style="margin-top: 30px; text-align: right; display:none; clear:both;">
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_user_update($('#view_user_idx').val())">수정</button>		
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_update_cancel();">취소</button>		
+			</div>
 		</div>
 	</div>
 </form>

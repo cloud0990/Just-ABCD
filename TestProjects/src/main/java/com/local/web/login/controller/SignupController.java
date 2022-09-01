@@ -33,9 +33,8 @@ public class SignupController {
 	@RequestMapping(value="/insertUser", method=RequestMethod.POST)
 	public @ResponseBody ReturnDataVo signUp(@RequestParam HashMap<String, Object> hashmapParam) {
 		ReturnDataVo result = new ReturnDataVo();
-		int resultSignUp = 0;
 		try {
-			resultSignUp = service.signUpUser(hashmapParam);
+			service.signUpUser(hashmapParam);
 			result.setResultCode("S000");
 			result.setResultMsg("회원가입을 축하드립니다.");
 		} catch (Exception e) {

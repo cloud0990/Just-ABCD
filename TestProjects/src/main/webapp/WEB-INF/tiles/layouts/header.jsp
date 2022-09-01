@@ -15,11 +15,11 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
      <nav aria-label="breadcrumb">
 	     <ol class="breadcrumb">
-	        <li class="breadcrumb-item"><a href="/main/view">USER</a></li>
 	        <li class="breadcrumb-item"><a href="/main/loginhist">LOGIN HISTORY</a></li>
-	        <li class="breadcrumb-item"><a href="/board/main">BOARD</a></li>
+	        <li class="breadcrumb-item"><a href="/main/view">USERS</a></li>
+	        <li class="breadcrumb-item"><a href="/board/main">MAIN CONTENTS</a></li>
 	        <li class="breadcrumb-item"><a href="/board/main/myMain">MY CONTENT</a></li>
-	        <li class="breadcrumb-item"><a href="/board/createBoard">CREATE CONTENT</a></li>
+	        <!-- <li class="breadcrumb-item"><a href="/board/createBoard">CREATE CONTENT</a></li> -->
 	        <!-- <li class="breadcrumb-item active" aria-current="page"><a href="#">Data</a></li> -->
 	      </ol>
       </nav>
@@ -30,7 +30,7 @@
       <span class="input-group-text border-0" id="search-addon"><i class="fas fa-search" style="margin-right:10px;"></i></span>
      </form> -->
       <div class="d-flex align-items-center">
-        <button type="button" class="btn btn-link px-3 me-2">USER : ${sessionVo.uNm}</button>
+        <button type="button" class="btn btn-link px-3 me-2">닉네임&nbsp;&nbsp;: &nbsp;[ ${sessionVo.user_nm} ] 님</button>
         <a class="btn btn-dark px-3" href="https://github.com/cloud0990" role="button" style="margin-right:5px;"><i class="fab fa-github"></i></a>
         <button type="button" class="btn btn-primary me-3" onclick="location.href='/logout';">LOGOUT</button>
       </div>

@@ -37,7 +37,7 @@ public class TestInterceptor extends HandlerInterceptorAdapter implements Handle
 			String isLogon = (String) session.getAttribute("S_LOGIN_YN");
 			logger.debug("###############isLogon : " + isLogon);
 			SessionVo member = (SessionVo) session.getAttribute("S_USER");
-			if(isLogon==null || !isLogon.equals("Y") || member==null) {
+			if(isLogon==null || !"Y".equals(isLogon) || member==null) {
 				response.sendRedirect("/login");
 				return false;
 			}

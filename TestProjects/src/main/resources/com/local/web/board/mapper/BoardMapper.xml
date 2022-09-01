@@ -8,53 +8,100 @@
 	<select id="selectAllBoard" resultType="hashMap">
 		/* BoardMapper.selectAllBoard */
 		SELECT SQL_CALC_FOUND_ROWS
-			   board.*
+			   BOARD.*
 	    FROM  
-	    	   (SELECT * FROM BOARD ORDER BY bDate DESC) AS board
+	    	   (SELECT
+	    	   			  BOARD_ID AS board_id
+	    	   			, B_SUBJECT AS b_subject
+	    	   			, B_CONTENT AS b_content
+	    	   			, USER_IDX AS user_idx
+	    	   			, USER_NM AS user_nm
+	    	   			, DATE_FORMAT(B_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS b_date
+	    	   			, DATE_FORMAT(B_UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS b_upd_date
+	    	   FROM TB_BOARD
+	    	   ORDER BY B_DATE DESC) AS BOARD
+   	    WHERE 1=1
+ 	    <if test="srch_user_board != null and srch_user_board != ''">
+			<choose>
+				<when test="srch_user_board.equals('srch_user_nm')">
+					AND USER_NM LIKE CONCAT('%', #{srch_text} ,'%')		
+				</when>
+				<when test="srch_user_board.equals('srch_b_subject')">
+					AND B_SUBJECT LIKE CONCAT('%', #{srch_text} ,'%')		
+				</when>
+				<when test="srch_user_board.equals('srch_b_content')">
+					AND B_CONTENT LIKE CONCAT('%', #{srch_text}, '%')
+				</when>
+			</choose>
+		</if>
    	    LIMIT ${start}, ${end}
 	</select>
 
 	<select id="selectMyBoard" parameterType="hashMap" resultType="hashMap">
 		/* BoardMapper.selectMyBoard */
 		SELECT SQL_CALC_FOUND_ROWS 
-			   board.*
+			   BOARD.*
 		FROM 
-			   (SELECT * FROM BOARD WHERE uIdx=#{uIdx} ORDER BY bDate DESC) AS board
+			   (SELECT
+			   			  BOARD_ID AS board_id
+			   			, B_SUBJECT AS b_subject
+			   			, B_CONTENT AS b_content
+			   			, DATE_FORMAT(B_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS b_date
+			   			, DATE_FORMAT(B_UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS b_upd_date
+			   			, USER_IDX AS user_idx
+			   			, USER_NM AS user_nm
+			   FROM TB_BOARD
+			   WHERE USER_IDX = #{user_idx}
+			   ORDER BY B_DATE DESC) AS BOARD
+   	    WHERE 1=1
+ 	    <if test="srch_user_board != null and srch_user_board != ''">
+			<choose>
+				<when test="srch_user_board.equals('srch_user_nm')">
+					AND USER_NM LIKE CONCAT('%', #{srch_text} ,'%')		
+				</when>
+				<when test="srch_user_board.equals('srch_b_subject')">
+					AND B_SUBJECT LIKE CONCAT('%', #{srch_text} ,'%')		
+				</when>
+				<when test="srch_user_board.equals('srch_b_content')">
+					AND B_CONTENT LIKE CONCAT('%', #{srch_text}, '%')
+				</when>
+			</choose>
+		</if>		
 		LIMIT ${start}, ${end}	   
 	</select>
 
 	<insert id="createItem" parameterType="hashMap">
 		/* BoardMapper.createItem */
 		INSERT INTO
-		BOARD(bSubject, bContent, uIdx, uNm, bDate)
+		TB_BOARD(B_SUBJECT, B_CONTENT, USER_IDX, USER_NM, B_DATE)
 		VALUES(
-				  #{bSubject}
-				, #{bContent}
-				, #{uIdx}
-				, #{uNm}
-				, now()
+				  #{b_subject}
+				, #{b_content}
+				, #{user_idx}
+				, #{user_nm}
+				, NOW()
 			  ) 
 	</insert>
 
 	<update id="updateItem" parameterType="hashMap">
 		/* BoardMapper.updateItem */
-		UPDATE BOARD
+		UPDATE TB_BOARD
 		SET
-		<if test="bSubject != null and bSubject != ''">
-			  bSubject = #{bSubject}		
+		<if test="b_subject != null and b_subject != ''">
+			  B_SUBJECT = #{b_subject}		
 		</if>
-		<if test="bContent != null and bContent != ''">
-			, bContent=#{bContent}
+		<if test="b_content != null and b_content != ''">
+			, B_CONTENT = #{b_content}
 		</if>
-			, bDate=now()
+			, B_UPD_DATE = NOW()
 		WHERE
-		bIdx = #{bIdx}
+		BOARD_ID = #{board_id}
 	</update>
 	
 	<delete id="deleteItem" parameterType="hashMap">
 		/* BoardMapper.deleteItem */
-		DELETE FROM BOARD
-		WHERE bIdx = #{bIdx}
+		DELETE FROM TB_BOARD
+		WHERE BOARD_ID = #{board_id}
 	</delete>
 	
 </mapper>

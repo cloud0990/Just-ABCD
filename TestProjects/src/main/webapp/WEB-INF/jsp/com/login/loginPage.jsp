@@ -29,31 +29,54 @@ height: calc(100% - 73px);
 </style>
 <script type="text/javascript">
 $(function(){
-	$("#login").click(function(){
-		uId  = $("#uId").val();
-		uPwd = $("#uPwd").val();
-		if(uId=='' || uPwd=='') {
-			$('input[type="text"], input[type="password"]').css("border", "2px solid red");
-			$('input[type="text"], input[type="password"]').css("box-shadow", "0 0 3px red");
-			alert('아이디를 입력해주세요');	
-		}else {
-			$.post("/checkLoginUser", {uId:uId, uPwd:uPwd},
-			function(data){
-				var code = data.resultCode;
-				var msg  = data.resultMsg;
-				if(code=='S000') {
-					location.href='/main/view';
-					alert(msg);
-				} else if(code=='S999') {
-					$("#uId").focus();
-					$("#uId").attr("style", "border: 2px solid red;");
-					$("#uPwd").focus();
-					$("#uPwd").attr("style", "border: 2px solid red;");
-					alert(msg);
-					return false;
-				}
-			});
+	/* 로그인 엔터 이벤트 */
+	$("#user_pwd").keypress(function(e){
+		if(e.keyCode && e.keyCode == 13) {
+			$("#login").trigger('click'); //trigger() : 이벤트 강제 발생
 		}
+	});
+	/* 아이디 저장 엔터 이벤트 */
+	$("#rememberId").keypress(function(e){
+		if(e.keyCode && e.keyCode == 13) {
+			$("#rememberId").trigger('click'); //trigger() : 이벤트 강제 발생
+		}
+	});
+	
+	$("#login").click(function(){
+		user_id  = $("#user_id").val();
+		user_pwd = $("#user_pwd").val();
+		
+		if(user_id == '') {
+			//$('input[type="text"], input[type="password"]').css("border", "2px solid red");
+			$("#user_id").css("border", "2px solid red");
+			$("#user_id").css("box-shadow", "0 0 3px red");
+			alert('아이디를 입력해주세요');	
+			return;
+		}
+		if(user_pwd == '') {
+			$("#user_pwd").css("border", "2px solid red");
+			$("#user_pwd").css("box-shadow", "0 0 3px red");
+			alert('비밀번호를 입력해주세요');	
+			return;
+		}
+		
+		$.post("/checkLoginUser"
+			  , {user_id:user_id, user_pwd:user_pwd}
+			  , function(data){
+				  var resultCode = data.resultCode;
+				  var resultMsg  = data.resultMsg;
+				  if(resultCode=='S000') {
+				   	  location.href='/main/view';
+					  alert(resultMsg);
+				  } else if(resultCode=='S999') {
+					  //$("#user_id").focus();
+					  $("#user_id").attr("style", "border: 2px solid red;");
+					  //$("#user_pwd").focus();
+					  $("#user_pwd").attr("style", "border: 2px solid red;");
+					  alert(resultMsg);
+					  return false;
+				  }
+		});
 	});
 });	
 </script>
@@ -61,23 +84,23 @@ $(function(){
 $(function(){
 	//저장된 쿠키값을 가져온다. 없으면 공백
 	var key = getCookie("key");
-	$("#uId").val(key);
+	$("#user_id").val(key);
 	//처음 페이지 로딩 시, ID 입력칸에 ID가 표시된 상태인 경우
-	if($("#uId").val() != "") {
+	if($("#user_id").val() != "") {
 		$("#rememberId").attr("checked", true); //chekced 상태로 둔다. 
 	}
 	//체크박스에 변화가 있는 경우
 	$("#rememberId").change(function(){
 		if($("#rememberId").is(":checked")) {
-			setCookie("key", $("#uId").val(), 7); //7일 동안 쿠키 보관
+			setCookie("key", $("#user_id").val(), 7); //7일 동안 쿠키 보관
 		}else { //체크 해제 시, 쿠키 삭제
 			deleteCookie("key");			
 		}	
 	});
 	//rememberId가 체크된 상태에서 ID를 입력하는 경우
-	$("#uId").keyup(function(){
+	$("#user_id").keyup(function(){
 		if($("#rememberId").is(":checked")) {
-			setCookie("key", $("#uId").val(), 7);
+			setCookie("key", $("#user_id").val(), 7);
 		}
 	});
 });
@@ -135,25 +158,25 @@ function getCookie(cookieName) {
           </div>
           <!-- ID input -->
           <div class="form-outline mb-4">
-            <label class="form-label" for="uId">ID</label>
-            <input id="uId" class="form-control form-control-lg" placeholder="Enter a valid ID" style="border:1px solid gray;"/>
+            <label class="form-label" for="user_id">아이디</label>
+            <input type="email" id="user_id" class="form-control form-control-lg" style="border:1px solid gray;"/>
           </div>
           <div class="form-check mb-0">
+            <label class="form-check-label" for="rememberId">아이디 저장</label>
             <input class="form-check-input me-2" type="checkbox" value="" id="rememberId" />
-            <label class="form-check-label" for="rememberId">Remember ID</label>
           </div>
           <br>
           <!-- Password input -->
           <div class="form-outline mb-3">
-            <label class="form-label" for="uPwd">Password</label>
-            <input type="password" id="uPwd" class="form-control form-control-lg" placeholder="Enter Password" style="border:1px solid gray;" />
+            <label class="form-label" for="user_pwd">비밀번호</label>
+            <input type="password" id="user_pwd" class="form-control form-control-lg" style="border:1px solid gray;"/>
           </div>
           <div class="text-center text-lg-start mt-4 pt-2">
-            <button type="button" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;" id="login">LOGIN</button>
-            <p class="small fw-bold mt-2 pt-1 mb-0">Not a member? <a href="/signUp/view" class="link-danger">SIGN UP</a></p>
+            <button type="button" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;" id="login">로그인</button>
+            <p class="small fw-bold mt-2 pt-1 mb-0">회원이 아니십니까? <a href="/signUp/view" class="link-danger">회원가입</a></p>
           </div><br>
           <div class="d-flex justify-content-between align-items-center">
-            <a href="#!" class="text-body">Forgot password?</a> 
+            <a href="#!" class="text-body">비밀번호 찾기</a> 
           </div>
         </form>
       </div>
