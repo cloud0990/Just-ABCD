@@ -180,16 +180,13 @@ function onSignInFailure(t){
         <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid" alt="Sample image">
       </div>
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-        <form>
+        <form class="form-horizontal">
 		  <!-- 로그인 API -->        
           <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-            <p class="lead fw-normal mb-0 me-3">Login with</p>
-            <button type="button" class="btn btn-primary btn-floating mx-1" id="google_login_btn">
-              	<i class="fab fa-google"></i>
-            </button>
-            <button type="button" class="btn btn-primary btn-floating mx-1">
-              <i class="fab fa-facebook"></i>
-            </button>
+            <button type="button" class="btn btn-lg btn-block btn-primary" id="google_login_btn" style="background-color: #dd4b39;">
+            	<i class="fab fa-google me-2"></i> 구글 로그인</button>
+            <button type="button" class="btn btn-lg btn-block btn-primary mb-2" id="facebook_login_btn" style="background-color: #3b5998;">
+            	<i class="fab fa-facebook-f me-2"></i> 페이스북 로그인</button>
           </div> 
           <div class="divider d-flex align-items-center my-4">
             <p class="text-center fw-bold mx-3 mb-0">Or</p>
@@ -197,7 +194,7 @@ function onSignInFailure(t){
           <!-- ID input -->
           <div class="form-outline mb-4">
             <label class="form-label" for="user_id">아이디</label>
-            <input type="email" id="user_id" class="form-control form-control-lg" style="border:1px solid gray;"/>
+            <input type="text" id="user_id" class="form-control form-control-lg" style="border:1px solid gray;"/>
           </div>
           <div class="form-check mb-0">
             <label class="form-check-label" for="rememberId">아이디 저장</label>
@@ -210,16 +207,17 @@ function onSignInFailure(t){
             <input type="password" id="user_pwd" class="form-control form-control-lg" style="border:1px solid gray;"/>
           </div>
           <div class="text-center text-lg-start mt-4 pt-2">
-            <button type="button" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;" id="login">로그인</button>
-            <p class="small fw-bold mt-2 pt-1 mb-0">회원이 아니십니까? <a href="/signUp/view" class="link-danger">회원가입</a></p>
+            <button type="button" class="btn btn-primary btn-lg" style="padding-left: 2.5rem; padding-right: 2.5rem;" id="login">LOGIN</button>
+            <p class="small fw-bold mt-2 pt-1 mb-0">회원이 아니십니까? <a href="/signUp/view" class="link-danger">Sign in</a></p>
           </div><br>
           <div class="d-flex justify-content-between align-items-center">
-            <a href="#!" class="text-body">비밀번호 찾기</a> 
+            <a href="#exampleModal" class="text-body">비밀번호 찾기</a> 
           </div>
         </form>
       </div>
     </div>
   </div>
+  <!-- footer -->
   <div class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
     <div class="text-white mb-3 mb-md-0">Copyright © 2020. All rights reserved.</div>
   </div>

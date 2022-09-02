@@ -3,6 +3,7 @@ package com.local.web.todo.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
@@ -260,7 +261,7 @@ public class TodoController {
 
 		hashmapParam.put("td_tp", hashmapParam.get("create_td_tp"));
 		hashmapParam.remove("create_td_tp");
-		
+
 		try {
 			mapper.createTodo(hashmapParam);
 			result.setResultCode("S000");

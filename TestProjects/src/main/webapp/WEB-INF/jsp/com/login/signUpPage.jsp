@@ -153,7 +153,7 @@ function onSignInFailure(t){
             <!-- Checkbox -->
             <div class="form-check d-flex justify-content-start mb-4">
               <input class="form-check-input" type="checkbox" value="" id="rememberId" />
-              <label class="form-check-label" for="rememberId" style="font-size: 14px; color: gray; margin-top:3px;"> 아이디 저장 </label>
+              <label class="form-check-label" for="rememberId" style="font-size: 14px; color: gray; margin-top:3px;"> 아이디 저장</label>
             </div>
             <div class="text-center text-lg-start mt-4 pt-2">
 	            <button type="button" class="btn btn-primary btn-block mb-4" id="signUp" style="font-size: 15px;">회원가입</button>
