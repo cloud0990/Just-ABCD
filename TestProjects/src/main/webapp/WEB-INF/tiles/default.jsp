@@ -102,24 +102,22 @@ $(function(){
 	$(".ui-icon.ui-icon-cancel").removeClass().addClass("fa fa-times").parent(".btn-primary").removeClass("btn-primary").addClass("btn-danger");	
 
 	$(".ui-icon.ui-icon-seek-prev").wrap("<div class='btn btn-sm btn-default'></div>");	
-	$(".ui-icon.ui-icon-seek-prev").removeClass().addClass("fa fa-backward");
+	$(".ui-icon.ui-icon-seek-prev").removeClass().addClass("fas fa-angle-left");
 	
 	$(".ui-icon.ui-icon-seek-first").wrap("<div class='btn btn-sm btn-default'></div>");
-	$(".ui-icon.ui-icon-seek-first").removeClass().addClass("fa fa-fast-backward");
+	$(".ui-icon.ui-icon-seek-first").removeClass().addClass("fas fa-angle-double-left");
 	
 	$(".ui-icon.ui-icon-seek-next").wrap("<div class='btn btn-sm btn-default'></div>");
-	$(".ui-icon.ui-icon-seek-next").removeClass().addClass("fa fa-forward");
+	$(".ui-icon.ui-icon-seek-next").removeClass().addClass("fas fa-angle-right");
 	
 	$(".ui-icon.ui-icon-seek-end").wrap("<div class='btn btn-sm btn-default'></div>");
-	$(".ui-icon.ui-icon-seek-end").removeClass().addClass("fa fa-fast-forward");
+	$(".ui-icon.ui-icon-seek-end").removeClass().addClass("fas fa-angle-double-right");
 	
 /* 
-
-$(".ui-jqgrid-htable").each(function(){
+	$(".ui-jqgrid-htable").each(function(){
 		$(this).css("width", "" + eval($(this).width()+3.5)+"px");		
 	}); 
-	
-	*/
+*/
 });	
 </script>
 

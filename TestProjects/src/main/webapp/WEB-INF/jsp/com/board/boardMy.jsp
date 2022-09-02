@@ -56,8 +56,8 @@ $(function(){
 					{name:'empty', index:'empty', align:"center", formatter:formatOpt, width:30}
 				 ],
 		pager : "#pager",
-	    rowNum  : 25,
-		rowList : [25, 50, 75],
+	    rowNum  : 20,
+		rowList : [20, 40, 60],
  		onSelectRow: function(index, row) {
  			$("#view_board_id").val('');
  			if(index) {
@@ -104,7 +104,13 @@ $(function(){
 			, function(data) {
 				if(data.resultCode=="S000") {
 					alert("등록이 완료되었습니다.");
-					location.href='/board/main/myMain';
+					
+					$("#create_b_subject").val('');
+					$("#create_b_content").val('');
+					$("#create_b_subject").focus(false);
+					$("#create_b_content").focus(false);
+					
+					$("#mainGrid").setGridParam({url:"/board/main/selectMyBoard", page:1, datatype:"json"}).trigger("reloadGrid");
 				}else if(data.resultCode=="S999"){
 					$("#create_b_subject").focus();
 					$("#create_b_subject").attr("style", "border: 2px solid red;");
@@ -119,19 +125,31 @@ $(function(){
 function formatOpt(cellvalue, options, rowObject) {
 	var str = "";
 	str += "<div class=\"btn-group\">";
-	str += "<button type='button' class='btn btn-default btn-sm' style='padding:2px 10px 2px; border:1px solid gray; z-index:1;' onclick=\"javascript:fn_board_delete('" + rowObject.board_id + "')\">삭제</button>";
+	str += "<button type='button' class='btn btn-light sm-1' style='padding:2px 10px 2px; z-index:1;' onclick=\"javascript:fn_board_delete('" + rowObject.board_id + "')\">삭제</button>";
 	str += "</div>"
 	return str;
 }
 
 /* 게시글 수정 */
 function fn_board_update(board_id) {
+	if($("#view_b_subject").val()=='') {
+		alert("제목을 입력해주세요.");
+		$("#view_b_subject").focus();
+		return;
+	}
+	if($("#view_b_content").val()=='') {
+		alert("내용을 입력해주세요.");
+		$("#view_b_content").focus();
+		return;
+	}
 	if(!confirm("수정하시겠습니까?")) return;
+
 	callAjax("/board/updateItem", $("#frm_update_board").serialize(), fn_update_result);
 }
 function fn_update_result(data) {
 	if(data.resultCode=="S000") {
 		alert("수정을 완료하였습니다.");
+		
 		$("#mainGrid").setGridParam({url:"/board/main/selectMyBoard", page:1, datatype:"json"}).trigger("reloadGrid");
 		
 		$("#view_b_subject").val('');

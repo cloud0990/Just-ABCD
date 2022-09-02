@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>HOME : TODO-LIST</title>
+<title>HOME : TODO LIST</title>
 </head>
 <script type="text/javascript">
 $(function(){
@@ -27,8 +27,8 @@ $(function(){
 		shrinkToFit: true,
 		colNames:['작성자', '내용', 'td_id', 'user_idx', 'td_date', 'td_upd_date'],
 		colModel:[
-					{name:'user_nm', index:'user_nm', align:"left", width:"40px"},
-					{name:'td_nm', index:'td_nm', align:"left", width:"60px"},
+					{name:'user_nm', index:'user_nm', align:"left", width:"70px"},
+					{name:'td_nm', index:'td_nm', align:"left"},		
 					{name:'td_id', index:'td_id', hidden:true},
 					{name:'user_idx', index:'user_idx', hidden:true},
 					{name:'td_date', index:'td_date', hidden:true},
@@ -36,8 +36,8 @@ $(function(){
 				 ],
 		pager : "#pager_pre_list",
 		pagerpos:'left',
-	    rowNum  : 25,
-		loadComplete: function() {
+	    rowNum  : 10,
+	    loadComplete: function() {
 			$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
 		},
  		onSelectRow: function(index, row) {
@@ -68,8 +68,8 @@ $(function(){
 		shrinkToFit: true,
 		colNames:['작성자', '내용', 'td_id', 'user_idx', 'td_date', 'td_upd_date'],
 		colModel:[
-					{name:'user_nm', index:'user_nm', align:"left", width:"40px"},
-					{name:'td_nm', index:'td_nm', align:"left", width:"60px"},
+					{name:'user_nm', index:'user_nm', align:"left", width:"70px"},
+					{name:'td_nm', index:'td_nm', align:"left"},
 					{name:'td_id', index:'td_id', hidden:true},
 					{name:'user_idx', index:'user_idx', hidden:true},
 					{name:'td_date', index:'td_date', hidden:true},
@@ -108,8 +108,8 @@ $(function(){
 		shrinkToFit: true,
 		colNames:['작성자', '내용', 'td_id', 'user_idx', 'td_date', 'td_upd_date'],
 		colModel:[
-					{name:'user_nm', index:'user_nm', align:"left", width:"40px"},
-					{name:'td_nm', index:'td_nm', align:"left", width:"60px"},
+					{name:'user_nm', index:'user_nm', align:"left", width:"70px"},
+					{name:'td_nm', index:'td_nm', align:"left"},
 					{name:'td_id', index:'td_id', hidden:true},
 					{name:'user_idx', index:'user_idx', hidden:true},
 					{name:'td_date', index:'td_date', hidden:true},
@@ -148,8 +148,8 @@ $(function(){
 		shrinkToFit: true,
 		colNames:['작성자', '내용', 'td_id', 'user_idx', 'td_date', 'td_upd_date'],
 		colModel:[
-					{name:'user_nm', index:'user_nm', align:"left", width:"40px"},
-					{name:'td_nm', index:'td_nm', align:"left", width:"60px"},
+					{name:'user_nm', index:'user_nm', align:"left", width:"70px"},
+					{name:'td_nm', index:'td_nm', align:"left"},
 					{name:'td_id', index:'td_id', hidden:true},
 					{name:'user_idx', index:'user_idx', hidden:true},
 					{name:'td_date', index:'td_date', hidden:true},
