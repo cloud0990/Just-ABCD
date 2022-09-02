@@ -9,30 +9,47 @@
 </head>
 <script type="text/javascript">
 $(function(){
-	/* 로그인 엔터 이벤트 */
+	/* 할 일 등록 엔터 이벤트 */
 	$("#create_td_nm").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
 			$("#create_btn").trigger('click'); //trigger() : 이벤트 강제 발생
 		}
 	});
+	/* todo 수정 엔터 이벤트 */
+	$("#view_td_nm").keypress(function(e){
+		if(e.keyCode && e.keyCode == 13) {
+			$("#update_btn").trigger('click'); //trigger() : 이벤트 강제 발생
+		}
+	});
+	$("input:radio[name='td_tp']").keypress(function(e){
+		if(e.keyCode && e.keyCode == 13) {
+			$("#update_btn").trigger('click'); //trigger() : 이벤트 강제 발생
+		}
+	});
+	
+	$("#create_td_last_date").val(getToday());	
+	
 	/* 예정 리스트 */
 	$("#pre_todo").jqGrid({
 		url:"/todo/main/getTodoPreListRetrieve",
 		loadtext:"로딩 중...",
 		datatype:"json",
 		mtype:"POST",
-		height:280,
+		height:250,
 		width:360,
+		multiselect:true,
 		//autowidth:true,
 		shrinkToFit: true,
-		colNames:['작성자', '내용', 'td_id', 'user_idx', 'td_date', 'td_upd_date'],
+		colNames:['내용', 'user_nm', 'td_id', 'user_idx', 'td_date', 'td_upd_date', 'td_last_date'],
 		colModel:[
-					{name:'user_nm', index:'user_nm', align:"left", width:"70px"},
 					{name:'td_nm', index:'td_nm', align:"left"},		
+					{name:'user_nm', index:'user_nm', hidden:true},
 					{name:'td_id', index:'td_id', hidden:true},
 					{name:'user_idx', index:'user_idx', hidden:true},
 					{name:'td_date', index:'td_date', hidden:true},
-					{name:'td_upd_date', index:'td_upd_date', hidden:true}
+					{name:'td_upd_date', index:'td_upd_date', hidden:true},
+					{name:'td_last_date', index:'td_last_date', hidden:true}
+					//{name:'empty', index:'empty', formatter:fmtOpt1, width:13}
 				 ],
 		pager : "#pager_pre_list",
 		pagerpos:'left',
@@ -50,8 +67,9 @@ $(function(){
 				$("#view_td_nm").val(row.td_nm);
 				$("#view_td_date").val(row.td_date);
 				$("#view_td_upd_date").val(row.td_upd_date);
-				//$("input:radio[name='td_tp']").val('00').prop("checked", true);		
+				$("#view_td_last_date").val(row.td_last_date);
 				$("#view_tp_pre").prop("checked", true);
+				//$("input:radio[name='td_tp']").val('00').prop("checked", true);		
 				
 				$("#view_td_nm").prop("disabled", false);
 			}
@@ -63,17 +81,19 @@ $(function(){
 		loadtext:"로딩 중...",
 		datatype:"json",
 		mtype:"POST",
-		height:280,
+		height:250,
 		width:350,
+		multiselect:true,
 		shrinkToFit: true,
-		colNames:['작성자', '내용', 'td_id', 'user_idx', 'td_date', 'td_upd_date'],
+		colNames:['내용', 'user_nm', 'td_id', 'user_idx', 'td_date', 'td_upd_date', 'td_last_date'],
 		colModel:[
-					{name:'user_nm', index:'user_nm', align:"left", width:"70px"},
 					{name:'td_nm', index:'td_nm', align:"left"},
+					{name:'user_nm', index:'user_nm', hidden:true},
 					{name:'td_id', index:'td_id', hidden:true},
 					{name:'user_idx', index:'user_idx', hidden:true},
 					{name:'td_date', index:'td_date', hidden:true},
-					{name:'td_upd_date', index:'td_upd_date', hidden:true}
+					{name:'td_upd_date', index:'td_upd_date', hidden:true},
+					{name:'td_last_date', index:'td_last_date', hidden:true}
 				 ],
 		pager : "#pager_now_list",
 	    rowNum  : 25,
@@ -91,6 +111,7 @@ $(function(){
 				$("#view_td_nm").val(row.td_nm);
 				$("#view_td_date").val(row.td_date);
 				$("#view_td_upd_date").val(row.td_upd_date);
+				$("#view_td_last_date").val(row.td_last_date);
 				$("#view_tp_now").prop("checked", true);
 				
 				$("#view_td_nm").prop("disabled", false);
@@ -103,17 +124,19 @@ $(function(){
 		loadtext:"로딩 중...",
 		datatype:"json",
 		mtype:"POST",
-		height:280,
+		height:250,
 		width:350,
 		shrinkToFit: true,
-		colNames:['작성자', '내용', 'td_id', 'user_idx', 'td_date', 'td_upd_date'],
+		multiselect:true,
+		colNames:['내용', 'user_nm', 'td_id', 'user_idx', 'td_date', 'td_upd_date', 'td_last_date'],
 		colModel:[
-					{name:'user_nm', index:'user_nm', align:"left", width:"70px"},
 					{name:'td_nm', index:'td_nm', align:"left"},
+					{name:'user_nm', index:'user_nm',hidden:true},
 					{name:'td_id', index:'td_id', hidden:true},
 					{name:'user_idx', index:'user_idx', hidden:true},
 					{name:'td_date', index:'td_date', hidden:true},
-					{name:'td_upd_date', index:'td_upd_date', hidden:true}
+					{name:'td_upd_date', index:'td_upd_date', hidden:true},
+					{name:'td_last_date', index:'td_last_date', hidden:true}
 				 ],
 		pager : "#pager_success_list",
 	    rowNum  : 25,
@@ -131,6 +154,7 @@ $(function(){
 				$("#view_td_nm").val(row.td_nm);
 				$("#view_td_date").val(row.td_date);
 				$("#view_td_upd_date").val(row.td_upd_date);
+				$("#view_td_last_date").val(row.td_last_date);
 				$("#view_tp_success").prop("checked", true);
 				
 				$("#view_td_nm").prop("disabled", false);
@@ -143,17 +167,19 @@ $(function(){
 		loadtext:"로딩 중...",
 		datatype:"json",
 		mtype:"POST",
-		height:280,
+		height:250,
 		width:350,
+		multiselect:true,
 		shrinkToFit: true,
-		colNames:['작성자', '내용', 'td_id', 'user_idx', 'td_date', 'td_upd_date'],
+		colNames:['내용', 'user_nm', 'td_id', 'user_idx', 'td_date', 'td_upd_date', 'td_last_date'],
 		colModel:[
-					{name:'user_nm', index:'user_nm', align:"left", width:"70px"},
 					{name:'td_nm', index:'td_nm', align:"left"},
+					{name:'user_nm', index:'user_nm', hidden:true},
 					{name:'td_id', index:'td_id', hidden:true},
 					{name:'user_idx', index:'user_idx', hidden:true},
 					{name:'td_date', index:'td_date', hidden:true},
-					{name:'td_upd_date', index:'td_upd_date', hidden:true}
+					{name:'td_upd_date', index:'td_upd_date', hidden:true},
+					{name:'td_last_date', index:'td_last_date', hidden:true}
 				 ],
 		pager : "#pager_re_list",
 	    rowNum  : 25,
@@ -171,6 +197,7 @@ $(function(){
 				$("#view_td_nm").val(row.td_nm);
 				$("#view_td_date").val(row.td_date);
 				$("#view_td_upd_date").val(row.td_upd_date);
+				$("#view_td_last_date").val(row.td_last_date);
 				$("#view_tp_re").prop("checked", true);
 				
 				$("#view_td_nm").prop("disabled", false);
@@ -178,6 +205,13 @@ $(function(){
 	    }
 	});	
 });
+
+function fmtOpt1() {
+	str='';
+	str += "<button type='button'> -> </button>"
+	
+	return str;
+}
 
 /* 삭제 */
 function fn_mng_delete() {
@@ -224,6 +258,7 @@ function fn_mng_update_result(data) {
 		$("#view_td_nm").val('');
 		$("#view_td_date").val('');
 		$("#view_td_upd_date").val('');
+		$("#view_td_last_date").val('');
 		$("input:radio[name='td_tp']").prop("checked", false);
 	}else {
 		alert("작업수행에 실패하였습니다.");
@@ -269,6 +304,27 @@ function fn_mng_cancel() {
 	$("#view_td_upd_date").val('');
 	$("input:radio[name='td_tp']").prop("checked", false);
 	$("#view_td_nm").prop("disabled", true);
+}
+
+/* 현재 날짜 Setting */
+function getToday(){
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = ("0" + (1 + date.getMonth())).slice(-2);
+    var day = ("0" + date.getDate()).slice(-2);
+
+    return year + "-" + month + "-" + day;
+}
+function myGetToday() {
+	var year = new Date().getFullYear();
+	var m = new Date().getMonth()+1;
+	var d = new Date().getDate();
+	var month = '';
+	var day = '';
+	if(m<10) month = "0" + m;
+	if(d<10) day = "0" + d;
+	
+	return year + "-" + month + "-" + day;
 }
 </script>
 <body>
@@ -330,13 +386,17 @@ function fn_mng_cancel() {
 					<div>
 						<input class="form-control input-sm" id="view_td_nm" name="td_nm" disabled="disabled"/>					
 					</div>
-					<div style="float:left; width:320px;">
+					<div style="float:left; width:250px;">
 					<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">작성일</legend>
 						<input class="form-control input-sm" id="view_td_date" disabled="disabled"/>					
 					</div>
-					<div style="float:right; width:320px;">
+					<div style="float:left; width:250px;">
 					<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">수정일</legend>
 						<input class="form-control input-sm" id="view_td_upd_date" disabled="disabled"/>					
+					</div>
+					<div style="float:left; width:230px;">
+					<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">마감일</legend>
+						<input type="date" class="form-control input-sm" id="view_td_last_date" name="td_last_date"/>					
 					</div>
 					<div style="margin-top:10px; clear:both;">
 					<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">상태</legend>
@@ -386,7 +446,11 @@ function fn_mng_cancel() {
 				<div>
 					<input class="form-control input-sm" id="create_td_nm" name="td_nm" placeholder="할 일을 입력하세요."/>					
 				</div>
-				<div style="margin-top:10px;">
+				<div style="float:left; width: 300px;">
+				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">마감일 설정</legend>
+					<input type="date" class="form-control input-sm" id="create_td_last_date" name="td_last_date"/>					
+				</div>
+				<div style="float:right;">
 				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">상태</legend>
 					<div style="margin-right:30px; display: inline-block;">
 						<input type="radio" class="form-check-input" name="create_td_tp" id="create_tp_pre" value="00" checked/>

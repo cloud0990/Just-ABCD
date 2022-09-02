@@ -10,6 +10,7 @@ public class TodoVo {
 	private String td_tp;
 	private String td_date;
 	private String td_upd_date;
+	private String td_last_date;
 	private String user_idx;
 	private String user_nm;
 }

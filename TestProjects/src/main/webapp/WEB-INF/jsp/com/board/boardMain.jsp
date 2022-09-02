@@ -46,8 +46,8 @@ $(function(){
 		shrinkToFit: true,
 		colNames:['번호', '작성자', '제목', '내용', '', 'b_date', 'b_upd_date'],
 		colModel:[
-					{name:'board_id', index:'board_id', align:"center", width:"30px"},
-					{name:'user_nm', index:'user_nm', align:"center", width:"60px"},
+					{name:'board_id', index:'board_id', align:"center", width:"28px"},
+					{name:'user_nm', index:'user_nm', align:"center", width:"70px"},
 					{name:'b_subject', index:'b_subject', align:"center"},
 					{name:'b_content', index:'b_content', align:"center"},
 					{name:'empty', index:'empty', align:"center", formatter:formatOpt, width:60},

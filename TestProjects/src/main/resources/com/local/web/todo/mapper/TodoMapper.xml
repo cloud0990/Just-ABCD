@@ -16,6 +16,7 @@
 				  , TD_TP AS td_tp
 				  , DATE_FORMAT(TD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_date
 				  , DATE_FORMAT(TD_UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_upd_date
+				  , DATE_FORMAT(TD_LAST_DATE, '%Y-%m-%d') AS td_last_date
 				  , USER_NM AS user_nm
 				  , USER_IDX AS user_idx
 			FROM TB_TODO
@@ -37,6 +38,7 @@
 				  , TD_TP AS td_tp
 				  , DATE_FORMAT(TD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_date
 				  , DATE_FORMAT(TD_UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_upd_date
+				  , DATE_FORMAT(TD_LAST_DATE, '%Y-%m-%d') AS td_last_date
 				  , USER_NM AS user_nm
 				  , USER_IDX AS user_idx
 			FROM TB_TODO
@@ -58,6 +60,7 @@
 				  , TD_TP AS td_tp
 				  , DATE_FORMAT(TD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_date
 				  , DATE_FORMAT(TD_UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_upd_date
+				  , DATE_FORMAT(TD_LAST_DATE, '%Y-%m-%d') AS td_last_date
 				  , USER_NM AS user_nm
 				  , USER_IDX AS user_idx
 			FROM TB_TODO
@@ -79,6 +82,7 @@
 				  , TD_TP AS td_tp
 				  , DATE_FORMAT(TD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_date
 				  , DATE_FORMAT(TD_UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS td_upd_date
+				  , DATE_FORMAT(TD_LAST_DATE, '%Y-%m-%d') AS td_last_date
 				  , USER_NM AS user_nm
 				  , USER_IDX AS user_idx
 			FROM TB_TODO
@@ -95,6 +99,9 @@
 		SET
 		  TD_NM = #{td_nm}
 		, TD_UPD_DATE = NOW()
+		<if test="td_last_date != null and td_last_date != ''">
+			, TD_LAST_DATE = #{td_last_date}
+		</if>
 		<choose>
 			<when test="td_tp=='00'">
 				, TD_TP = '00'
@@ -122,13 +129,14 @@
 	<insert id="createTodo" parameterType="hashMap">
 	/* TodoMapper.createTodo */
 		INSERT INTO
-		TB_TODO(TD_NM, TD_TP, TD_DATE ,USER_IDX, USER_NM)
+		TB_TODO(TD_NM, TD_TP, TD_DATE ,USER_IDX, USER_NM, TD_LAST_DATE)
 		VALUES(
 					#{td_nm}
 				  , #{td_tp}
 				  , NOW()
 				  , #{user_idx}
 				  , #{user_nm}
+				  , #{td_last_date}
 			  )
 	</insert>
 	
