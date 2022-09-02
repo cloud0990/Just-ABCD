@@ -3,6 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name ="google-signin-client_id" content="697342832307-9o74r3mkkp8buqlbnagvus5ksr4b555q.apps.googleusercontent.com">
 <title>SIGN UP</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
@@ -95,6 +96,39 @@ $(function(){
 	});
 }); //end : function
 </script>
+<!-- 구글 API -->
+<script>
+function init() {
+	gapi.load('auth2', function() {
+		gapi.auth2.init();
+		options = new gapi.auth2.SigninOptionsBuilder();
+		options.setPrompt('select_account');
+        // 추가는 Oauth 승인 권한 추가 후 띄어쓰기 기준으로 추가
+		options.setScope('email profile openid https://www.googleapis.com/auth/user.birthday.read');
+        // 인스턴스의 함수 호출 - element에 로그인 기능 추가
+        // GgCustomLogin은 li태그안에 있는 ID, 위에 설정한 options와 아래 성공,실패시 실행하는 함수들
+		gapi.auth2.getAuthInstance().attachClickHandler('google_login_btn', options, onSignIn, onSignInFailure);
+	})
+}
+function onSignIn(googleUser) {
+	var access_token = googleUser.getAuthResponse().access_token
+	$.ajax({
+		  url: 'https://people.googleapis.com/v1/people/me' 
+		, data: {personFields:'birthdays', key:'AIzaSyBbDk2F66S-MUF8Y3bbVFMzDf990_SJoc8', 'access_token': access_token}
+		, method:'GET'
+	})
+	.done(function(e){
+		var profile = googleUser.getBasicProfile();
+	})
+	.fail(function(e){
+		console.log(e);
+	})
+}
+function onSignInFailure(t){		
+	console.log(t);
+}
+</script>
+<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
 </head>
 <body>
 <section class="vh-100" style="background-color: #508bfc;">
@@ -126,8 +160,8 @@ $(function(){
 	            <p class="small fw-bold mt-2 pt-1 mb-0">이미 가입하셨습니까? <a href="/login" class="link-danger">로그인</a></p>
             </div>
             <hr class="my-4">
-            <button class="btn btn-lg btn-block btn-primary" style="background-color: #dd4b39;" type="submit"><i class="fab fa-google me-2"></i> 구글 회원가입</button>
-            <button class="btn btn-lg btn-block btn-primary mb-2" style="background-color: #3b5998;" type="submit"><i class="fab fa-facebook-f me-2"></i> 페이스북 회원가입</button>
+            <button class="btn btn-lg btn-block btn-primary" id="google_login_btn" style="background-color: #dd4b39;" type="submit"><i class="fab fa-google me-2"></i> 구글 회원가입</button>
+            <button class="btn btn-lg btn-block btn-primary mb-2" id="facebook_login_btn" style="background-color: #3b5998;" type="submit"><i class="fab fa-facebook-f me-2"></i> 페이스북 회원가입</button>
           </div>
         </div>
       </div>

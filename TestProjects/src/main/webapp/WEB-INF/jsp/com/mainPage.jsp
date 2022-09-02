@@ -50,8 +50,8 @@ $(function(){
 					{name:'upd_date', index:'upd_date', align:"center", width:"60px"},
 					{name:'empty',  index:'empty',  align:"center", formatter:formatOpt, width:40 }
 	              ],
-	    rowNum: 25,
-	    rowList: [25, 50, 75],
+	    rowNum: 20,
+	    rowList: [20, 40, 60],
 	    rownumbers: true,
 	    pager : '#pager',
 	    viewrecords: true,
@@ -82,8 +82,8 @@ $(function(){
 function formatOpt(cellvalue, options, rowObject) {
 	var str = "";
 	str += "<div class=\"btn-group\">";
-	str += "<button type='button' class='btn btn-default btn-sm' style='padding:2px 10px 2px; border:1px solid gray; z-index:1;' onclick=\"javascript:fn_update_allow()\">수정</button>";
-	str += "<button type='button' class='btn btn-default btn-sm' style='padding:2px 10px 2px; border:1px solid gray; z-index:1;' onclick=\"javascript:fn_user_delete('" + rowObject.user_idx + "')\">삭제</button>";
+	str += "<button type='button' class='btn btn-light sm-1' style='padding:2px 10px 2px; z-index:1;' onclick=\"javascript:fn_update_allow()\">수정</button>";
+	str += "<button type='button' class='btn btn-light sm-1' style='padding:2px 10px 2px; z-index:1;' onclick=\"javascript:fn_user_delete('" + rowObject.user_idx + "')\">삭제</button>";
 	str += "</div>"
 	return str;
 }
@@ -220,6 +220,5 @@ function fn_user_srch() {
 		</div>
 	</div>
 </form>
-
 </body>
 </html>

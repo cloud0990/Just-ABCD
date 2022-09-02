@@ -19,7 +19,7 @@
 	        <li class="breadcrumb-item"><a href="/main/view">USERS</a></li>
 	        <li class="breadcrumb-item"><a href="/board/main">MAIN CONTENTS</a></li>
 	        <li class="breadcrumb-item"><a href="/board/main/myMain">MY CONTENT</a></li>
-	        <li class="breadcrumb-item"><a href="/todo/main/view">TODO-LIST</a></li>
+	        <li class="breadcrumb-item"><a href="/todo/main/view">TODO LIST</a></li>
 	        <!-- <li class="breadcrumb-item"><a href="/board/createBoard">CREATE CONTENT</a></li> -->
 	        <!-- <li class="breadcrumb-item active" aria-current="page"><a href="#">Data</a></li> -->
 	      </ol>

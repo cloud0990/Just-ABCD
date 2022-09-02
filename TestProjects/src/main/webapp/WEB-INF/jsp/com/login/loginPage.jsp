@@ -3,6 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name ="google-signin-client_id" content="697342832307-9o74r3mkkp8buqlbnagvus5ksr4b555q.apps.googleusercontent.com">
 <!-- <meta name="description" content=""> -->
 <title>LOGIN</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -132,9 +133,46 @@ function getCookie(cookieName) {
 	return unescape(cookieValue);	
 }
 </script>
+<!-- 구글 로그인 API -->
+<script>
+/* 처음 실행하는 함수 */
+function init() {
+	gapi.load('auth2', function() {
+		gapi.auth2.init();
+		options = new gapi.auth2.SigninOptionsBuilder();
+		options.setPrompt('select_account');
+        // 추가는 Oauth 승인 권한 추가 후 띄어쓰기 기준으로 추가
+		options.setScope('email profile openid https://www.googleapis.com/auth/user.birthday.read');
+        // 인스턴스의 함수 호출 - element에 로그인 기능 추가
+        // GgCustomLogin은 li태그안에 있는 ID, 위에 설정한 options와 아래 성공,실패시 실행하는 함수들
+		gapi.auth2.getAuthInstance().attachClickHandler('google_login_btn', options, onSignIn, onSignInFailure);
+	})
+}
+
+function onSignIn(googleUser) {
+	var access_token = googleUser.getAuthResponse().access_token
+	$.ajax({
+		  url: 'https://people.googleapis.com/v1/people/me' 
+		, data: {personFields:'birthdays', key:'AIzaSyBbDk2F66S-MUF8Y3bbVFMzDf990_SJoc8', 'access_token': access_token}
+		, method:'GET'
+	})
+	.done(function(e){
+		var profile = googleUser.getBasicProfile();
+	})
+	.fail(function(e){
+		console.log(e);
+	})
+}
+function onSignInFailure(t){		
+	console.log(t);
+}
+</script>
+<!-- 구글 api 사용을 위한 스크립트 -->
+<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+
 </head>
 <body>
-<!-- 로그인폼2 -->
+<!-- 로그인폼 -->
 <section class="vh-100">
   <div class="container-fluid h-custom">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -143,14 +181,14 @@ function getCookie(cookieName) {
       </div>
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
         <form>
-		  <!-- 회원가입 API -->        
+		  <!-- 로그인 API -->        
           <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
-            <p class="lead fw-normal mb-0 me-3">Sign in with</p>
-            <button type="button" class="btn btn-primary btn-floating mx-1">
-              <i class="fab fa-twitter"></i>
+            <p class="lead fw-normal mb-0 me-3">Login with</p>
+            <button type="button" class="btn btn-primary btn-floating mx-1" id="google_login_btn">
+              	<i class="fab fa-google"></i>
             </button>
             <button type="button" class="btn btn-primary btn-floating mx-1">
-              <i class="fab fa-google"></i>
+              <i class="fab fa-facebook"></i>
             </button>
           </div> 
           <div class="divider d-flex align-items-center my-4">
@@ -184,15 +222,6 @@ function getCookie(cookieName) {
   </div>
   <div class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
     <div class="text-white mb-3 mb-md-0">Copyright © 2020. All rights reserved.</div>
-    <!-- 로그인 API -->
-    <div>
-      <a href="#!" class="text-white me-4">
-        <i class="fab fa-twitter"></i>
-      </a>
-      <a href="#!" class="text-white me-4">
-        <i class="fab fa-google"></i>
-      </a>
-    </div>
   </div>
 </section>
 

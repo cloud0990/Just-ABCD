@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import org.apache.ibatis.type.Alias;
 
-import lombok.Data;
-
 @Alias("sessionVo")
 //@Data
 public class SessionVo implements Serializable {
@@ -84,5 +82,4 @@ public class SessionVo implements Serializable {
 	public void setLog_tp_yn(String log_tp_yn) {
 		this.log_tp_yn = log_tp_yn;
 	}
-	
 }
