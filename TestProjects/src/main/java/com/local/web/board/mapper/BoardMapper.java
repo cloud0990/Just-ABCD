@@ -20,5 +20,4 @@ public interface BoardMapper {
 	int updateItem(HashMap<String, Object> hashmapParam);
 	//게시글 삭제
 	int deleteItem(HashMap<String, Object> hashmapParam);
-	int deleteItemLike(HashMap<String, Object> hashmapParam);
 }

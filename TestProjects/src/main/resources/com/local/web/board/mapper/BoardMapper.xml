@@ -8,21 +8,24 @@
 	<select id="selectAllBoard" resultType="hashMap" parameterType="hashMap">
 		/* BoardMapper.selectAllBoard */
 		SELECT SQL_CALC_FOUND_ROWS
-			   BOARD.*
-	    FROM  
-	    	   (SELECT
-	    	   			  TBB.BOARD_ID AS board_id
-	    	   			, TBB.B_SUBJECT AS b_subject
-	    	   			, TBB.B_CONTENT AS b_content
-	    	   			, TBB.USER_IDX AS user_idx
-	    	   			, TBB.USER_NM AS user_nm
-	    	   			, DATE_FORMAT(TBB.B_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS b_date
-	    	   			, DATE_FORMAT(TBB.B_UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS b_upd_date
-	    	   			, IFNULL(TL.LIKE_TP, 'N') AS like_tp
-	    	   FROM TB_BOARD TBB
-	    	   LEFT JOIN TB_LIKE TL
-	    	   ON TBB.LIKE_ID = TL.LIKE_ID
-	    	   ORDER BY B_DATE DESC) AS BOARD
+				   IFNULL(TL.LIKE_TP, 'N') AS like_tp
+		         , BOARD.*
+		FROM (
+				  SELECT
+							  TBB.BOARD_ID AS board_id
+							, TBB.B_SUBJECT AS b_subject
+							, TBB.B_CONTENT AS b_content
+							, TBB.USER_IDX AS user_idx
+							, TBB.USER_NM AS user_nm
+							, DATE_FORMAT(TBB.B_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS b_date
+							, DATE_FORMAT(TBB.B_UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS b_upd_date
+				   FROM TB_BOARD TBB
+					 ORDER BY TBB.B_DATE DESC
+			   ) AS BOARD
+		LEFT OUTER JOIN
+		(SELECT BOARD_ID, LIKE_TP FROM TB_LIKE WHERE USER_IDX = #{user_idx}) TL
+		ON
+			BOARD.BOARD_ID = TL.BOARD_ID
    	    WHERE 1=1
  	    <if test="srch_user_board != null and srch_user_board != ''">
 			<choose>
@@ -76,13 +79,14 @@
 	<insert id="createItem" parameterType="hashMap">
 		/* BoardMapper.createItem */
 		INSERT INTO
-		TB_BOARD(B_SUBJECT, B_CONTENT, USER_IDX, USER_NM, B_DATE)
+		TB_BOARD(B_SUBJECT, B_CONTENT, USER_IDX, USER_NM, B_DATE, LIKE_IDX)
 		VALUES(
 				  #{b_subject}
 				, #{b_content}
 				, #{user_idx}
 				, #{user_nm}
 				, NOW()
+				, (SELECT IFNULL(MAX(B.BOARD_ID), 0) + 1 FROM TB_BOARD B)
 			  ) 
 	</insert>
 	
@@ -104,11 +108,6 @@
 	<delete id="deleteItem" parameterType="hashMap">
 		/* BoardMapper.deleteItem */
 		DELETE FROM TB_BOARD
-		WHERE BOARD_ID = #{board_id}
-	</delete>
-	<delete id="deleteItemLike" parameterType="hashMap">
-		/* BoardMapper.deleteItemLike */
-		DELETE FROM TB_LIKE
 		WHERE BOARD_ID = #{board_id}
 	</delete>
 	

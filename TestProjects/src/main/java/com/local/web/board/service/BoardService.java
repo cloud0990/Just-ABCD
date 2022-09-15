@@ -43,7 +43,4 @@ public class BoardService {
 	public int deleteItem(HashMap<String, Object> hashmapParam) {
 		return mapper.deleteItem(hashmapParam);
 	}
-	public int deleteItemLike(HashMap<String, Object> hashmapParam) {
-		return mapper.deleteItemLike(hashmapParam);
-	}
 }

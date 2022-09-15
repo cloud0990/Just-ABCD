@@ -13,21 +13,30 @@ input:button {
 </style>
 <script type="text/javascript">
 $(function(){
-	$("#view_b_content").keypress(function(e){
+	/* Create Board Enter key Event */
+	$("#view_b_subject").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
-			$("#update_btn").trigger('click'); //trigger() : 이벤트 강제 발생
+			fn_board_cu();
 		}
 	});
+	$("#view_b_content").keypress(function(e){
+		if(e.keyCode && e.keyCode == 13) {
+			fn_board_cu();
+		}
+	});
+	/* Search Filter Enter key Event */
 	$("#srch_text").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
 			if($("#srch_text").val()=='') {
 				$("#srch_user_board option:eq(0)").prop("selected", true);
-				//$("#srch_user_board").val("srch_all").prop("selected", true); //value==srch_all 인 option 선택
+				
+				//value==srch_all 인 option 선택
+				//$("#srch_user_board").val("srch_all").prop("selected", true);
 			}
 			$("#srch_btn").trigger('click'); //trigger() : 이벤트 강제 발생
 		}
 	});
-	/* 검색필터 */
+	/* Search Filter Button Event */
 	$("#srch_btn").click(function(){
 		if($("#srch_text").val()=='') {
 			$("#srch_user_board option:eq(0)").prop("selected", true);
@@ -35,6 +44,7 @@ $(function(){
 		fn_user_board_srch();
 	});
 	
+	/* Board Main Grid */
 	$("#mainGrid").jqGrid({
 		url:"/board/main/selectAllBoard",
 		loadtext:"로딩 중...",
@@ -44,33 +54,35 @@ $(function(){
 		width:830,
 		pagerpos:'center',
 		shrinkToFit: true,
-		colNames:['번호', '작성자', '제목', '내용', '', '', 'b_date', 'b_upd_date', 'like_tp'],
+		colNames:['번호', '작성자', '제목', '내용', '', 'b_date', 'b_upd_date', 'user_idx', 'like_tp'],
 		colModel:[
 					{name:'board_id', index:'board_id', align:"center", width:"28px"},
 					{name:'user_nm', index:'user_nm', align:"center", width:"70px"},
 					{name:'b_subject', index:'b_subject', align:"center"},
 					{name:'b_content', index:'b_content', align:"center"},
-					{name:'empty', index:'empty', align:"center", formatter:formatOpt, width:60},
 					{name:'like_btn', index:'like_btn', align:"center", formatter:formatOpt_like, width:30},
 					{name:'b_date', index:'b_date', hidden:true},
 					{name:'b_upd_date', index:'b_upd_date', hidden:true},
- 					{name:'like_tp', index:'like_tp', hidden:true}
+					{name:'user_idx', index:'user_idx', hidden:true},
+					{name:'like_tp', index:'like_tp', hidden:true}
 				 ],
 		pager : "#pager",
 	    rowNum  : 20,
 		rowList : [20, 40, 60],
-		loadComplete: function() {
+		loadComplete: function(data) {
 			$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
-            var allRow = $("#mainGrid").jqGrid('getGridParam', 'records');        
-            if(allRow == 0 ){          
-            	$("#mainGrid > tbody").append("<tr><td align='center' colspan='10' style=''>조회된 데이터가 없습니다.</td></tr>");       
-           	}
 		},
  		onSelectRow: function(index, row) {
  			if(index) {
- 				$("#view_board_id").val('');
  				var row = $("#mainGrid").jqGrid('getRowData', index);
+
+ 				$("#view_board_id").val('');
+ 				$("#view_user_idx").val('');
+ 				
+ 				$("#status").val("update");
+ 				
  				$("#view_board_id").val(row.board_id);
+ 				$("#view_user_idx").val(row.user_idx);
  				$("#view_user_nm").val(row.user_nm);
  				$("#view_b_subject").val(row.b_subject);
  				$("#view_b_content").val(row.b_content);
@@ -79,57 +91,113 @@ $(function(){
  			}
 	    }
 	});
-	
 });
 
-function formatOpt(cellvalue, options, rowObject) {
-	var str = "";
-	str += "<div class=\"btn-group\">";
-	str += "<button type='button' class='btn btn-light sm-1' style='padding:2px 10px 2px; z-index:1;' onclick=\"javascript:fn_update_allow('" + rowObject.user_idx + "')\">수정</button>";
-	str += "<button type='button' class='btn btn-light sm-1' style='padding:2px 10px 2px; z-index:1;' onclick=\"javascript:fn_board_delete('" + rowObject.board_id + "','" + rowObject.user_idx + "')\">삭제</button>";
-	str += "</div>"
-	return str;
-}
 function formatOpt_like(cellvalue, options, rowObject) {
 	var str = "";
 	str += "<div class=\"btn-group\">";
 	
-	if(rowObject.like_tp == 'N') {
-	 	str += "<button type='button' class='btn btn-light sm-1' style='padding:2px 10px 2px; z-index:1;' onclick=\"javascript:fn_like('" + rowObject.board_id + "')\"><i class=\"far fa-thumbs-up\"></i></button>";
-	}else {
-		str += "<button type='button' class='btn btn-light sm-1' style='padding:2px 10px 2px; z-index:1;' onclick=\"javascript:fn_like('" + rowObject.board_id + "')\"><i class=\"fas fa-thumbs-up\"></i></button>";
-	}	
-	
+	if(rowObject.like_tp == "N") {
+	 	str += "<button type='button' id=\"like_" + rowObject.board_id + '"' + "class='btn btn-light sm-1' style='padding:2px 10px 2px; z-index:1;' onclick=\"javascript:fn_like('" + rowObject.board_id + "','" + rowObject.like_tp + "')\">🤍</button>";
+	}else if(rowObject.like_tp == "Y"){
+		str += "<button type='button' id=\"like_" + rowObject.board_id + '"' + "class='btn btn-light sm-1' style='padding:2px 10px 2px; z-index:1;' onclick=\"javascript:fn_like('" + rowObject.board_id + "','" + rowObject.like_tp + "')\">❤️</button>";
+	}
 	str += "</div>";
 	return str;
 }
 
-/* 게시글 수정 */
-function fn_board_update(board_id) {
-	if($("#view_b_subject").val()=='') {
-		alert("제목을 입력해주세요.");
+/* Click Like Button */
+function fn_like(board_id, like_tp) {
+	var user_idx = '${sessionVo.user_idx}';
+	callAjax("/like/board/updateLikeTp", {board_id:board_id, like_tp:like_tp, user_idx:user_idx}, fn_update_like);
+}
+
+/* Ajax updateLike Callback Function */
+function fn_update_like(data) {
+	if(data.resultCode=="S000") {
+		$("#mainGrid").setGridParam({url:"/board/main/selectAllBoard", page:1, datatype:"json"}).trigger("reloadGrid");		
+	}else {
+		alert("좋아요 실패");
+	}
+}
+
+/* Create Board Button Click */
+function fn_board_clear() {
+	
+	$("#status").val("create");
+	
+	$("#view_board_id").val("");
+	$("#view_user_idx").val("");
+	$("#view_user_nm").val("");
+	$("#view_b_subject").val("");
+	$("#view_b_content").val("");
+	$("#view_b_date").val("");
+	$("#view_b_upd_date").val("");
+}
+
+/* Create/Update Board */
+function fn_board_cu() {
+	var user_idx  = $("#view_user_idx").val();
+	var b_subject = $("#view_b_subject").val().trim();
+	var b_content = $("#view_b_content").val().trim();
+	if(b_subject == '') {
+		alert('제목을 입력해주세요.');
 		return;
 	}
-	if($("#view_b_content").val()=='') {
-		alert("내용을 입력해주세요.");
+	if(b_content == '') {
+		alert('내용을 입력해주세요.');
 		return;
 	}
 	
-	if(!confirm("수정하시겠습니까?")) return;
-	callAjax("/board/updateItem", $("#frm_update_board").serialize(), fn_update_result);
-}
-/* 게시글 수정 callback fn */
-function fn_update_result(data) {
-	if(data.resultCode=="S000") {
-		alert("수정을 완료하였습니다.");
+	if($("#status").val()=="create") {
 		
-		fn_update_cancel();
+		if(!confirm("등록하시겠습니까?")) return;
+		
+		callAjax("/board/createItem", $("#frm_update_board").serialize(), fn_result);	
+	
+	}else if($("#status").val()=="update") {
+		
+		if('${sessionVo.user_idx}' != user_idx) {
+			alert("본인의 게시글만 수정할 수 있습니다."); 
+			$("#view_user_nm").val("");
+			$("#view_b_subject").val("");
+			$("#view_b_content").val("");
+			$("#view_b_date").val("");
+			$("#view_b_upd_date").val("");
+			return;
+		}
+		
+		if(!confirm("수정하시겠습니까?")) return;
+		
+		callAjax("/board/updateItem", $("#frm_update_board").serialize(), fn_result);
+	}
+}
+/* Delete Board */
+function fn_board_delete() {
+	var user_idx = $("#view_user_idx").val();
+	if('${sessionVo.user_idx}' != user_idx) {
+		alert('본인의 게시글만 삭제할 수 있습니다.'); 
+		$("#view_user_nm").val("");
+		$("#view_b_subject").val("");
+		$("#view_b_content").val("");
+		$("#view_b_date").val("");
+		$("#view_b_upd_date").val("");
+		return;
+	}
+	
+	if(!confirm("삭제하시겠습니까?")) return;
+	
+	callAjax("/board/deleteItem", $("#frm_update_board").serialize(), fn_result);
+}
+/* Ajax Callback Function */
+function fn_result(data) {
+	if(data.resultCode=="S000") {
+		alert("작업수행을 완료하였습니다.");
 		
 		$("#mainGrid").setGridParam({url:"/board/main/selectAllBoard", page:1, datatype:"json"}).trigger("reloadGrid");		
 		
-		$("#view_b_subject").attr("disabled", "disabled");
-		$("#view_b_content").attr("disabled", "disabled");
-		
+		$("#view_board_id").val('');
+		$("#view_user_idx").val('');
 		$("#view_user_nm").val('');
 		$("#view_b_subject").val('');
 		$("#view_b_content").val('');
@@ -139,52 +207,8 @@ function fn_update_result(data) {
 		alert("작업수행에 실패하였습니다.");
 	}
 }
-/* 게시글 삭제 */
-function fn_board_delete(board_id, user_idx) {
-	if('${sessionVo.user_idx}' != user_idx) {
-		alert('본인의 게시글만 삭제할 수 있습니다.');
-		return;
-	}
-	ConfirmAjax("delete"
-		, "/board/deleteItem"     
-		, "board_id=" + board_id         
-		, function(data) {       
-			if(data.resultCode=="S000") {
-				$("#mainGrid").setGridParam({url:"/board/main/selectAllBoard", page:1, datatype:"json"}).trigger("reloadGrid");	
-				
-				$("#view_b_subject").attr("disabled", "disabled");
-				$("#view_b_content").attr("disabled", "disabled");
-				
-				$("#view_user_nm").val('');
-				$("#view_b_subject").val('');
-				$("#view_b_content").val('');
-				$("#view_b_date").val('');
-				$("#view_b_upd_date").val('');
-			}else {
-				alert("작업수행에 실패하였습니다.");
-			}
-		}		
-	);
-}
-/* 수정 버튼 */
-function fn_update_allow(user_idx) {
-	if('${sessionVo.user_idx}' != user_idx) {
-		alert('본인의 게시글만 수정할 수 있습니다.');
-		return;
-	}
-	$("#updateCancel_btn").show();
-	
-	$("#view_b_subject").removeAttr("disabled");
-	$("#view_b_content").removeAttr("disabled");
-}
-/* 수정 취소 버튼 */
-function fn_update_cancel() {
-	$("#view_b_subject").attr("disabled", "disabled");
-	$("#view_b_content").attr("disabled", "disabled");
 
-	$("#updateCancel_btn").hide();
-}
-/* 검색 */
+/* Board Search Filter */
 function fn_user_board_srch() {
 	$("#mainGrid").clearGridData();
 	$("#mainGrid").setGridParam({
@@ -195,18 +219,6 @@ function fn_user_board_srch() {
 		   }
 		 , datatype:"json"
 	}).trigger('reloadGrid');
-}
-
-/* 좋아요 버튼 */
-function fn_like(board_id) {
-	callAjax("/like/board/createLike", {board_id:board_id, user_idx:'${sessionVo.user_idx}'}, fn_create_like);
-}
-function fn_create_like(data) {
-	if(data.resultCode=="S000") {
-		$("#mainGrid").setGridParam({url:"/board/main/selectAllBoard", page:1, datatype:"json"}).trigger("reloadGrid");		
-	}else {
-		alert("작업수행에 실패하였습니다.");
-	}
 }
 </script>
 </head>
@@ -252,6 +264,8 @@ function fn_create_like(data) {
 			</fieldset>
 			<hr style="margin-top:0px;">
 			<input type="hidden" id="view_board_id" name="board_id">
+			<input type="hidden" id="view_user_idx" name="user_idx">
+			<input type="hidden" id="status" value="create">
 			<fieldset>	
 				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">작성자</legend>
 				<div style="width:200px; text-align: left;">
@@ -259,11 +273,11 @@ function fn_create_like(data) {
 				</div>	
 				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">제목</legend>
 				<div>
-					<input type="text" class="form-control input-sm" id="view_b_subject" name="b_subject" disabled="disabled"/>					
+					<input type="text" class="form-control input-sm" id="view_b_subject" name="b_subject"/>					
 				</div>
 				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">내용</legend>
 				<div>
-					<input type="text" class="form-control input-sm" id="view_b_content" name="b_content" disabled="disabled"/>					
+					<input type="text" class="form-control input-sm" id="view_b_content" name="b_content"/>					
 				</div>
 				<div style="float:left; width:310px;">
 				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">작성일</legend>
@@ -275,9 +289,10 @@ function fn_create_like(data) {
 				</div>
 			</fieldset>	
 			<br>
-			<div id="updateCancel_btn" style="text-align: right; display:none;">
-				<button type='button' id="update_btn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_board_update($('#view_board_id').val())">수정</button>		
-				<button type='button' class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_update_cancel();">취소</button>		
+			<div id="updateCancel_btn" style="text-align: right;">
+				<button type='button' id="clear_btn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_board_clear();">신규</button>		
+				<button type='button' id="update_btn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_board_cu();">저장</button>		
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" id="delete_btn" onclick="fn_board_delete();">삭제</button>		
 			</div>
 		</div>
 	</div>
