@@ -1,9 +1,6 @@
 *.iml
 .gradle
 /local.properties
-
-*.properties
-
 /.idea/caches/build_file_checksums.ser
 /.idea/libraries
 /.idea/modules.xml
@@ -112,3 +109,9 @@ TestProjects/logs/
 JavaScriptTest/mvnw
 JavaScriptTest/mvnw.cmd
 JavaScriptTest/pom.xml
+
+application.properties
+application-local.properties
+application-real.properties
+log4jdbc.log4jdbc.properties
+logback-spring.xml
