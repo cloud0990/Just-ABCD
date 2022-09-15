@@ -15,6 +15,7 @@ input:focus{
 </style>
 <script type="text/javascript">
 $(function(){
+	/* Search Filter Enter key Event */
 	$("#srch_user_text").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
 			if($("#srch_user_text").val()=='') {
@@ -23,15 +24,35 @@ $(function(){
 			$("#srch_user_btn").trigger('click'); //trigger() : 이벤트 강제 발생
 		}
 	});
-	/* 검색필터 */
 	$("#srch_user_btn").click(function(){
 		if($("#srch_user_text").val()=='') {
 			$("#srch_user option:eq(0)").prop("selected", true);
 		}
 		fn_user_srch();
 	});
+	/* User Information Detail Grid's Enter key Event */
+	$("#view_user_nm").keypress(function(e){
+		if(e.keyCode && e.keyCode == 13) {
+			if($("#status").val()=="create") {
+				if($("#view_user_nm").val()=='') {
+					alert('닉네임을 입력해주세요.'); return;
+				}
+				$("#duplChk").trigger('click');
+			}
+		}
+	});
+	$("#view_user_id").keypress(function(e){
+		if(e.keyCode && e.keyCode == 13) {
+			fn_user_cu();
+		}
+	});
+	$("#view_user_pwd").keypress(function(e){
+		if(e.keyCode && e.keyCode == 13) {
+			fn_user_cu();
+		}
+	});
 	
-	/* 메인 그리드 */
+	/* User Main Grid */
 	$("#mainGrid").jqGrid({
 		url:"/main/selectUserList",
 		loadtext:"로딩 중..",
@@ -86,7 +107,7 @@ $(function(){
 	    } 
 	});
 	
-	/* 닉네임 중복체크 */
+	/* Duplicated Nickname Check */
 	$("#duplChk").click(function(){
 		var user_nm  = $("#view_user_nm").val();
 		$.post("/signUp/chkUserNm"
@@ -105,8 +126,6 @@ $(function(){
 		});
 	});
 });
-
-
 /*
 //cellvalue : format 지정값
 //options : Element 포함하는 객체 (rowId=row의 id, colModel=colModel배열의 컬럼 속성 객체)
@@ -121,7 +140,7 @@ function formatOpt(cellvalue, options, rowObject) {
 }
 */
 
-/* 신규버튼 click */
+/* Create User Button Click */
 function fn_user_clear() {
 	
 	$("#status").val("create");
@@ -136,13 +155,13 @@ function fn_user_clear() {
 	$("#view_upd_date").val('');
 }
 
-/* 사용자 삭제 */
+/* Delete User */
 function fn_user_delete() {
 	if(!confirm("삭제하시겠습니까?")) return;
 	callAjax("/main/deleteUser", $("#frm_update_user").serialize(), fn_result);
 }
 
-/* 사용자 수정 */
+/* Update User */
 function fn_user_cu() {
 	
 	if($("#status").val() == "create") {
@@ -196,7 +215,7 @@ function fn_user_cu() {
 		callAjax("/main/updateUser", $("#frm_update_user").serialize(), fn_result);
 	}
 }
-/* callback Function > update/delete */
+/* Callback Function > Update/Delete */
 function fn_result(data) {
 	
 	if(data.resultCode=="S000") {
@@ -217,7 +236,7 @@ function fn_result(data) {
 	}
 }
 
-/* 사용자 검색 */
+/* Search User */
 function fn_user_srch() {
 	
 	$("#mainGrid").clearGridData();

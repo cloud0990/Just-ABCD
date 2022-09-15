@@ -138,7 +138,11 @@ public class BoardController {
 		hashmapParam.put("user_idx", member.getUser_idx());
 		hashmapParam.put("user_nm", member.getUser_nm());
 		try {
+			
 			mapper.createItem(hashmapParam);
+			
+			likeMapper.insertLike(hashmapParam);
+			
 			result.setResultCode("S000");
 		} catch (Exception e) {
 			result.setResultCode("S999");
@@ -176,7 +180,11 @@ public class BoardController {
 	public @ResponseBody ReturnDataVo deleteItem(@RequestParam HashMap<String, Object> hashmapParam) {
 		ReturnDataVo result = new ReturnDataVo();
 		try {
+			
+			likeMapper.deleteLike(hashmapParam);
+
 			mapper.deleteItem(hashmapParam);
+			
 			result.setResultCode("S000");
 		} catch (Exception e) {
 			result.setResultCode("S999");

@@ -3,55 +3,45 @@
 
 <mapper namespace="com.local.web.like.mapper.LikeMapper">
 	
-	<select id="getLikeCnt" resultType="int" parameterType="hashMap">
+	<select id="getLikeCnt" parameterType="hashMap" resultType="int">
 		SELECT
-			COUNT(IFNULL(LIKE_IDX, 0))
+			COUNT(1)
 		FROM TB_LIKE
-		WHERE 1=1
-		AND USER_IDX = #{user_idx}
-		AND BOARD_ID = #{board_id}
+		WHERE 1=1 
+			AND USER_IDX = #{user_idx}
+			AND BOARD_ID = #{board_id}
 	</select>
 	
-	<select id="getLikeTp" parameterType="hashMap" resultType="hashMap">
-		SELECT
-			LIKE_TP AS like_tp
-		FROM TB_LIKE
-		WHERE 1=1
-		AND USER_IDX = #{user_idx}
-		AND BOARD_ID = #{board_id}
-	</select>
-	
-	<select id="getLikeListRetrieve" resultType="hashMap">
-		SELECT
-			  LIKE_IDX AS likd_idx
-			, USER_IDX AS user_idx
-			, BOARD_ID AS board_id
-			, LIKE_TP AS like_tp
-		FROM TB_LIKE
-		WHERE 1=1
-		AND USER_IDX = #{user_idx}
-		ORDER BY BOARD_ID DESC
-	</select>
-	
-	<update id="updateInitLike" parameterType="hashMap">
+	<insert id="insertLike" parameterType="hashMap">
 		INSERT INTO
-		TB_LIKE(LIKE_TP, LIKE_ID, USER_IDX, BOARD_ID)
+			TB_LIKE(LIKE_ID, USER_IDX, BOARD_ID)
 		VALUES(
-		          #{like_tp}
+		          #{user_idx}  
 		        , #{user_idx}  
-		        , #{user_idx}  
-		        , #{board_id}  
-			)
-	</update>
+		        , (SELECT IFNULL(MAX(BOARD_ID), 1) FROM TB_BOARD)  
+			   )
+	</insert>
 	
-	<update id="updateLike" parameterType="hashMap">
+	<update id="updateLikeTp" parameterType="hashMap">
+		/* LikeMapper.updateLikeTp */
 		UPDATE 
 			TB_LIKE 
 		SET
-		 	  LIKE_TP = #{like_tp}
+	 	    LIKE_TP = CASE WHEN #{like_tp} = 'N' 
+	 	    			   THEN 'Y'
+	 	    			   ELSE 'N'
+	    			  END
 		WHERE 1=1
 		AND BOARD_ID = #{board_id}	
 		AND USER_IDX = #{user_idx}	
 	</update>
+	
+	<delete id="deleteLike" parameterType="hashMap">
+		/* LikedMapper.deleteItemLike */
+		DELETE FROM TB_LIKE
+		WHERE 1=1
+			AND USER_IDX = #{user_idx}
+			AND BOARD_ID = #{board_id}
+	</delete>
 	
 </mapper>

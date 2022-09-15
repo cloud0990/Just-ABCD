@@ -7,11 +7,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository("likeMapper")
 public interface LikeMapper {
-	
-	List<HashMap<String, Object>> getLikeListRetrieve(HashMap<String, Object> hashmapParam);
-	int getLikeCnt(HashMap<String, Object> hashmapParam);
-	int createLike(HashMap<String, Object> hashmapParam);	
-	int updateLike(HashMap<String, Object> hashmapParam);	
-	int updateInitLike(HashMap<String, Object> hashmapParam);	
-	HashMap<String, Object> getLikeTp(HashMap<String, Object> hashmapParam);
+	int getLikeCnt(HashMap<String, Object> hashmapParam);	
+	int insertLike(HashMap<String, Object> hashmapParam);	
+	int updateLikeTp(HashMap<String, Object> hashmapParam);	
+	int deleteLike(HashMap<String, Object> hashmapParam);
 }
