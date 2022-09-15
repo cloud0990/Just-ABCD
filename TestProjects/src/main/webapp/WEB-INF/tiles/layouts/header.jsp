@@ -20,16 +20,10 @@
 	        <li class="breadcrumb-item"><a href="/board/main">MAIN CONTENTS</a></li>
 	        <li class="breadcrumb-item"><a href="/board/main/myMain">MY CONTENT</a></li>
 	        <li class="breadcrumb-item"><a href="/todo/main/view">❤TODO LIST❤</a></li>
-	        <!-- <li class="breadcrumb-item"><a href="/board/createBoard">CREATE CONTENT</a></li> -->
-	        <!-- <li class="breadcrumb-item active" aria-current="page"><a href="#">Data</a></li> -->
 	      </ol>
       </nav>
     </div>
     <div class="d-flex align-items-center">
-<!--      <form class="d-flex input-group w-auto">
-      <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon"/>
-      <span class="input-group-text border-0" id="search-addon"><i class="fas fa-search" style="margin-right:10px;"></i></span>
-     </form> -->
       <div class="d-flex align-items-center">
         <button type="button" class="btn btn-link px-3 me-2">❤닉네임&nbsp;&nbsp;: &nbsp;[ ${sessionVo.user_nm} ] 님❤</button>
         <a class="btn btn-dark px-3" href="https://github.com/cloud0990" role="button" style="margin-right:5px;"><i class="fab fa-github"></i></a>

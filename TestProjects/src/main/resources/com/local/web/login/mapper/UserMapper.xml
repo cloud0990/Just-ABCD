@@ -39,8 +39,8 @@
 		TB_USER(USER_ID, USER_NM, USER_PWD, USER_DATE)
 		VALUES( 
 				  #{user_id}
-				, #{user_nm}
-				, #{user_pwd}
+				, CONCAT('유저_' ,#{user_nm})
+				, MD5(#{user_pwd})
 				, NOW()
 			  )
 	</insert>
@@ -56,7 +56,7 @@
 			TB_USER
 		WHERE 1=1 
 		AND USER_ID = #{user_id}
-		AND USER_PWD = #{user_pwd}
+		AND USER_PWD = MD5(#{user_pwd})
 	</select>
 
 	<insert id="createloginHist" parameterType="hashMap">
@@ -110,14 +110,14 @@
 		  USER_NM = #{user_nm}
 		</if>
 		<if test="user_pwd != null and user_pwd  != ''">
-		, USER_PWD = #{user_pwd}
+		, USER_PWD = MD5(#{user_pwd})
 		</if> 
 		<if test="user_id != null and user_id != ''">
 		, USER_ID = #{user_id}
 		</if>
 		, UPD_DATE = NOW()
-		WHERE
-			USER_IDX = #{user_idx}		
+		WHERE 1=1
+		AND USER_IDX = #{user_idx}		
 	</update>
 
 	<delete id="deleteUser" parameterType="hashMap">
@@ -126,5 +126,12 @@
 		WHERE USER_IDX = #{user_idx}
 	</delete>
 	
+	<select id="chkUserNm" parameterType="hashMap" resultType="int">
+		/* UserMapper.chkUserNm */
+		SELECT 
+			COUNT(1)
+		FROM TB_USER
+		WHERE USER_NM = CONCAT('유저_' , #{user_nm})
+	</select>
 	
 </mapper>

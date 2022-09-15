@@ -12,7 +12,6 @@ $(function(){
 	$("#create_b_content").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
 			if(!confirm("작성하시겠습니까?")) {
-				$("#create_b_subject").focus();
 				$("#create_b_subject").val('');
 				$("#create_b_content").val('');
 				return;
@@ -72,6 +71,10 @@ $(function(){
 	    },
 		loadComplete: function() {
 			$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
+            var allRow = $("#mainGrid").jqGrid('getGridParam', 'records');        
+            if(allRow == 0 ){          
+            	$("#mainGrid > tbody").append("<tr><td align='center' colspan='10' style=''>조회된 데이터가 없습니다.</td></tr>");       
+           	}
 		}
 	});
 	
@@ -81,18 +84,12 @@ $(function(){
 		var b_content = $("#create_b_content").val().trim();
 		
 		if(b_subject == '') {
-			$("#create_b_subject").css("border", "2px solid red");
-			$("#create_b_subject").css("box-shadow", "0 0 3px red");
-			
 			alert('제목을 입력해주세요.');
 			$("#create_b_subject").val('');
 			$("#create_b_content").val('');
 			return;
 		}
 		if(b_content == '') {
-			$("#create_b_content").css("border", "2px solid red");
-			$("#create_b_content").css("box-shadow", "0 0 3px red");
-			
 			alert('내용을 입력해주세요.');
 			$("#create_b_subject").val('');
 			$("#create_b_content").val('');
@@ -104,18 +101,12 @@ $(function(){
 			, function(data) {
 				if(data.resultCode=="S000") {
 					alert("등록이 완료되었습니다.");
-					
 					$("#create_b_subject").val('');
 					$("#create_b_content").val('');
-					$("#create_b_subject").focus(false);
-					$("#create_b_content").focus(false);
 					
 					$("#mainGrid").setGridParam({url:"/board/main/selectMyBoard", page:1, datatype:"json"}).trigger("reloadGrid");
 				}else if(data.resultCode=="S999"){
-					$("#create_b_subject").focus();
-					$("#create_b_subject").attr("style", "border: 2px solid red;");
-					$("#create_b_content").focus();
-					$("#create_b_content").attr("style", "border: 2px solid red;");
+					alert("작업수행에 실패하였습니다.");
 					return false;
 				}
 		});
@@ -134,12 +125,10 @@ function formatOpt(cellvalue, options, rowObject) {
 function fn_board_update(board_id) {
 	if($("#view_b_subject").val()=='') {
 		alert("제목을 입력해주세요.");
-		$("#view_b_subject").focus();
 		return;
 	}
 	if($("#view_b_content").val()=='') {
 		alert("내용을 입력해주세요.");
-		$("#view_b_content").focus();
 		return;
 	}
 	if(!confirm("수정하시겠습니까?")) return;

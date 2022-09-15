@@ -44,21 +44,27 @@ $(function(){
 		width:830,
 		pagerpos:'center',
 		shrinkToFit: true,
-		colNames:['번호', '작성자', '제목', '내용', '', 'b_date', 'b_upd_date'],
+		colNames:['번호', '작성자', '제목', '내용', '', '', 'b_date', 'b_upd_date', 'like_tp'],
 		colModel:[
 					{name:'board_id', index:'board_id', align:"center", width:"28px"},
 					{name:'user_nm', index:'user_nm', align:"center", width:"70px"},
 					{name:'b_subject', index:'b_subject', align:"center"},
 					{name:'b_content', index:'b_content', align:"center"},
 					{name:'empty', index:'empty', align:"center", formatter:formatOpt, width:60},
+					{name:'like_btn', index:'like_btn', align:"center", formatter:formatOpt_like, width:30},
 					{name:'b_date', index:'b_date', hidden:true},
-					{name:'b_upd_date', index:'b_upd_date', hidden:true}
+					{name:'b_upd_date', index:'b_upd_date', hidden:true},
+ 					{name:'like_tp', index:'like_tp', hidden:true}
 				 ],
 		pager : "#pager",
 	    rowNum  : 20,
 		rowList : [20, 40, 60],
 		loadComplete: function() {
 			$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
+            var allRow = $("#mainGrid").jqGrid('getGridParam', 'records');        
+            if(allRow == 0 ){          
+            	$("#mainGrid > tbody").append("<tr><td align='center' colspan='10' style=''>조회된 데이터가 없습니다.</td></tr>");       
+           	}
 		},
  		onSelectRow: function(index, row) {
  			if(index) {
@@ -73,6 +79,7 @@ $(function(){
  			}
 	    }
 	});
+	
 });
 
 function formatOpt(cellvalue, options, rowObject) {
@@ -83,17 +90,28 @@ function formatOpt(cellvalue, options, rowObject) {
 	str += "</div>"
 	return str;
 }
+function formatOpt_like(cellvalue, options, rowObject) {
+	var str = "";
+	str += "<div class=\"btn-group\">";
+	
+	if(rowObject.like_tp == 'N') {
+	 	str += "<button type='button' class='btn btn-light sm-1' style='padding:2px 10px 2px; z-index:1;' onclick=\"javascript:fn_like('" + rowObject.board_id + "')\"><i class=\"far fa-thumbs-up\"></i></button>";
+	}else {
+		str += "<button type='button' class='btn btn-light sm-1' style='padding:2px 10px 2px; z-index:1;' onclick=\"javascript:fn_like('" + rowObject.board_id + "')\"><i class=\"fas fa-thumbs-up\"></i></button>";
+	}	
+	
+	str += "</div>";
+	return str;
+}
 
 /* 게시글 수정 */
 function fn_board_update(board_id) {
 	if($("#view_b_subject").val()=='') {
 		alert("제목을 입력해주세요.");
-		$("#view_b_subject").focus();
 		return;
 	}
 	if($("#view_b_content").val()=='') {
 		alert("내용을 입력해주세요.");
-		$("#view_b_content").focus();
 		return;
 	}
 	
@@ -156,15 +174,11 @@ function fn_update_allow(user_idx) {
 	}
 	$("#updateCancel_btn").show();
 	
-//	$("#view_b_subject").prop("disabled", false);
-//	$("#view_b_content").prop("disabled", false);
 	$("#view_b_subject").removeAttr("disabled");
 	$("#view_b_content").removeAttr("disabled");
 }
 /* 수정 취소 버튼 */
 function fn_update_cancel() {
-	//$("#view_b_subject").prop("disabled", true);
-	//$("#view_b_content").prop("disabled", true);
 	$("#view_b_subject").attr("disabled", "disabled");
 	$("#view_b_content").attr("disabled", "disabled");
 
@@ -182,10 +196,21 @@ function fn_user_board_srch() {
 		 , datatype:"json"
 	}).trigger('reloadGrid');
 }
+
+/* 좋아요 버튼 */
+function fn_like(board_id) {
+	callAjax("/like/board/createLike", {board_id:board_id, user_idx:'${sessionVo.user_idx}'}, fn_create_like);
+}
+function fn_create_like(data) {
+	if(data.resultCode=="S000") {
+		$("#mainGrid").setGridParam({url:"/board/main/selectAllBoard", page:1, datatype:"json"}).trigger("reloadGrid");		
+	}else {
+		alert("작업수행에 실패하였습니다.");
+	}
+}
 </script>
 </head>
 <body>
-
 <div id="content" style="float:left;">
 	<div role="content">
 		<div class="widget-body" style="padding:30px;">

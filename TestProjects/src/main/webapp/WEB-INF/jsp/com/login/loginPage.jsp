@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<meta name ="google-signin-client_id" content="697342832307-9o74r3mkkp8buqlbnagvus5ksr4b555q.apps.googleusercontent.com">
+<!-- <meta name ="google-signin-client_id" content="697342832307-9o74r3mkkp8buqlbnagvus5ksr4b555q.apps.googleusercontent.com"> -->
 <!-- <meta name="description" content=""> -->
 <title>LOGIN</title>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -70,9 +70,7 @@ $(function(){
 				   	  location.href='/main/view';
 					  alert(resultMsg);
 				  } else if(resultCode=='S999') {
-					  //$("#user_id").focus();
 					  $("#user_id").attr("style", "border: 2px solid red;");
-					  //$("#user_pwd").focus();
 					  $("#user_pwd").attr("style", "border: 2px solid red;");
 					  alert(resultMsg);
 					  return false;
@@ -135,7 +133,7 @@ function getCookie(cookieName) {
 </script>
 <!-- 구글 로그인 API -->
 <script>
-/* 처음 실행하는 함수 */
+/* 처음 실행하는 함수 
 function init() {
 	gapi.load('auth2', function() {
 		gapi.auth2.init();
@@ -165,10 +163,10 @@ function onSignIn(googleUser) {
 }
 function onSignInFailure(t){		
 	console.log(t);
-}
+} */
 </script>
-<!-- 구글 api 사용을 위한 스크립트 -->
-<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+<!-- 구글 api 사용을 위한 스크립트 
+<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>-->
 
 </head>
 <body>
@@ -180,7 +178,7 @@ function onSignInFailure(t){
         <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp" class="img-fluid" alt="Sample image">
       </div>
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-        <form class="form-horizontal">
+        <form class="form-horizontal" id="frm_login_info">
 		  <!-- 로그인 API -->        
           <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
             <button type="button" class="btn btn-lg btn-block btn-primary" id="google_login_btn" style="background-color: #dd4b39;">

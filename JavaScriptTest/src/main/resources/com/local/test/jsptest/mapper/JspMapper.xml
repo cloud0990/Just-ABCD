@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.local.test.jsptest.mapper.JspMapper">
+		
+	<!-- REPLACE(변수/컬럼, '바꾸려는 값', '바꾸고싶은 값') -->
+	<select id="replaceFnTest1" resultType="hashMap">
+		<!-- 유저_다람 -->
+		SELECT
+			REPLACE(USER_NM, '유저', 'USER') AS user_nm
+		FROM TB_USER
+		<!-- 결과 : USER_다람 -->
+	</select>
+	<select id="replaceFnTest2" resultType="hashMap">
+		<!-- 유저_다람 -> USER_다람 -->
+		SELECT
+			REPLACE(REPLACE(USER_NM, '유저', 'USER'), 'USER_', '') AS user_nm
+		FROM TB_USER
+		<!-- 결과 : 다람 -->
+	</select>
+	
+</mapper>

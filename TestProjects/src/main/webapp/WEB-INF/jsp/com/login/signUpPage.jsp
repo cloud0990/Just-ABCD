@@ -36,16 +36,10 @@ height: 100vh !important;
 <script type="text/javascript">
 $(function(){
 	/* 회원가입 엔터 처리 */
-	$("#user_pwd").keypress(function(e){
+	$("#user_nm").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
 			if(!confirm('회원가입 하시겠습니까?')) return;			
 			$("#signUp").trigger('click'); //trigger() : 이벤트 강제 발생
-		}
-	});
-	/* 아이디 저장 엔터 처리 */
-	$("#rememberId").keypress(function(e){
-		if(e.keyCode && e.keyCode == 13) {
-			$("#rememberId").trigger('click'); //trigger() : 이벤트 강제 발생
 		}
 	});
 	
@@ -54,42 +48,77 @@ $(function(){
 
 		var user_id  = $("#user_id").val();
 		var user_pwd = $("#user_pwd").val();
+		var confirm_user_pwd = $("#confirm_user_pwd").val();
 		var user_nm  = $("#user_nm").val();
-
-		if(user_nm == '') {
-			$("#user_nm").css("border", "2px solid red");
-			$("#user_nm").css("box-shadow", "0 0 3px red");
-			alert('닉네임을 입력해주세요');
-			return;
-		}
+	
 		if(user_id == '') {
 			$("#user_id").css("border", "2px solid red");
 			$("#user_id").css("box-shadow", "0 0 3px red");
-			alert('아이디를 입력해주세요');
+			alert('아이디를 입력해주세요.');
 			return;
 		}
 		if(user_pwd == '') {
 			$("#user_pwd").css("border", "2px solid red");
 			$("#user_pwd").css("box-shadow", "0 0 3px red");
-			alert('비밀번호를 입력해주세요');
+			alert('비밀번호를 입력해주세요.');
 			return;
 		}
+		if(confirm_user_pwd == '') {
+			$("#confirm_user_pwd").css("border", "2px solid red");
+			$("#confirm_user_pwd").css("box-shadow", "0 0 3px red");
+			alert('비밀번호 확인이 필요합니다.');
+			return;
+		}
+		if(user_nm == '') {
+			$("#user_nm").css("border", "2px solid red");
+			$("#user_nm").css("box-shadow", "0 0 3px red");
+			alert('닉네임을 입력해주세요.');
+			return;
+		}
+		if(user_pwd != confirm_user_pwd) {
+			$("#user_pwd").css("border", "2px solid red");
+			$("#user_pwd").css("box-shadow", "0 0 3px red");
+			$("#confirm_user_pwd").css("border", "2px solid red");
+			$("#confirm_user_pwd").css("box-shadow", "0 0 3px red");
+			alert('비밀번호가 일치하지 않습니다.');
+			return;
+		}
+		
 		$.post("/signUp/insertUser"
 				, {user_id:user_id, user_pwd:user_pwd, user_nm:user_nm}
 				, function(data){
 					var resultCode = data.resultCode;
-					var resultMsg  = data.resultMsg;
 					if(resultCode=='S000'){
 						location.href='/login';
-						alert(resultMsg);
+						alert("회원가입이 완료되었습니다.\n로그인 화면으로 이동합니다.");
 					}else if(resultCode=='S999'){
-						$("#user_id").focus();
+						//$("#user_id").focus();
+						//$("#user_pwd").focus();
+						//$("#user_nm").focus();
 						$("#user_id").attr("style", "border: 2px solid red;");
-						$("#user_pwd").focus();
 						$("#user_pwd").attr("style", "border: 2px solid red;");					
-						$("#user_nm").focus();
 						$("#user_nm").attr("style", "border: 2px solid red;");
-						alert(resultMsg);
+						alert("작업수행에 실패하였습니다.\n다시 시도해주세요.");
+						return false;
+				   }
+		});
+	});
+	
+	/* 닉네임 중복체크 */
+	$("#duplChk").click(function(){
+		var user_nm  = $("#user_nm").val();
+		
+		$.post("/signUp/chkUserNm"
+				, {user_nm:user_nm}
+				, function(data){
+					var resultCode = data.resultCode;
+					if(resultCode=='S000'){
+						alert("사용할 수 있는 닉네임입니다.");
+					}else if(resultCode=='S999'){
+						alert("중복된 닉네임입니다.");
+						return false;
+				   }else if(resultCode=='V999') {
+						alert("작업수행에 실패하였습니다.");
 						return false;
 				   }
 		});
@@ -131,6 +160,7 @@ function onSignInFailure(t){
 <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
 </head>
 <body>
+
 <section class="vh-100" style="background-color: #508bfc;">
   <div class="container py-5 h-100">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -139,21 +169,24 @@ function onSignInFailure(t){
           <div class="card-body p-5 text-center">
             <h5 class="mb-5" style="font-weight: 700">회원가입</h5>
             <div class="form-outline mb-4" style="text-align: left;">
-              <label class="form-label" for="user_nm" style="font-size: 14px; font-weight: 700;">닉네임</label>
-              <input type="text" id="user_nm" class="form-control form-control-lg" style="border:1px solid gray;" />
-            </div>
-            <div class="form-outline mb-4" style="text-align: left;">
               <label class="form-label" for="user_id" style="font-size: 14px; font-weight: 700;">아이디</label>
               <input type="text" id="user_id" class="form-control form-control-lg" style="border:1px solid gray;"/>
             </div>
-            <div class="form-outline mb-4" style="text-align: left;">
+            <div class="form-outline mb-4" style="text-align: left; width:213px; float:left;">
               <label class="form-label" for="user_pwd" style="font-size: 14px; font-weight: 700;">비밀번호</label>
               <input type="password" id="user_pwd" class="form-control form-control-lg" style="border:1px solid gray;"/>
             </div>
-            <!-- Checkbox -->
-            <div class="form-check d-flex justify-content-start mb-4">
-              <input class="form-check-input" type="checkbox" value="" id="rememberId" />
-              <label class="form-check-label" for="rememberId" style="font-size: 14px; color: gray; margin-top:3px;"> 아이디 저장</label>
+            <div class="form-outline mb-4" style="text-align: left; width:213px; float:right;">
+              <label class="form-label" for="confirm_user_pwd" style="font-size: 14px; font-weight: 700;">비밀번호 확인</label>
+              <input type="password" id="confirm_user_pwd" class="form-control form-control-lg" style="border:1px solid gray;"/>
+            </div>
+             
+            <div class="form-outline mb-4" style="text-align: left; clear:both;">
+            <label class="form-label" for="user_nm" style="font-size: 14px; font-weight: 700;">닉네임</label><br>
+              <input type="text" id="user_nm" class="form-control form-control-lg" style="border:1px solid gray; width:345px; display: inline-block;" />
+              <div style="display: inline-block;">
+	              <button type="button" class='btn btn-default btn-sm' id="duplChk" style="font-weight: bold; font-size: 12px;">중복확인</button>
+              </div>
             </div>
             <div class="text-center text-lg-start mt-4 pt-2">
 	            <button type="button" class="btn btn-primary btn-block mb-4" id="signUp" style="font-size: 15px;">회원가입</button>
@@ -168,6 +201,6 @@ function onSignInFailure(t){
     </div>
   </div>
 </section>
-
+	
 </body>
 </html>

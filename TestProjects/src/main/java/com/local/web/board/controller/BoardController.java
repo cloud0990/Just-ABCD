@@ -3,26 +3,23 @@ package com.local.web.board.controller;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 
 import com.local.web.board.service.BoardService;
 import com.local.web.common.domain.PageingVo;
 import com.local.web.common.domain.ReturnDataVo;
 import com.local.web.common.domain.SessionVo;
+import com.local.web.like.service.LikeService;
 
 @Controller
 @RequestMapping("/board")
@@ -30,6 +27,10 @@ public class BoardController {
 	
 	@Resource(name="boardService")
 	private BoardService mapper;
+
+	@Resource(name="likeService")
+	private LikeService likeMapper;
+	
 	
 	@RequestMapping("/main")
 	public String boardPage() {
@@ -87,9 +88,15 @@ public class BoardController {
 	 */
 	//@PostMapping(value="/main/selectAllBoard")
 	@RequestMapping(value="/main/selectAllBoard", method=RequestMethod.POST)
-	public @ResponseBody HashMap<String, Object> selectAllBoard(@ModelAttribute("pageing") PageingVo pageing, @RequestParam HashMap<String, Object> hashmapParam) {
+	public @ResponseBody HashMap<String, Object> selectAllBoard(@ModelAttribute("pageing") PageingVo pageing
+															  , @RequestParam HashMap<String, Object> hashmapParam
+															  , HttpSession session) {
 		List<HashMap<String, Object>> boardList = new ArrayList<>();
 		HashMap<String, Object> hashmapResult = new HashMap<>();
+	
+		SessionVo member = (SessionVo) session.getAttribute("S_USER");
+		hashmapParam.put("user_idx", member.getUser_idx());
+		
 		try {
 			Integer page = pageing.getPage();
 			if(page == 0) page = (Integer) 1;
@@ -111,6 +118,7 @@ public class BoardController {
 			hashmapResult.put("total", pageing.getTotal());
 			hashmapResult.put("records", pageing.getRecords());
 			hashmapResult.put("rows", boardList);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

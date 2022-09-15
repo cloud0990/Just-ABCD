@@ -36,10 +36,29 @@ public class SignupController {
 		try {
 			service.signUpUser(hashmapParam);
 			result.setResultCode("S000");
-			result.setResultMsg("회원가입을 축하드립니다.");
 		} catch (Exception e) {
 			result.setResultCode("S999");
-			result.setResultMsg("이미 사용 중인 닉네임입니다.");
+		}
+		return result;
+	}
+	
+	/**
+	 * 닉네임 중복확인
+	 * @param hashmapParam
+	 * @return ReturnDataVo
+	 */
+	@RequestMapping(value="/chkUserNm", method=RequestMethod.POST)
+	public @ResponseBody ReturnDataVo chkUserNm(@RequestParam HashMap<String, Object> hashmapParam) {
+		ReturnDataVo result = new ReturnDataVo();
+		try {
+			int chkResult = service.chkUserNm(hashmapParam);
+			if(chkResult == 0) {
+				result.setResultCode("S000");
+			}else {
+				result.setResultCode("S999");
+			}
+		} catch (Exception e) {
+			result.setResultCode("V999");
 		}
 		return result;
 	}
