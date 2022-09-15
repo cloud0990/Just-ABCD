@@ -1,4 +1,4 @@
-package java;
+package javacode;
 
 /* int[]를 입력받고, 각 숫자의 빈도수 출력. */
 public class Frequency {
