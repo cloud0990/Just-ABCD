@@ -1,4 +1,4 @@
-package java;
+package javacode;
 
 import java.util.Calendar;
 import java.util.Date;
