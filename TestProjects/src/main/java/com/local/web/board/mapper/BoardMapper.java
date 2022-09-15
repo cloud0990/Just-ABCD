@@ -15,8 +15,10 @@ public interface BoardMapper {
 	List<HashMap<String, Object>> selectMyBoard(HashMap<String, Object> hashmapParam);
 	//게시물 작성
 	int createItem(HashMap<String, Object> hashmapParam);
+	//int createItemLike(HashMap<String, Object> hashmapParam);
 	//게시물 수정
 	int updateItem(HashMap<String, Object> hashmapParam);
 	//게시글 삭제
 	int deleteItem(HashMap<String, Object> hashmapParam);
+	int deleteItemLike(HashMap<String, Object> hashmapParam);
 }

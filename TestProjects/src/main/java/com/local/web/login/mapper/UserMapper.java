@@ -29,4 +29,6 @@ public interface UserMapper {
 	int deleteUser(HashMap<String, Object> hashmapParam);
 	//사용자 수정
 	int updateUser(HashMap<String, Object> hashmapParam);
+	//닉네임 중복체크
+	int chkUserNm(HashMap<String, Object> hashmapParam);
 }	

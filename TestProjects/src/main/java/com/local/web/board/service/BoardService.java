@@ -30,6 +30,11 @@ public class BoardService {
 	public int createItem(HashMap<String, Object> hashmapParam) {
 		return mapper.createItem(hashmapParam);
 	}
+
+	/*
+	 * public int createItemLike(HashMap<String, Object> hashmapParam) { return
+	 * mapper.createItemLike(hashmapParam); }
+	 */
 	//게시글 수정
 	public int updateItem(HashMap<String, Object> hashmapParam) {
 		return mapper.updateItem(hashmapParam);
@@ -37,5 +42,8 @@ public class BoardService {
 	//게시글 삭제
 	public int deleteItem(HashMap<String, Object> hashmapParam) {
 		return mapper.deleteItem(hashmapParam);
+	}
+	public int deleteItemLike(HashMap<String, Object> hashmapParam) {
+		return mapper.deleteItemLike(hashmapParam);
 	}
 }

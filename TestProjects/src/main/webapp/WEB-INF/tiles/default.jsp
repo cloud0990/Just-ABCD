@@ -32,12 +32,15 @@
 <script type="text/javascript" src="/assets/common/ajaxCommon.js"></script>
 <script type="text/javascript" src="/assets/common/jquery.form.js"></script>
 
+<script src="//cdnjs.cloudflare.com/ajax/libs/validate.js/0.12.0/validate.min.js"></script>
+
 <!-- sweetAlert2 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-sweetalert/1.0.1/sweetalert.min.js"></script> 
 
 <!-- jgGrid -->
 <script type="text/javascript" src="/assets/plugin/js/jqgrid/jquery.jqGrid.min.js"></script>
 <script type="text/javascript" src="/assets/plugin/js/jqgrid/grid.locale-en.min.js"></script>
+
 
 <style type="text/css">
 * {

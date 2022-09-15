@@ -47,6 +47,10 @@ $(function(){
 		viewrecords: true,
 		loadComplete: function() {
 			$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
+            var allRow = $("#mainGrid").jqGrid('getGridParam', 'records');        
+            if(allRow == 0 ){          
+            	$("#mainGrid > tbody").append("<tr><td align='center' colspan='6' style=''>조회된 데이터가 없습니다.</td></tr>");       
+           	}
 		},
  		onSelectRow: function(index, row) { //index = 선택된 row의 index
  			if(index) {

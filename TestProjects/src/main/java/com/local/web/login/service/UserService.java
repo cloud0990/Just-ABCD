@@ -44,4 +44,7 @@ public class UserService {
 	public int updateUser(HashMap<String, Object> hashmapParam) {
 		return mapper.updateUser(hashmapParam);
 	}
+	public int chkUserNm(HashMap<String, Object> hashmapParam) {
+		return mapper.chkUserNm(hashmapParam);
+	}
 }

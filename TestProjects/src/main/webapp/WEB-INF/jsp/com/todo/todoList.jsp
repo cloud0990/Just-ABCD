@@ -221,8 +221,8 @@ function fn_mng_delete() {
 /* 수정 */
 function fn_mng_update() {
 	if($("#view_td_nm").val()=='') {
-		$("#view_td_nm").css("border", "2px solid red");
-		$("#view_td_nm").css("box-shadow", "0 0 3px red");
+/* 		$("#view_td_nm").css("border", "2px solid red");
+		$("#view_td_nm").css("box-shadow", "0 0 3px red"); */
 		alert("내용을 입력하세요.");
 		return;
 	}
@@ -269,8 +269,8 @@ function fn_mng_update_result(data) {
 function fn_todo_create() {
 	if($("#create_td_nm").val()=='') {
 		alert("할 일을 입력하세요.");
-		$("#create_td_nm").css("border", "2px solid red");
-		$("#create_td_nm").css("box-shadow", "0 0 3px red");
+/* 		$("#create_td_nm").css("border", "2px solid red");
+		$("#create_td_nm").css("box-shadow", "0 0 3px red"); */
 		return;
 	}
 	if(!confirm('할 일을 등록하시겠습니까?')) return;
