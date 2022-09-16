@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface LikeMapper {
 	int getLikeCnt(HashMap<String, Object> hashmapParam);	
 	int insertLike(HashMap<String, Object> hashmapParam);	
+	int insertBoardLike(HashMap<String, Object> hashmapParam);	
 	int updateLikeTp(HashMap<String, Object> hashmapParam);	
 	int deleteLike(HashMap<String, Object> hashmapParam);
 }

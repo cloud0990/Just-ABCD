@@ -6,10 +6,12 @@
 	</select>
 
 	<select id="selectAllBoard" resultType="hashMap" parameterType="hashMap">
-		/* BoardMapper.selectAllBoard */
-		SELECT SQL_CALC_FOUND_ROWS
-				   IFNULL(TL.LIKE_TP, 'N') AS like_tp
-		         , BOARD.*
+	/* BoardMapper.selectAllBoard */
+		SELECT
+			   SQL_CALC_FOUND_ROWS
+
+			   IFNULL(TL.LIKE_TP, 'N') AS like_tp
+	         , BOARD.*
 		FROM (
 				  SELECT
 							  TBB.BOARD_ID AS board_id
@@ -40,11 +42,12 @@
 				</when>
 			</choose>
 		</if>
+		ORDER BY BOARD.BOARD_ID DESC
    	    LIMIT ${start}, ${end}
 	</select>
 	
 	<select id="selectMyBoard" parameterType="hashMap" resultType="hashMap">
-		/* BoardMapper.selectMyBoard */
+	/* BoardMapper.selectMyBoard */
 		SELECT SQL_CALC_FOUND_ROWS 
 			   BOARD.*
 		FROM 
@@ -77,7 +80,7 @@
 	</select>
 
 	<insert id="createItem" parameterType="hashMap">
-		/* BoardMapper.createItem */
+	/* BoardMapper.createItem */
 		INSERT INTO
 		TB_BOARD(B_SUBJECT, B_CONTENT, USER_IDX, USER_NM, B_DATE, LIKE_IDX)
 		VALUES(
@@ -91,7 +94,7 @@
 	</insert>
 	
 	<update id="updateItem" parameterType="hashMap">
-		/* BoardMapper.updateItem */
+	/* BoardMapper.updateItem */
 		UPDATE TB_BOARD
 		SET
 		<if test="b_subject != null and b_subject != ''">
@@ -106,7 +109,7 @@
 	</update>
 	
 	<delete id="deleteItem" parameterType="hashMap">
-		/* BoardMapper.deleteItem */
+	/* BoardMapper.deleteItem */
 		DELETE FROM TB_BOARD
 		WHERE BOARD_ID = #{board_id}
 	</delete>
