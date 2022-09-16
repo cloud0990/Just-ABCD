@@ -20,6 +20,9 @@ public class LikeService {
 	public int insertLike(HashMap<String, Object> hashmapParam) {
 		return mapper.insertLike(hashmapParam);
 	}
+	public int insertBoardLike(HashMap<String, Object> hashmapParam) {
+		return mapper.insertBoardLike(hashmapParam);
+	}
 	public int updateLikeTp(HashMap<String, Object> hashmapParam) {
 		return mapper.updateLikeTp(hashmapParam);
 	}

@@ -140,9 +140,9 @@ public class BoardController {
 		try {
 			
 			mapper.createItem(hashmapParam);
-			
-			likeMapper.insertLike(hashmapParam);
-			
+
+			likeMapper.insertBoardLike(hashmapParam);
+
 			result.setResultCode("S000");
 		} catch (Exception e) {
 			result.setResultCode("S999");

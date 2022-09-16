@@ -4,6 +4,7 @@
 <mapper namespace="com.local.web.like.mapper.LikeMapper">
 	
 	<select id="getLikeCnt" parameterType="hashMap" resultType="int">
+	/* LikeMapper.getLikeCnt */
 		SELECT
 			COUNT(1)
 		FROM TB_LIKE
@@ -13,17 +14,38 @@
 	</select>
 	
 	<insert id="insertLike" parameterType="hashMap">
+	/* LikeMapper.insertLike */
 		INSERT INTO
-			TB_LIKE(LIKE_ID, USER_IDX, BOARD_ID)
-		VALUES(
-		          #{user_idx}  
-		        , #{user_idx}  
-		        , (SELECT IFNULL(MAX(BOARD_ID), 1) FROM TB_BOARD)  
-			   )
+			TB_LIKE( LIKE_ID
+				    ,USER_IDX
+					,BOARD_ID
+					)
+			VALUES(
+			          #{user_idx}  
+			        , #{user_idx}  
+			        , #{board_id}  
+				   )
+	</insert>
+	
+	<insert id="insertBoardLike" parameterType="hashMap">
+	/* LikeMapper.insertBoardLike */
+		INSERT INTO
+			TB_LIKE( LIKE_ID
+				    ,USER_IDX
+					,BOARD_ID
+					)
+			VALUES(
+			          #{user_idx}  
+			        , #{user_idx}  
+			        , (SELECT 
+			           		IFNULL(MAX(BOARD_ID), 1) 
+		        	   FROM TB_BOARD
+		        	  ) 
+				   )
 	</insert>
 	
 	<update id="updateLikeTp" parameterType="hashMap">
-		/* LikeMapper.updateLikeTp */
+	/* LikeMapper.updateLikeTp */
 		UPDATE 
 			TB_LIKE 
 		SET
