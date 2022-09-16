@@ -13,9 +13,8 @@ public interface TodoMapper {
 	List<HashMap<String, Object>> getTodoNowListRetrieve(HashMap<String, Object> hashmapParam);
 	List<HashMap<String, Object>> getTodoSuccessListRetrieve(HashMap<String, Object> hashmapParam);
 	List<HashMap<String, Object>> getTodoRestListRetrieve(HashMap<String, Object> hashmapParam);
-	
+
 	int createTodo(HashMap<String, Object> hashmapParam);
 	int updateTodo(HashMap<String, Object> hashmapParam);
 	int deleteTodo(HashMap<String, Object> hashmapParam);
-	
 }

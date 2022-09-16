@@ -16,12 +16,12 @@ $(function(){
 	/* Create Board Enter key Event */
 	$("#view_b_subject").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
-			fn_board_cu();
+			fn_mng_board('add');
 		}
 	});
 	$("#view_b_content").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
-			fn_board_cu();
+			fn_mng_board('add');
 		}
 	});
 	/* Search Filter Enter key Event */
@@ -29,11 +29,8 @@ $(function(){
 		if(e.keyCode && e.keyCode == 13) {
 			if($("#srch_text").val()=='') {
 				$("#srch_user_board option:eq(0)").prop("selected", true);
-				
-				//value==srch_all 인 option 선택
-				//$("#srch_user_board").val("srch_all").prop("selected", true);
 			}
-			$("#srch_btn").trigger('click'); //trigger() : 이벤트 강제 발생
+			$("#srch_btn").trigger('click'); //click 이벤트 강제 발생
 		}
 	});
 	/* Search Filter Button Event */
@@ -76,10 +73,10 @@ $(function(){
  			if(index) {
  				var row = $("#mainGrid").jqGrid('getRowData', index);
 
+ 				$("#status").val("update");
+
  				$("#view_board_id").val('');
  				$("#view_user_idx").val('');
- 				
- 				$("#status").val("update");
  				
  				$("#view_board_id").val(row.board_id);
  				$("#view_user_idx").val(row.user_idx);
@@ -135,8 +132,8 @@ function fn_board_clear() {
 	$("#view_b_upd_date").val("");
 }
 
-/* Create/Update Board */
-function fn_board_cu() {
+/* Create/Update/Delete Board */
+function fn_mng_board(type) {
 	var user_idx  = $("#view_user_idx").val();
 	var b_subject = $("#view_b_subject").val().trim();
 	var b_content = $("#view_b_content").val().trim();
@@ -149,60 +146,46 @@ function fn_board_cu() {
 		return;
 	}
 	
-	if($("#status").val()=="create") {
+	/* Create/Update Board */
+	if(type=="add") {
+		if($("#status").val()=="create") {
+			
+			if(!confirm("등록하시겠습니까?")) return;
+			callAjax("/board/createItem", $("#frm_update_board").serialize(), fn_result);	
 		
-		if(!confirm("등록하시겠습니까?")) return;
-		
-		callAjax("/board/createItem", $("#frm_update_board").serialize(), fn_result);	
+		}else if($("#status").val()=="update") {
+			
+			if('${sessionVo.user_idx}' != user_idx) {
+				alert('다른 사용자의 게시물은 수정할 수 없습니다.'); 
+				fn_board_clear();
+				return;
+			}
+			if(!confirm("수정하시겠습니까?")) return;
+
+			callAjax("/board/updateItem", $("#frm_update_board").serialize(), fn_result);
+		}
 	
-	}else if($("#status").val()=="update") {
+	/* Delete Board */
+	}else if(type=="delete") {
 		
 		if('${sessionVo.user_idx}' != user_idx) {
-			alert("본인의 게시글만 수정할 수 있습니다."); 
-			$("#view_user_nm").val("");
-			$("#view_b_subject").val("");
-			$("#view_b_content").val("");
-			$("#view_b_date").val("");
-			$("#view_b_upd_date").val("");
+			alert('다른 사용자의 게시물은 삭제할 수 없습니다.'); 
+			fn_board_clear();
 			return;
 		}
-		
-		if(!confirm("수정하시겠습니까?")) return;
-		
-		callAjax("/board/updateItem", $("#frm_update_board").serialize(), fn_result);
+		if(!confirm("삭제하시겠습니까?")) return;
+
+		callAjax("/board/deleteItem", $("#frm_update_board").serialize(), fn_result);
 	}
 }
-/* Delete Board */
-function fn_board_delete() {
-	var user_idx = $("#view_user_idx").val();
-	if('${sessionVo.user_idx}' != user_idx) {
-		alert('본인의 게시글만 삭제할 수 있습니다.'); 
-		$("#view_user_nm").val("");
-		$("#view_b_subject").val("");
-		$("#view_b_content").val("");
-		$("#view_b_date").val("");
-		$("#view_b_upd_date").val("");
-		return;
-	}
-	
-	if(!confirm("삭제하시겠습니까?")) return;
-	
-	callAjax("/board/deleteItem", $("#frm_update_board").serialize(), fn_result);
-}
+
 /* Ajax Callback Function */
 function fn_result(data) {
 	if(data.resultCode=="S000") {
-		alert("작업수행을 완료하였습니다.");
 		
 		$("#mainGrid").setGridParam({url:"/board/main/selectAllBoard", page:1, datatype:"json"}).trigger("reloadGrid");		
-		
-		$("#view_board_id").val('');
-		$("#view_user_idx").val('');
-		$("#view_user_nm").val('');
-		$("#view_b_subject").val('');
-		$("#view_b_content").val('');
-		$("#view_b_date").val('');
-		$("#view_b_upd_date").val('');
+		fn_board_clear();
+	
 	}else {
 		alert("작업수행에 실패하였습니다.");
 	}
@@ -290,9 +273,9 @@ function fn_user_board_srch() {
 			</fieldset>	
 			<br>
 			<div id="updateCancel_btn" style="text-align: right;">
-				<button type='button' id="clear_btn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_board_clear();">신규</button>		
-				<button type='button' id="update_btn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_board_cu();">저장</button>		
-				<button type='button' class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" id="delete_btn" onclick="fn_board_delete();">삭제</button>		
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 20px 2px; font-size: 15px; font-weight: bold;" onclick="fn_board_clear();">신규</button>		
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 20px 2px; font-size: 15px; font-weight: bold;" onclick="fn_mng_board('add');">저장</button>		
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 20px 2px; font-size: 15px; font-weight: bold;" onclick="fn_mng_board('delete');">삭제</button>		
 			</div>
 		</div>
 	</div>
