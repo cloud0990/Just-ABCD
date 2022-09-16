@@ -11,12 +11,12 @@ $(function(){
 	/* Create/Board Enter key Envent */
 	$("#view_b_subject").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
-			fn_board_cu();
+			fn_mng_board('add');
 		}
 	});
 	$("#view_b_content").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
-			fn_board_cu();
+			fn_mng_board('add');
 		}
 	});
 	
@@ -29,7 +29,6 @@ $(function(){
 			$("#srch_btn").trigger('click');
 		}
 	});
-	
 	/* Search Filter Button Event */
 	$("#srch_btn").click(function(){
 		if($("#srch_text").val()=='') {
@@ -62,14 +61,13 @@ $(function(){
 	    rowNum  : 20,
 		rowList : [20, 40, 60],
  		onSelectRow: function(index, row) {
- 			
- 			$("#view_board_id").val('');
- 			
- 			$("#status").val("update");
- 			
  			if(index) {
- 				
+
  				var row = $("#mainGrid").jqGrid('getRowData', index);
+	 			
+ 				$("#view_board_id").val('');
+	 			
+	 			$("#status").val("update");
  				
  				$("#view_board_id").val(row.board_id);
  				$("#view_b_subject").val(row.b_subject);
@@ -87,15 +85,6 @@ $(function(){
 		}
 	});
 });
-/*
-function formatOpt(cellvalue, options, rowObject) {
-	var str = "";
-	str += "<div class=\"btn-group\">";
-	str += "<button type='button' class='btn btn-light sm-1' style='padding:2px 10px 2px; z-index:1;' onclick=\"javascript:fn_board_delete('" + rowObject.board_id + "')\">삭제</button>";
-	str += "</div>"
-	return str;
-}
-*/
 
 /* Create Button Click */
 function fn_board_clear() {
@@ -108,8 +97,8 @@ function fn_board_clear() {
 	$("#view_b_upd_date").val("");
 }
 
-/* Create/Update Board */
-function fn_board_cu() {
+/* Create/Update/Delete Board */
+function fn_mng_board(type) {
 	var user_idx  = '${sessionVo.user_idx}';
 	var b_subject = $("#view_b_subject").val().trim();
 	var b_content = $("#view_b_content").val().trim();
@@ -120,42 +109,37 @@ function fn_board_cu() {
 		alert('내용을 입력해주세요.'); return;
 	}
 
-	if($("#status").val()=="create") {
-		
-		if(!confirm("등록하시겠습니까?")) return;
-		
-		callAjax("/board/createItem", $("#frm_update_board").serialize(), fn_result);
-		
-	}else if($("#status").val()=="update") {
-		
-		$("#status").val("create");
-		
-		if(!confirm("수정하시겠습니까?")) return;
-		
-		callAjax("/board/updateItem", $("#frm_update_board").serialize(), fn_result);
-	}
-}
+	/* Create/Update Board */
+	if(type=="add") {
 
-/* Delete Board */
-function fn_board_delete() {
-	
-	if(!confirm("삭제하시겠습니까?")) return;
-	
-	callAjax("/board/deleteItem", $("#frm_update_board").serialize(), fn_result);
+		if($("#status").val()=="create") {
+			
+			if(!confirm("등록하시겠습니까?")) return;
+			callAjax("/board/createItem", $("#frm_update_board").serialize(), fn_result);
+			
+		}else if($("#status").val()=="update") {
+			
+			$("#status").val("create");
+			
+			if(!confirm("수정하시겠습니까?")) return;
+			callAjax("/board/updateItem", $("#frm_update_board").serialize(), fn_result);
+		}
+		
+	/* Delete Board */
+	}else if(type=="delete") {
+		
+		if(!confirm("삭제하시겠습니까?")) return;
+		callAjax("/board/deleteItem", $("#frm_update_board").serialize(), fn_result);
+	}
 }
 
 /* Callback Function Insert/Update/Delete */
 function fn_result(data) {
 	if(data.resultCode=="S000") {
-		alert("작업수행을 완료하였습니다.");
 		
 		$("#mainGrid").setGridParam({url:"/board/main/selectMyBoard", page:1, datatype:"json"}).trigger("reloadGrid");
-		
-		$("#view_board_id").val("");
-		$("#view_b_subject").val("");
-		$("#view_b_content").val("");
-		$("#view_b_date").val("");
-		$("#view_b_upd_date").val("");
+		fn_board_clear();
+	
 	}else {
 		alert("작업수행에 실패하였습니다.");
 	}
@@ -238,43 +222,13 @@ function fn_user_board_srch() {
 			</fieldset>	
 			<br>
 			<div id="cu_btn" style="text-align: right;">
-				<button type='button' id="clear_btn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_board_clear()">신규</button>		
-				<button type='button' id="update_btn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_board_cu()">저장</button>		
-				<button type='button' id="delete_btn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_board_delete()">삭제</button>		
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 20px 2px; font-size: 15px; font-weight: bold;" onclick="fn_board_clear()">신규</button>		
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 20px 2px; font-size: 15px; font-weight: bold;" onclick="fn_mng_board('add')">저장</button>		
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 20px 2px; font-size: 15px; font-weight: bold;" onclick="fn_mng_board('delete')">삭제</button>		
 			</div>
 		</div>
 	</div>
 </form>
-
-<!--  
-	<form class="form-horizontal" id="frm_create_board" name="frm_create_board" onsubmit="return false">
-		<div class="board_create" style="width:700px; float:right;">
-			<div class="widget-body" style="padding:30px;">
-				<fieldset>
-					<div style="flex:center;">
-						<label><span class="widget-icon"><i class="fa fa-list-alt txt-color-white"></i>&nbsp;&nbsp;&nbsp;게시글 작성</span></label>
-					</div>
-				</fieldset>
-				<hr style="margin-top:0px;">
-				<fieldset>	
-					<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">제목</legend>
-					<div>
-						<input type="text" class="form-control input-sm" id="create_b_subject" name="b_subject" style="height:40px;"/>					
-					</div>
-					<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">내용</legend>
-					<div>
-						<input type="text" class="form-control input-sm" id="create_b_content" name="b_content" style="height:40px;"/>					
-					</div>
-					<br>
-					<div style="text-align: right;">
-						<button type='button' id="create_btn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;">작성</button>		
-						<button type='button' class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_create_cancel();">취소</button>		
-					</div>
-				</fieldset>	
-			</div>
-		</div>
-	</form>
--->
 
 </body>
 </html>

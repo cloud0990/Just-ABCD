@@ -6,30 +6,42 @@
 <head>
 <meta charset="UTF-8">
 <title>HOME : TODO LIST</title>
-</head>
+<style type="text/css">
+input[type=radio]:checked+label {
+	font-weight: 700;
+}
+input[type=radio]+label {
+	font-size: 15px;
+}
+input[type=radio]+label:hover {
+	cursor: pointer;
+}
+</style>
 <script type="text/javascript">
 $(function(){
-	/* 할 일 등록 엔터 이벤트 */
-	$("#create_td_nm").keypress(function(e){
-		if(e.keyCode && e.keyCode == 13) {
-			$("#create_btn").trigger('click'); //trigger() : 이벤트 강제 발생
-		}
-	});
-	/* todo 수정 엔터 이벤트 */
+	/* Update Todo Enter key Evenet */
 	$("#view_td_nm").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
-			$("#update_btn").trigger('click'); //trigger() : 이벤트 강제 발생
+			fn_mng('add');
+			
+			//trigger() : 이벤트 강제 발생
+			//$("#btn").trigger('click'); 
 		}
-	});
-	$("input:radio[name='td_tp']").keypress(function(e){
+	});	
+ 	$("input:radio[name='td_tp']").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
-			$("#update_btn").trigger('click'); //trigger() : 이벤트 강제 발생
+			fn_mng('add');
 		}
 	});
+
+	/* Set Current Time */
+	$("#view_td_last_date").val(getToday());	
+	$("#view_td_date").val(getToday());	
 	
-	$("#create_td_last_date").val(getToday());	
+	/* Check input radio */
+	$("#view_tp_pre").prop("checked", true);
 	
-	/* 예정 리스트 */
+	/* Pre Grid */
 	$("#pre_todo").jqGrid({
 		url:"/todo/main/getTodoPreListRetrieve",
 		loadtext:"로딩 중...",
@@ -37,19 +49,19 @@ $(function(){
 		mtype:"POST",
 		height:250,
 		width:360,
-		multiselect:true,
+		//multiselect:true,
 		//autowidth:true,
 		shrinkToFit: true,
-		colNames:['내용', 'user_nm', 'td_id', 'user_idx', 'td_date', 'td_upd_date', 'td_last_date'],
+		colNames:['내용', '마감일','user_nm', 'td_id', 'user_idx', 'td_date', 'td_upd_date', 'td_tp'],
 		colModel:[
 					{name:'td_nm', index:'td_nm', align:"left"},		
+					{name:'td_last_date', index:'td_last_date', align:"center", width:"55px;"},
 					{name:'user_nm', index:'user_nm', hidden:true},
 					{name:'td_id', index:'td_id', hidden:true},
 					{name:'user_idx', index:'user_idx', hidden:true},
 					{name:'td_date', index:'td_date', hidden:true},
 					{name:'td_upd_date', index:'td_upd_date', hidden:true},
-					{name:'td_last_date', index:'td_last_date', hidden:true}
-					//{name:'empty', index:'empty', formatter:fmtOpt1, width:13}
+					{name:'td_tp', index:'td_tp', hidden:true}
 				 ],
 		pager : "#pager_pre_list",
 		pagerpos:'left',
@@ -58,24 +70,26 @@ $(function(){
 			$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
 		},
  		onSelectRow: function(index, row) {
-			if(index) {
-				var row = $("#pre_todo").jqGrid('getRowData', index);
+ 			
+ 			if(index) {
+	 			var row = $("#pre_todo").jqGrid('getRowData', index);
+	 			
+				$("#status").val("update");
+
 				$("#view_td_id").val('');
 				$("#view_td_id").val(row.td_id);
-
-				$("#view_user_nm").val(row.user_nm);
 				$("#view_td_nm").val(row.td_nm);
+				
 				$("#view_td_date").val(row.td_date);
 				$("#view_td_upd_date").val(row.td_upd_date);
 				$("#view_td_last_date").val(row.td_last_date);
-				$("#view_tp_pre").prop("checked", true);
-				//$("input:radio[name='td_tp']").val('00').prop("checked", true);		
 				
-				$("#view_td_nm").prop("disabled", false);
-			}
+				$("#view_tp_pre").prop("checked", true);
+ 			}
 	    }
 	});	
-	/* 진행중 리스트 */
+	
+	/* Now Grid */
 	$("#now_todo").jqGrid({
 		url:"/todo/main/getTodoNowListRetrieve",
 		loadtext:"로딩 중...",
@@ -83,17 +97,18 @@ $(function(){
 		mtype:"POST",
 		height:250,
 		width:350,
-		multiselect:true,
+		//multiselect:true,
 		shrinkToFit: true,
-		colNames:['내용', 'user_nm', 'td_id', 'user_idx', 'td_date', 'td_upd_date', 'td_last_date'],
+		colNames:['내용', '마감일','user_nm', 'td_id', 'user_idx', 'td_date', 'td_upd_date', 'td_tp'],
 		colModel:[
 					{name:'td_nm', index:'td_nm', align:"left"},
+					{name:'td_last_date', index:'td_last_date', align:"center", width:"55px;"},
 					{name:'user_nm', index:'user_nm', hidden:true},
 					{name:'td_id', index:'td_id', hidden:true},
 					{name:'user_idx', index:'user_idx', hidden:true},
 					{name:'td_date', index:'td_date', hidden:true},
 					{name:'td_upd_date', index:'td_upd_date', hidden:true},
-					{name:'td_last_date', index:'td_last_date', hidden:true}
+					{name:'td_tp', index:'td_tp', hidden:true}
 				 ],
 		pager : "#pager_now_list",
 	    rowNum  : 25,
@@ -102,23 +117,26 @@ $(function(){
 			$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
 		},
  		onSelectRow: function(index, row) {
-			if(index) {
+			
+ 			if(index) {
 				var row = $("#now_todo").jqGrid('getRowData', index);
+
+				$("#status").val("update");
+				
 				$("#view_td_id").val('');
 				$("#view_td_id").val(row.td_id);
-
-				$("#view_user_nm").val(row.user_nm);
+				
 				$("#view_td_nm").val(row.td_nm);
 				$("#view_td_date").val(row.td_date);
 				$("#view_td_upd_date").val(row.td_upd_date);
 				$("#view_td_last_date").val(row.td_last_date);
-				$("#view_tp_now").prop("checked", true);
 				
-				$("#view_td_nm").prop("disabled", false);
+				$("#view_tp_now").prop("checked", true);
 			}
 	    }
 	});	
-	/* 완료 리스트 */
+	
+	/* Success Grid */
 	$("#success_todo").jqGrid({
 		url:"/todo/main/getTodoSuccessListRetrieve",
 		loadtext:"로딩 중...",
@@ -127,16 +145,17 @@ $(function(){
 		height:250,
 		width:350,
 		shrinkToFit: true,
-		multiselect:true,
-		colNames:['내용', 'user_nm', 'td_id', 'user_idx', 'td_date', 'td_upd_date', 'td_last_date'],
+		//multiselect:true,
+		colNames:['내용', '마감일', 'user_nm', 'td_id', 'user_idx', 'td_date', 'td_upd_date', 'td_tp'],
 		colModel:[
 					{name:'td_nm', index:'td_nm', align:"left"},
+					{name:'td_last_date', index:'td_last_date', align:"center", width:"55px;"},
 					{name:'user_nm', index:'user_nm',hidden:true},
 					{name:'td_id', index:'td_id', hidden:true},
 					{name:'user_idx', index:'user_idx', hidden:true},
 					{name:'td_date', index:'td_date', hidden:true},
 					{name:'td_upd_date', index:'td_upd_date', hidden:true},
-					{name:'td_last_date', index:'td_last_date', hidden:true}
+					{name:'td_tp', index:'td_tp', hidden:true}
 				 ],
 		pager : "#pager_success_list",
 	    rowNum  : 25,
@@ -145,23 +164,26 @@ $(function(){
 			$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
 		},
  		onSelectRow: function(index, row) {
-			if(index) {
+			
+ 			if(index) {
 				var row = $("#success_todo").jqGrid('getRowData', index);
+
+				$("#status").val("update");
+				
 				$("#view_td_id").val('');
 				$("#view_td_id").val(row.td_id);
-
-				$("#view_user_nm").val(row.user_nm);
+				
 				$("#view_td_nm").val(row.td_nm);
 				$("#view_td_date").val(row.td_date);
 				$("#view_td_upd_date").val(row.td_upd_date);
 				$("#view_td_last_date").val(row.td_last_date);
-				$("#view_tp_success").prop("checked", true);
 				
-				$("#view_td_nm").prop("disabled", false);
+				$("#view_tp_success").prop("checked", true);
 			}
 	    }
 	});	
-	/* 보류 리스트 */
+	
+	/* Rest Grid */
 	$("#re_todo").jqGrid({
 		url:"/todo/main/getTodoRestListRetrieve",
 		loadtext:"로딩 중...",
@@ -169,17 +191,18 @@ $(function(){
 		mtype:"POST",
 		height:250,
 		width:350,
-		multiselect:true,
+		//multiselect:true,
 		shrinkToFit: true,
-		colNames:['내용', 'user_nm', 'td_id', 'user_idx', 'td_date', 'td_upd_date', 'td_last_date'],
+		colNames:['내용', '마감일', 'user_nm', 'td_id', 'user_idx', 'td_date', 'td_upd_date', 'td_tp'],
 		colModel:[
 					{name:'td_nm', index:'td_nm', align:"left"},
+					{name:'td_last_date', index:'td_last_date', align:"center", width:"55px;"},
 					{name:'user_nm', index:'user_nm', hidden:true},
 					{name:'td_id', index:'td_id', hidden:true},
 					{name:'user_idx', index:'user_idx', hidden:true},
 					{name:'td_date', index:'td_date', hidden:true},
 					{name:'td_upd_date', index:'td_upd_date', hidden:true},
-					{name:'td_last_date', index:'td_last_date', hidden:true}
+					{name:'td_tp', index:'td_tp', hidden:true}
 				 ],
 		pager : "#pager_re_list",
 	    rowNum  : 25,
@@ -188,125 +211,92 @@ $(function(){
 			$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
 		},
  		onSelectRow: function(index, row) {
-			if(index) {
+			
+ 			if(index) {
 				var row = $("#re_todo").jqGrid('getRowData', index);
-				$("#view_td_id").val('');
+
+				$("#status").val("update");
+				
+				$("#view_td_id").val("");
 				$("#view_td_id").val(row.td_id);
 
-				$("#view_user_nm").val(row.user_nm);
 				$("#view_td_nm").val(row.td_nm);
+				$("#view_td_tp").val(row.td_tp);
 				$("#view_td_date").val(row.td_date);
 				$("#view_td_upd_date").val(row.td_upd_date);
 				$("#view_td_last_date").val(row.td_last_date);
-				$("#view_tp_re").prop("checked", true);
 				
-				$("#view_td_nm").prop("disabled", false);
+				$("#view_tp_re").prop("checked", true);
 			}
 	    }
 	});	
 });
 
-function fmtOpt1() {
-	str='';
-	str += "<button type='button'> -> </button>"
+function fn_mng(type) {
+
+	/* Create/Update Todo */
+	if(type=="add") {
+		
+		var td_nm = $("#view_td_nm").val();
+		if(td_nm == '') {
+			alert("내용을 입력하세요."); return;
+		}
+		
+		var td_tp = $("input:radio[name='td_tp']:checked").val();
+		$("#view_td_tp").val(td_tp);
 	
-	return str;
+		if($("#status").val()=="create") {
+			if(!confirm('등록하시겠습니까?')) return;
+			callAjax("/todo/main/createTodo", $("#frm_todo").serialize(), fn_result);
+	
+		}else if($("#status").val()=="update") {
+			if(!confirm("수정하시겠습니까?")) return;
+			callAjax("/todo/main/updateTodo", $("#frm_todo").serialize(), fn_result);
+		}
+	
+	/* Delete Todo */	
+	}else if(type=="delete") {
+		if($("#status").val()=="create") {
+			alert("삭제할 일정을 선택하세요."); return;
+		}
+		
+		if(!confirm("삭제하시겠습니까?")) return;
+		callAjax("/todo/main/deleteTodo",  $("#frm_todo").serialize(), fn_result);
+	}
 }
 
-/* 삭제 */
-function fn_mng_delete() {
-	if(!confirm("삭제하시겠습니까?")) return;
-	callAjax("/todo/main/deleteTodo",  $("#frm_todo").serialize(), fn_mng_delete_result);
-}
-/* 수정 */
-function fn_mng_update() {
-	if($("#view_td_nm").val()=='') {
-/* 		$("#view_td_nm").css("border", "2px solid red");
-		$("#view_td_nm").css("box-shadow", "0 0 3px red"); */
-		alert("내용을 입력하세요.");
-		return;
-	}
-	if(!confirm("수정하시겠습니까?")) return;
-	callAjax("/todo/main/updateTodo", $("#frm_todo").serialize(), fn_mng_update_result);
-}
-/* 삭제 결과 callback */
-function fn_mng_delete_result(data) {
-	if(data.resultCode=="S000") {
-		$("#pre_todo").setGridParam({url:"/todo/main/getTodoPreListRetrieve", page:1, datatype:"json"}).trigger("reloadGrid");
-		$("#now_todo").setGridParam({url:"/todo/main/getTodoNowListRetrieve", page:1, datatype:"json"}).trigger("reloadGrid");
-		$("#success_todo").setGridParam({url:"/todo/main/getTodoSuccessListRetrieve", page:1, datatype:"json"}).trigger("reloadGrid");
-		$("#re_todo").setGridParam({url:"/todo/main/getTodoRestListRetrieve", page:1, datatype:"json"}).trigger("reloadGrid");
-		
-		$("#view_user_nm").val('');
-		$("#view_td_nm").val('');
-		$("#view_td_date").val('');
-		$("#view_td_upd_date").val('');
-		$("input:radio[name='td_tp']").prop("checked", false);
-	}else {
-		alert("작업수행에 실패하였습니다.");
-	}
-}
-/* 수정 결과 callback */
-function fn_mng_update_result(data) {
+/* Ajax Callback Function */
+function fn_result(data) {
 	if(data.resultCode=="S000"){
 		$("#pre_todo").setGridParam({url:"/todo/main/getTodoPreListRetrieve", page:1, datatype:"json"}).trigger("reloadGrid");
 		$("#now_todo").setGridParam({url:"/todo/main/getTodoNowListRetrieve", page:1, datatype:"json"}).trigger("reloadGrid");
 		$("#success_todo").setGridParam({url:"/todo/main/getTodoSuccessListRetrieve", page:1, datatype:"json"}).trigger("reloadGrid");
 		$("#re_todo").setGridParam({url:"/todo/main/getTodoRestListRetrieve", page:1, datatype:"json"}).trigger("reloadGrid");
 		
-		$("#view_user_nm").val('');
-		$("#view_td_nm").val('');
-		$("#view_td_date").val('');
-		$("#view_td_upd_date").val('');
-		$("#view_td_last_date").val('');
-		$("input:radio[name='td_tp']").prop("checked", false);
+		fn_clear();
 	}else {
 		alert("작업수행에 실패하였습니다.");
 	}
 }
 
-/* 삽입 */
-function fn_todo_create() {
-	if($("#create_td_nm").val()=='') {
-		alert("할 일을 입력하세요.");
-/* 		$("#create_td_nm").css("border", "2px solid red");
-		$("#create_td_nm").css("box-shadow", "0 0 3px red"); */
-		return;
-	}
-	if(!confirm('할 일을 등록하시겠습니까?')) return;
+/* Clear Button Click Function */
+function fn_clear() {
+	$("#status").val("create");
 	
-	callAjax("/todo/main/createTodo", $("#frm_todo_create").serialize(), fn_create_result);
-}
-/* 삽입 결과 callback */
-function fn_create_result(data) {
-	if(data.resultCode=="S000"){
-		$("#pre_todo").setGridParam({url:"/todo/main/getTodoPreListRetrieve", page:1, datatype:"json"}).trigger("reloadGrid");
-		$("#now_todo").setGridParam({url:"/todo/main/getTodoNowListRetrieve", page:1, datatype:"json"}).trigger("reloadGrid");
-		$("#success_todo").setGridParam({url:"/todo/main/getTodoSuccessListRetrieve", page:1, datatype:"json"}).trigger("reloadGrid");
-		$("#re_todo").setGridParam({url:"/todo/main/getTodoRestListRetrieve", page:1, datatype:"json"}).trigger("reloadGrid");
-		
-		$("#create_td_nm").val('');
-		$("#create_tp_pre").prop("checked", true);
-	}else {
-		alert("작업수행에 실패하였습니다.");
-	}
-}
-
-/* 취소 버튼 */
-function fn_create_cancel(){
-	$("#create_td_nm").val('');
-	$("#create_tp_pre").prop("checked", true);
-}
-function fn_mng_cancel() {
-	$("#view_user_nm").val('');
 	$("#view_td_nm").val('');
-	$("#view_td_date").val('');
+	$("#view_td_tp").val('');
 	$("#view_td_upd_date").val('');
-	$("input:radio[name='td_tp']").prop("checked", false);
-	$("#view_td_nm").prop("disabled", true);
+	
+	$("#view_td_last_date").val('');
+	$("#view_td_last_date").val(getToday());
+	
+	$("#view_td_date").val('');
+	$("#view_td_date").val(getToday());	
+
+	$("#view_tp_pre").prop("checked", true);
 }
 
-/* 현재 날짜 Setting */
+/* Current Time Set Function */
 function getToday(){
     var date = new Date();
     var year = date.getFullYear();
@@ -315,6 +305,7 @@ function getToday(){
 
     return year + "-" + month + "-" + day;
 }
+/* My Current Time Set Function */
 function myGetToday() {
 	var year = new Date().getFullYear();
 	var m = new Date().getMonth()+1;
@@ -327,6 +318,7 @@ function myGetToday() {
 	return year + "-" + month + "-" + day;
 }
 </script>
+</head>
 <body>
 <div id="container">
 	<div role="content">
@@ -366,113 +358,71 @@ function myGetToday() {
 		</div>
 	</div>
 </div>
+
 <form class="form-horizontal" id="frm_todo" name="frm_todo" onsubmit="return false">
 	<div class="board_info" id="content">
-		<div class="widget-body" style="margin-left:30px; float:left; width:730px;">
+	<hr style="margin-top:0px; margin-bottom:0px;">
+		<div class="widget-body" style="width:800px; padding:30px; margin: auto;">
 			<fieldset>
-				<div style="flex:center; border-radius:3px; background-color:#1266F1;">
-					<label style="color:white; margin-left:5px;">
-						<span class="widget-icon"><i class="fa fa-list-alt txt-color-white"></i>&nbsp;&nbsp;&nbsp;TODO MANAGEMENT</span>
+				<div style="flex:center;">
+					<label>
+						<span class="widget-icon"><i class="fa fa-list-alt txt-color-white"></i>&nbsp;&nbsp;&nbsp;일정 관리</span>
 					</label>
 				</div>
 			</fieldset>
+			<input type="hidden" id="user_nm" name="user_nm" value="${sessionVo.user_nm}"/>
+			<input type="hidden" id="user_idx" name="user_idx" value="${sessionVo.user_idx}"/>
 			<input type="hidden" id="view_td_id" name="td_id"/>
+			<input type="hidden" id="view_td_tp" name="td_tp"/>
+			<input type="hidden" id="status" value="create"/>
+			
 			<fieldset>	
-					<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">작성자</legend>
-					<div>
-						<input class="form-control input-sm" id="view_user_nm" name="user_nm" disabled="disabled"/>					
-					</div>
 					<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">내용</legend>
 					<div>
-						<input class="form-control input-sm" id="view_td_nm" name="td_nm" disabled="disabled"/>					
+						<input class="form-control input-sm" id="view_td_nm" name="td_nm"/>					
 					</div>
-					<div style="float:left; width:250px;">
-					<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">작성일</legend>
-						<input class="form-control input-sm" id="view_td_date" disabled="disabled"/>					
-					</div>
-					<div style="float:left; width:250px;">
-					<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">수정일</legend>
-						<input class="form-control input-sm" id="view_td_upd_date" disabled="disabled"/>					
-					</div>
-					<div style="float:left; width:230px;">
-					<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">마감일</legend>
-						<input type="date" class="form-control input-sm" id="view_td_last_date" name="td_last_date"/>					
-					</div>
-					<div style="margin-top:10px; clear:both;">
+					<div style="float:left;">
 					<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">상태</legend>
 						<div style="margin-right:30px; display: inline-block;">
 							<input type="radio" class="form-check-input" name="td_tp" id="view_tp_pre" value="00"/>
-							<label for="view_tp_pre" class="form-check-label">할 일</label>
+							<label for="view_tp_pre" class="radio radio-inline">
+								<span>할 일</span>
+							</label>
 						</div>
 						<div style="margin-right:30px; display: inline-block;">
 							<input type="radio" class="form-check-input" name="td_tp" id="view_tp_now" value="01"/>	
-							<label for="view_tp_now" class="form-check-label">진행 중</label>
+							<label for="view_tp_now" class="radio radio-inline">
+								<span>진행 중</span>
+							</label>
 						</div>
 						<div style="margin-right:30px; display: inline-block;">
 							<input type="radio" class="form-check-input" name="td_tp" id="view_tp_success" value="02"/>
-							<label for="view_tp_success" class="form-check-label">완료</label>
+							<label for="view_tp_success" class="radio radio-inline">
+								<span>완료</span>
+							</label>
 						</div>
 						<div style="margin-right:30px; display: inline-block;">
 							<input type="radio" class="form-check-input" name="td_tp" id="view_tp_re" value="99"/>	
-							<label for="view_tp_re" class="form-check-label">보류</label>
+							<label for="view_tp_re" class="radio radio-inline">
+								<span>보류</span>
+							</label>
 						</div>
 					</div>
+					
+					<div style="clear:both;">
+					<label style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:30px;">
+						<span>작성일 / 마감일</span>
+						<input class="form-control input-sm" id="view_td_date" disabled="disabled" style="display:inline-block; width:310px; margin-left:15px;"/>					
+						<input type="date" class="form-control input-sm" id="view_td_last_date" name="td_last_date" style="display:inline-block; width:310px;"/>
+					</label>					
+					</div>
 			</fieldset>	
-			<div id="todo_mng" style="text-align: right;">
-				<button type='button' id="update_btn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_mng_update();">수정</button>		
-				<button type='button' id="delete_btn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_mng_delete();">삭제</button>		
-				<button type='button' id="mng_cancel_btn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_mng_cancel();">취소</button>		
+			
+			<div id="todo_mng" style="text-align: right; margin-top: 30px; float:right;">
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 20px 2px; font-size: 15px; font-weight: bold;" onclick="fn_clear();">신규</button>		
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 20px 2px; font-size: 15px; font-weight: bold;" onclick="fn_mng('add');">저장</button>		
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 20px 2px; font-size: 15px; font-weight: bold;" onclick="fn_mng('delete');">삭제</button>		
 			</div>
-		</div>
-	</div>
-</form>
-<form class="form-horizontal" id="frm_todo_create" name="frm_todo_create" onsubmit="return false">	
-	<div class="widget-body" style="margin-right:30px; float:right; width:750px;">
-		<fieldset>
-			<div style="flex:center; border-radius:3px; background-color:#1266F1;">
-				<label style="color: white; margin-left:5px;">
-					<span class="widget-icon"><i class="fa fa-list-alt txt-color-white"></i>&nbsp;&nbsp;&nbsp;TODO CREATE</span>
-				</label>
-			</div>
-		</fieldset>
-		<input type="hidden" id="view_user_idx" name="user_idx" value="${sessionVo.user_idx}"/>
-		<input type="hidden" id="view_user_nm" name="user_nm" value="${sessionVo.user_nm}"/>
-		<fieldset>	
-				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">작성자</legend>
-				<div>
-					<input class="form-control input-sm" id="create_user_nm" value="${sessionVo.user_nm}" disabled="disabled"/>					
-				</div>
-				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">할 일</legend>
-				<div>
-					<input class="form-control input-sm" id="create_td_nm" name="td_nm" placeholder="할 일을 입력하세요."/>					
-				</div>
-				<div style="float:left; width: 300px;">
-				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">마감일 설정</legend>
-					<input type="date" class="form-control input-sm" id="create_td_last_date" name="td_last_date"/>					
-				</div>
-				<div style="float:right;">
-				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">상태</legend>
-					<div style="margin-right:30px; display: inline-block;">
-						<input type="radio" class="form-check-input" name="create_td_tp" id="create_tp_pre" value="00" checked/>
-						<label for="create_tp_pre" class="form-check-label">할 일</label>
-					</div>
-					<div style="margin-right:30px; display: inline-block;">
-						<input type="radio" class="form-check-input" name="create_td_tp" id="create_tp_now" value="01"/>	
-						<label for="create_tp_now" class="form-check-label">진행 중</label>
-					</div>
-					<div style="margin-right:30px; display: inline-block;">
-						<input type="radio" class="form-check-input" name="create_td_tp" id="create_tp_success" value="02"/>
-						<label for="create_tp_success" class="form-check-label">완료</label>
-					</div>
-					<div style="margin-right:30px; display: inline-block;">
-						<input type="radio" class="form-check-input" name="create_td_tp" id="create_tp_re" value="99"/>	
-						<label for="create_tp_re" class="form-check-label">보류</label>
-					</div>
-				</div>
-		</fieldset>	
-		<div id="todo_create" style="text-align: right;">
-			<button type='button' id="create_btn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_todo_create();">등록</button>		
-			<button type='button' id="create_cancel_btn" class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_create_cancel();">취소</button>		
 		</div>
 	</div>
 </form>

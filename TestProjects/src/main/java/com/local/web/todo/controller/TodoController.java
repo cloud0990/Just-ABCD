@@ -2,6 +2,7 @@ package com.local.web.todo.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -210,7 +211,27 @@ public class TodoController {
 	}
 	
 	/**
-	 * 삭제
+	 * Todo 삽입
+	 * @param hashmapParam
+	 * @return
+	 */
+	@Transactional
+	@RequestMapping(value="createTodo", method=RequestMethod.POST)
+	public @ResponseBody ReturnDataVo createTodo(@RequestParam HashMap<String, Object> hashmapParam) {
+		ReturnDataVo result = new ReturnDataVo();
+
+		try {
+			mapper.createTodo(hashmapParam);
+			result.setResultCode("S000");
+		} catch (Exception e) {
+			result.setResultCode("S999");
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	/**
+	 * Todo 삭제
 	 * @param hashmapParam
 	 * @return
 	 */
@@ -230,7 +251,7 @@ public class TodoController {
 	}
 	
 	/**
-	 * 수정
+	 * Todo 수정
 	 * @param hashmapParam
 	 * @return
 	 */
@@ -242,29 +263,7 @@ public class TodoController {
 		try {
 			mapper.updateTodo(hashmapParam);
 			result.setResultCode("S000");
-		} catch (Exception e) {
-			result.setResultCode("S999");
-			e.printStackTrace();
-		}
-		return result;
-	}
-	
-	/**
-	 * 삽입
-	 * @param hashmapParam
-	 * @return
-	 */
-	@Transactional
-	@RequestMapping(value="createTodo", method=RequestMethod.POST)
-	public @ResponseBody ReturnDataVo createTodo(@RequestParam HashMap<String, Object> hashmapParam) {
-		ReturnDataVo result = new ReturnDataVo();
-
-		hashmapParam.put("td_tp", hashmapParam.get("create_td_tp"));
-		hashmapParam.remove("create_td_tp");
-
-		try {
-			mapper.createTodo(hashmapParam);
-			result.setResultCode("S000");
+			
 		} catch (Exception e) {
 			result.setResultCode("S999");
 			e.printStackTrace();
