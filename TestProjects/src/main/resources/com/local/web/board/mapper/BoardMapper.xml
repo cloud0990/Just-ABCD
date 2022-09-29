@@ -40,9 +40,16 @@
 				<when test="srch_user_board.equals('srch_b_content')">
 					AND B_CONTENT LIKE CONCAT('%', #{srch_text}, '%')
 				</when>
+				<when test="srch_user_board.equals('srch_all')">
+					AND USER_NM LIKE CONCAT('%', #{srch_text} ,'%')
+					OR B_SUBJECT LIKE CONCAT('%', #{srch_text} ,'%')
+					OR B_CONTENT LIKE CONCAT('%', #{srch_text}, '%')
+				</when>
 			</choose>
 		</if>
-		ORDER BY BOARD.BOARD_ID DESC
+		<if test="sidx != '' and sord != '' ">
+			ORDER BY ${sidx} ${sord}
+		</if>
    	    LIMIT ${start}, ${end}
 	</select>
 	
@@ -74,7 +81,15 @@
 				<when test="srch_user_board.equals('srch_b_content')">
 					AND B_CONTENT LIKE CONCAT('%', #{srch_text}, '%')
 				</when>
+				<when test="srch_user_board.equals('srch_all')">
+					AND USER_NM LIKE CONCAT('%', #{srch_text} ,'%')	
+					OR B_SUBJECT LIKE CONCAT('%', #{srch_text} ,'%')
+					OR B_CONTENT LIKE CONCAT('%', #{srch_text}, '%')
+				</when>
 			</choose>
+		</if>
+		<if test="sidx != '' and sord != '' ">
+			ORDER BY ${sidx} ${sord}
 		</if>		
 		LIMIT ${start}, ${end}	   
 	</select>

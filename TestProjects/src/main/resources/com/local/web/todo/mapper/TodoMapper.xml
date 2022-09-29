@@ -24,6 +24,9 @@
 		WHERE 1=1
 		AND USER_IDX = #{user_idx}
 		AND TD_TP = '00'
+		<if test="sidx != '' and sord != '' ">
+			ORDER BY ${sidx} ${sord}
+		</if>	
 		LIMIT #{start}, #{end}			
 	</select>
 	
@@ -46,6 +49,9 @@
 		WHERE 1=1
 		AND USER_IDX = #{user_idx}
 		AND TD_TP = '01'
+		<if test="sidx != '' and sord != '' ">
+			ORDER BY ${sidx} ${sord}
+		</if>	
 		LIMIT #{start}, #{end}			
 	</select>
 
@@ -68,6 +74,9 @@
 		WHERE 1=1
 		AND USER_IDX = #{user_idx}
 		AND TD_TP = '02'
+		<if test="sidx != '' and sord != '' ">
+			ORDER BY ${sidx} ${sord}
+		</if>
 		LIMIT #{start}, #{end}			
 	</select>
 
@@ -90,6 +99,9 @@
 		WHERE 1=1
 		AND USER_IDX = #{user_idx}
 		AND TD_TP = '99'
+		<if test="sidx != '' and sord != '' ">
+			ORDER BY ${sidx} ${sord}
+		</if>
 		LIMIT #{start}, #{end}			
 	</select>	
 

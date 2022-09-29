@@ -15,6 +15,7 @@ input:focus{
 </style>
 <script type="text/javascript">
 $(function(){
+
 	/* Search Filter Enter key Event */
 	$("#srch_user_text").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
@@ -33,22 +34,28 @@ $(function(){
 	/* User Information Detail Grid's Enter key Event */
 	$("#view_user_nm").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
+			
 			if($("#status").val()=="create") {
+				
 				if($("#view_user_nm").val()=='') {
 					alert('닉네임을 입력해주세요.'); return;
 				}
+				
 				$("#duplChk").trigger('click');
+				
+			}else if($("#status").val()=="update") {
+				fn_mng_user('add');
 			}
 		}
 	});
 	$("#view_user_id").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
-			fn_user_cu();
+			fn_mng_user('add');
 		}
 	});
 	$("#view_user_pwd").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
-			fn_user_cu();
+			fn_mng_user('add');
 		}
 	});
 	
@@ -58,17 +65,19 @@ $(function(){
 		loadtext:"로딩 중..",
 		datatype:"json",
 		mtype:"POST",
-		height:'auto',
+		height : 640,
+		//height:'auto',
 		width:1000,
+		sortorder : 'asc',
 		shrinkToFit: true,
-		colNames:['회원번호', '닉네임', '아이디', '비밀번호', '가입일', '수정일'],
+		colNames:['회원번호', '닉네임', '아이디', '가입일', '수정일', 'user_pwd'],
 		colModel: [
-					{name:'user_idx', index:'user_idx', align:"center", width:"45px"},
+					{name:'user_idx', index:'user_idx', align:"center", width:"25px"},
 					{name:'user_nm',  index:'user_nm',  align:"center", width:"80px"},
 					{name:'user_id',  index:'user_id',  align:"center", width:"70px"},
-					{name:'user_pwd', index:'user_pwd', align:"center"},
 					{name:'user_date', index:'user_date', align:"center", width:"60px"},
 					{name:'upd_date', index:'upd_date', align:"center", width:"60px"},
+					{name:'user_pwd', index:'user_pwd', hidden:true}
 					//{name:'empty',  index:'empty',  align:"center", formatter:formatOpt, width:50}
 	              ],
 	    rowNum: 20,
@@ -78,23 +87,35 @@ $(function(){
 	    viewrecords: true,
 		loadComplete: function() {
 			$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
-            var allRow = $("#mainGrid").jqGrid('getGridParam', 'records');        
-            if(allRow == 0 ){          
-            	$("#mainGrid > tbody").append("<tr><td align='center' colspan='7' style=''>조회된 데이터가 없습니다.</td></tr>");       
+            
+			var rows = $("#mainGrid").jqGrid('getGridParam', 'records');        
+            if(rows == 0 ){          
+            	$("#mainGrid > tbody").append("<tr><td align='center' colspan='7' style=''>조회된 데이터가 없습니다.</td></tr>");   
            	}
+            
+            var user_idx = '${sessionVo.user_idx}';
+            var list = $("#mainGrid").getRowData();
+
+            for(var i=0; i<list.length; i++){
+	            if(user_idx == list[i].user_idx){
+	            	//var user = $("#mainGrid tr:eq("+ (i+1) +") td:eq('0')").text();
+	            	$("#mainGrid tr:eq("+ (i+1) +") td").css({"color":"#222222", "font-weight":"700"});
+	                break;
+                }
+           }
 		},
  		onSelectRow: function(index, row) { //index = 선택된 row의 index
- 			
- 			$("#view_user_idx").val('');
- 			
- 			$("#status").val("update");		
- 			$("#duplChk").css({"display":"none"});
- 			
  			if(index) {
  				
  				var row = $("#mainGrid").jqGrid('getRowData', index);
+ 	 			
+ 	 			$("#status").val("update");
  				
+ 	 			$("#view_user_idx").val('');
+ 	 			$("#curr_user_idx").val('');
  				$("#view_user_idx").val(row.user_idx);
+ 				$("#curr_user_idx").val(row.user_idx);
+
  				$("#view_user_id").val(row.user_id);
  				$("#view_user_pwd").val(row.user_pwd);
  				$("#view_user_nm").val(row.user_nm);
@@ -140,6 +161,14 @@ function formatOpt(cellvalue, options, rowObject) {
 }
 */
 
+/* Keep Pageing Function */
+function fn_keep_page() {
+	var scrollPosition = "";
+	var pageing = $("#mainGrid").jqGrid("getGridParam");
+	pageing.scrollTopPosition = $("#mainGrid").closest(".ui-jqgrid-bdiv").scrollTop();
+	scrollPosition = pageing.scrollPosition;
+}
+
 /* Create User Button Click */
 function fn_user_clear() {
 	
@@ -155,90 +184,113 @@ function fn_user_clear() {
 	$("#view_upd_date").val('');
 }
 
-/* Delete User */
-function fn_user_delete() {
-	if(!confirm("삭제하시겠습니까?")) return;
-	callAjax("/main/deleteUser", $("#frm_update_user").serialize(), fn_result);
-}
-
-/* Update User */
-function fn_user_cu() {
+/* Create/Update/Delete User */
+function fn_mng_user(type) {
 	
-	if($("#status").val() == "create") {
-		if(!confirm("등록하시겠습니까?")) return;
+	$("#type").val(type);
+	
+	var user_id  = $("#view_user_id").val();
+	var user_pwd = $("#view_user_pwd").val();
+	var user_nm  = $("#view_user_nm").val();
+	var curr_user_idx = '${sessionVo.user_idx}';
+	$("#curr_user_idx").val(curr_user_idx);
+
+	if(user_nm == '') {
+		alert('닉네임을 입력해주세요.');
+		return;
+	}
+	if(user_id == '') {
+		alert('아이디를 입력해주세요.');
+		return;
+	}
+	if(user_pwd == '') {
+		alert('비밀번호를 입력해주세요.');
+		return;
+	}
+	
+	/* Create/Update User */
+	if(type=="add") {
 		
-		var user_id  = $("#view_user_id").val();
-		var user_pwd = $("#view_user_pwd").val();
-		var user_nm  = $("#view_user_nm").val();
-	
-		if(user_nm == '') {
-			$("#view_user_nm").css("border", "2px solid red");
-			$("#view_user_nm").css("box-shadow", "0 0 3px red");
-			alert('닉네임을 입력해주세요.');
-			return;
-		}
-		if(user_id == '') {
-			$("#view_user_id").css("border", "2px solid red");
-			$("#view_user_id").css("box-shadow", "0 0 3px red");
-			alert('아이디를 입력해주세요.');
-			return;
-		}
-		if(user_pwd == '') {
-			$("#view_user_pwd").css("border", "2px solid red");
-			$("#view_user_pwd").css("box-shadow", "0 0 3px red");
-			alert('비밀번호를 입력해주세요.');
-			return;
-		}
+		if($("#status").val() == "create") {
+			if(!confirm("등록하시겠습니까?")) return;
 
-		$.post("/signUp/insertUser"
-				, {user_id:user_id, user_pwd:user_pwd, user_nm:user_nm}
-				, function(data){
-					var resultCode = data.resultCode;
-					if(resultCode=='S000'){
-					
-						alert("사용자 등록이 완료되었습니다.");
+			$.post("/signUp/insertUser"
+					, {user_id:user_id, user_pwd:user_pwd, user_nm:user_nm}
+					, function(data){
+						var resultCode = data.resultCode;
+						if(resultCode=='S000'){
+							alert("사용자 등록이 완료되었습니다.");
+							
+							$("#mainGrid").setGridParam({url:"/main/selectUserList", page:fn_keep_page(), datatype:"json"}).trigger("reloadGrid");	
 						
-						$("#mainGrid").setGridParam({url:"/main/selectUserList", page:1, datatype:"json"}).trigger("reloadGrid");	
-					
-					}else if(resultCode=='S999'){
-						$("#view_user_id").attr("style", "border: 2px solid red;");
-						$("#view_user_pwd").attr("style", "border: 2px solid red;");					
-						$("#view_user_nm").attr("style", "border: 2px solid red;");
-						alert("작업수행에 실패하였습니다.");
-						return false;
-				   }
-		});
+						}else if(resultCode=='S999'){
+							
+							alert("작업수행에 실패하였습니다.");
+							return false;
+					   }
+			});
+			
+		}else if($("#status").val() == "update") {
+			
+			if(!confirm("수정하시겠습니까?")) return;
+			callAjax("/main/updateUser", $("#frm_update_user").serialize(), fn_result);
+		}
 		
-	}else if($("#status").val() == "update") {
-		if(!confirm("수정하시겠습니까?")) return;
+	/* Delete User */	
+	}else if(type=="delete") {
 		
-		callAjax("/main/updateUser", $("#frm_update_user").serialize(), fn_result);
+		if(!confirm("삭제하시겠습니까?")) return;
+		callAjax("/main/deleteUser", $("#frm_update_user").serialize(), fn_result);
 	}
 }
 /* Callback Function > Update/Delete */
 function fn_result(data) {
 	
-	if(data.resultCode=="S000") {
-		alert("작업수행이 정상적으로 처리되었습니다..");
+	var user_idx = '${sessionVo.user_idx}';
+	var view_user_idx = $("#view_user_idx").val();
+	var type = $("#type").val();
+	
+	var resultCode = data.resultCode;
+	var resultMsg = data.resultMsg;
+	
+	if(user_idx == view_user_idx && type=="delete") {
+		alert("로그인화면으로 돌아갑니다.");
+		location.href='/logout';
+	}
+	
+	if(resultCode == "S000") {
 		
-		$("#mainGrid").setGridParam({url:"/main/selectUserList", page:1, datatype:"json"}).trigger("reloadGrid");
+		if(user_idx == view_user_idx || resultMsg=="CHG") {
+			
+			location.href='/main/view';	
+
+		}else {
+			
+			fn_user_clear();
+			$("#duplChk").css({"display":"none"});
+			$("#mainGrid").setGridParam({url:"/main/selectUserList", page:fn_keep_page(), datatype:"json"}).trigger("reloadGrid");
 		
-		//값 초기화
-		$("#view_user_idx").val('');
-		$("#view_user_id").val('');
-		$("#view_user_pwd").val('');
-		$("#view_user_nm").val('');
-		$("#view_user_date").val('');
-		$("#view_upd_date").val('');
-		$("#status").val("create");
-	}else {
+		}
+	}else if(resultCode == "S999"){
 		alert("작업수행에 실패하였습니다.");
 	}
 }
 
+/* Change Login User */
+function fn_user_login() {
+	
+	var user_idx = $("#view_user_idx").val();
+	var user_nm = $("#view_user_nm").val();
+	var user_id = $("#view_user_id").val();
+	
+	if(!confirm("["+ user_id + "] 계정으로 로그인하시겠습니까?")) return;
+	
+	callAjax("/main/changeUser", {user_idx:user_idx}, fn_result);
+}
+
 /* Search User */
 function fn_user_srch() {
-	
+
 	$("#mainGrid").clearGridData();
 	
 	$("#mainGrid").setGridParam({
@@ -284,7 +336,7 @@ function fn_user_srch() {
 	</div>
 </div>
 <form class="form-horizontal" id="frm_update_user" name="frm_update_user" onsubmit="return false">
-	<input type="hidden" name="status" id="status" value="create"/>
+	<input type="hidden" id="status" value="create"/>
 	<div class="user_info" id="content" style="float:right; width:530px;">
 		<div class="widget-body" style="padding:30px;">
 			<fieldset>
@@ -294,13 +346,15 @@ function fn_user_srch() {
 			</fieldset>
 			<hr style="margin-top:0px;">
 			<input type="hidden" id="view_user_idx" name="user_idx">
+			<input type="hidden" id="curr_user_idx" name="curr_user_idx">
+			<input type="hidden" id="type">
 			<fieldset>		
 				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">닉네임</legend>
 				<div style="display: inline-block; width:385px;">
 					<input class="form-control input-sm" id="view_user_nm" name="user_nm"/>					
 				</div>
                 <div style="display: inline-block;">
-	              <button type="button" class='btn btn-default btn-sm' id="duplChk" style="font-weight: bold; font-size: 12px; display:none;">중복확인</button>
+	              <button type="button" class='btn btn-default btn-sm' id="duplChk" style="padding:2px 10px 2px; font-size: 12px; font-weight:700; display:none;">중복확인</button>
                 </div>
 				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">아이디</legend>
 				<div>
@@ -320,10 +374,11 @@ function fn_user_srch() {
 				</div>
 			</fieldset>
 
-			<div id="updateCancel_btn" style="margin-top: 15px; text-align: right; clear:both; font-weight: bold;">
-				<button type='button' class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_user_clear()">신규</button>		
-				<button type='button' class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_user_cu()">저장</button>		
-				<button type='button' class='btn btn-default btn-sm' style="padding:2px 10px 2px; font-size: 15px;" onclick="fn_user_delete()">삭제</button>		
+			<div id="updateCancel_btn" style="margin-top: 25px; text-align: right; clear:both; font-weight: bold;">
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 20px 2px; font-weight: bold; font-size: 15px;" onclick="fn_user_login();">사용자 로그인</button>		
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 20px 2px; font-weight: bold; font-size: 15px;" onclick="fn_user_clear();">신규</button>		
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 20px 2px; font-weight: bold; font-size: 15px;" onclick="fn_mng_user('add');">저장</button>		
+				<button type='button' class='btn btn-default btn-sm' style="padding:2px 20px 2px; font-weight: bold; font-size: 15px;" onclick="fn_mng_user('delete');">삭제</button>		
 			</div>
 		</div>
 	</div>

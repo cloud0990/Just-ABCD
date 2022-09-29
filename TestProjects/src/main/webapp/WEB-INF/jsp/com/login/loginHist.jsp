@@ -6,8 +6,21 @@
 <head>
 <meta charset="UTF-8">
 <title>HOME : LOGIN HISTORY</title>
+<style type="text/css">
+input[type=radio]:checked+label {
+	font-weight: 700;
+}
+input[type=radio]+label {
+	font-size: 15px;
+}
+input[type=radio]+label:hover {
+	cursor: pointer;
+}
+</style>
 <script type="text/javascript">
 $(function(){
+	
+	/* Search Filter Enter key Event */
 	$("#srch_text").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
 			if($("#srch_text").val()=='') {
@@ -16,7 +29,13 @@ $(function(){
 			$("#srch_btn").trigger('click'); //trigger() : 이벤트 강제 발생
 		}
 	});
-	/* 검색필터 */
+	/* Delete LoginHistory Enter key Event */
+	$("input:radio[name='delData']").keypress(function(e){
+		if(e.keyCode && e.keyCode == 13) {
+			$("#log_del_btn").trigger('click');
+		}
+	});
+	/* Search Filter Click Event */
 	$("#srch_btn").click(function(){
 		if($("#srch_text").val()=='') {
 			$("#srch_log option:eq(0)").prop("selected", true);
@@ -28,8 +47,8 @@ $(function(){
 		url:"/main/selectLoginHist",
 	    loadtext:"로딩 중..",
 		datatype:"json", //데이터 타입(그리드를 채우는 데이터의 형식)
-		mtype:"POST", //데이터 전송방식(요청메소드 정의)
-		height : 650, //'auto' 로 자동 높이 설정 가능
+		mtype:"POST",    //데이터 전송방식(요청메소드 정의)
+		height : 645,    //'auto' : 자동 높이 설정
 		width : 800,
 		shrinkToFit: true,
 		colNames:['번호', '닉네임', '접속 아이디', '접속여부', '접속시도일', 'log_user_ip'],
@@ -47,8 +66,8 @@ $(function(){
 		viewrecords: true,
 		loadComplete: function() {
 			$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
-            var allRow = $("#mainGrid").jqGrid('getGridParam', 'records');        
-            if(allRow == 0 ){          
+            var rows = $("#mainGrid").jqGrid('getGridParam', 'records');        
+            if(rows == 0 ){          
             	$("#mainGrid > tbody").append("<tr><td align='center' colspan='6' style=''>조회된 데이터가 없습니다.</td></tr>");       
            	}
 		},
@@ -67,7 +86,27 @@ $(function(){
 	    } 
 	});
 });
-/* 사용자 검색 */
+
+/* Delete Login History Function */
+function fn_log_hist_del() {
+	
+	var delData = $("input:radio[name='delData']:checked").val();
+	
+	if(!confirm('삭제하시겠습니까?')) return;
+	callAjax("/main/deleteLoginHist", {delData:delData}, fn_result);
+}
+
+/* Ajax Callback Function */
+function fn_result(data) {
+	
+	if(data.resultCode=="S000") {
+		$("#mainGrid").setGridParam({url:"/main/selectLoginHist", page:1, datatype:"json"}).trigger("reloadGrid");
+	}else {
+		alert("작업수행에 실패하였습니다.");
+	}
+}
+
+/* Login User Search Filter */
 function fn_log_srch() {
 	$("#mainGrid").clearGridData();
 	$("#mainGrid").setGridParam({
@@ -88,7 +127,7 @@ function fn_log_srch() {
 		<div class="widget-body" style="padding:30px;">
 			<fieldset>
 				<div class="form-group" style="flex:center; float:left;">
-					<label><span class="widget-icon"><i class="fa fa-list-ul"></i>&nbsp;&nbsp;&nbsp;사용자 로그인 기록</span></label>
+					<label><span class="widget-icon"><i class="fa fa-list-ul"></i>&nbsp;&nbsp;&nbsp;로그인 기록</span></label>
 				</div>
 			<!-- 검색 -->
 			<div class="input-group rounded" style="width:400px; float: right;">
@@ -118,7 +157,7 @@ function fn_log_srch() {
 	<div class="widget-body" style="padding:30px;">
 		<fieldset>
 			<div style="flex:center;">
-				<label><span class="widget-icon"><i class="fa fa-list-alt txt-color-white"></i>&nbsp;&nbsp;&nbsp;사용자 상세정보</span></label>
+				<label><span class="widget-icon"><i class="fa fa-list-alt txt-color-white"></i>&nbsp;&nbsp;&nbsp;로그인 상세정보</span></label>
 			</div>
 		</fieldset>
 		<hr style="margin-top:0px;">
@@ -145,6 +184,50 @@ function fn_log_srch() {
 				<input class="form-control input-sm" id="view_log_date" disabled="disabled"/>					
 			</div>
 		</fieldset>
+	</div>
+	
+	<div class="widget-body" style="padding:30px;">
+		<fieldset>
+			<div style="flex:center;">
+				<label><span class="widget-icon"><i class="fa fa-list-alt txt-color-white"></i>&nbsp;&nbsp;&nbsp;로그인 데이터 관리</span></label>
+			</div>
+		</fieldset>
+		<hr style="margin-top:0px;">
+		<div style="margin-top:30px;">
+			<div style="margin-right:30px; display: inline-block;">
+				<input type="radio" class="form-check-input" name="delData" id="day" value="DAY" checked/>
+				<label for="day" class="radio radio-inline">
+					<span>일일</span>
+				</label>
+			</div>
+			<div style="margin-right:30px; display: inline-block;">
+				<input type="radio" class="form-check-input" name="delData" id="week" value="WEEK"/>	
+				<label for="week" class="radio radio-inline">
+					<span>주간</span>
+				</label>
+			</div>
+			<div style="margin-right:30px; display: inline-block;">
+				<input type="radio" class="form-check-input" name="delData" id="month" value="MONTH"/>
+				<label for="month" class="radio radio-inline">
+					<span>월간</span>
+				</label>
+			</div>
+			<div style="margin-right:30px; display: inline-block;">
+				<input type="radio" class="form-check-input" name="delData" id="all" value="ALL"/>	
+				<label for="all" class="radio radio-inline">
+					<span>일괄</span>
+				</label>
+			</div>
+			<div style="margin-right:30px; display: inline-block;">
+				<input type="radio" class="form-check-input" name="delData" id="failed" value="failed"/>	
+				<label for="failed" class="radio radio-inline">
+					<span>로그인 실패</span>
+				</label>
+			</div>
+		</div>
+		<div id="del_btn" style="text-align: right; font-weight: bold; padding:10px;">
+			<button type='button' class='btn btn-default btn-sm' style="padding:2px 20px 2px; font-weight: bold; font-size: 15px;" id="log_del_btn" onclick="fn_log_hist_del();">삭제</button>		
+		</div>
 	</div>
 </div>
 

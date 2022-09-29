@@ -40,7 +40,7 @@ public class LoginController implements Serializable {
 	 * @return ReturnDataVo
 	 */
 	@RequestMapping(value="/checkLoginUser", method=RequestMethod.POST)
-	public @ResponseBody ReturnDataVo checkLoginUser(@RequestParam HashMap<String, String> hashmapParam, HttpServletRequest request) throws Exception {
+	public @ResponseBody ReturnDataVo checkLoginUser(@RequestParam HashMap<String, Object> hashmapParam, HttpServletRequest request) throws Exception {
 		ReturnDataVo  result = new ReturnDataVo();
 		HttpSession  session = request.getSession(true);//현재 session이 있으면 반환, 없으면 생성해서 반환 (=request.getSession() )
 		//HttpSession session = request.getSession(false); : 현재 session이 있으면 반환, 없으면 null반환

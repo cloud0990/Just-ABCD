@@ -7,19 +7,21 @@
 	</select>
 
 	<select id="selectUserList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-		/* UserMapper.selectUserList */
+	/* UserMapper.selectUserList */
 		SELECT  SQL_CALC_FOUND_ROWS
 				USER.*
 		FROM
-				(SELECT
-						  USER_IDX AS user_idx
-						, USER_ID AS user_id
-						, USER_PWD AS user_pwd
-						, USER_NM AS user_nm
-						, DATE_FORMAT(USER_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS user_date
-						, DATE_FORMAT(UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS upd_date
-				FROM TB_USER
-				ORDER BY USER_DATE DESC) AS USER
+				(
+					SELECT
+							  USER_IDX AS user_idx
+							, USER_ID  AS user_id
+							, USER_PWD AS user_pwd
+							, USER_NM  AS user_nm
+							, DATE_FORMAT(USER_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i')) AS user_date
+							, DATE_FORMAT(UPD_DATE, CONCAT('%Y-%m-%d', ' ', '%H:%i'))  AS upd_date
+					FROM TB_USER
+					ORDER BY USER_DATE DESC
+				) AS USER
 		WHERE 1=1
 		<if test="srch_user != null and srch_user != ''">
 			<choose>
@@ -29,24 +31,33 @@
 				<when test="srch_user.equals('srch_user_id')">
 					AND USER_ID LIKE CONCAT('%', #{srch_user_text} ,'%')		
 				</when>
+				<when test="srch_user.equals('srch_all')">
+					AND USER_NM LIKE CONCAT('%', #{srch_user_text} ,'%')	
+					OR USER_ID LIKE CONCAT('%', #{srch_user_text} ,'%')		
+				</when>
 			</choose>
 		</if>
+		<if test="sidx != '' and sord != '' ">
+			ORDER BY ${sidx} ${sord}
+		</if>		
 		LIMIT ${start}, ${end}
 	</select>
+	
 	<insert id="signUpUser" parameterType="java.util.HashMap">
-		/* UserMapper.signUpUser */
+	/* UserMapper.signUpUser */
 		INSERT INTO
 		TB_USER(USER_ID, USER_NM, USER_PWD, USER_DATE)
 		VALUES( 
 				  #{user_id}
-				, CONCAT('유저_' ,#{user_nm})
-				, MD5(#{user_pwd})
+				, #{user_nm}
+		   <!-- , MD5(#{user_pwd})-->
+				, #{user_pwd}
 				, NOW()
 			  )
 	</insert>
 
 	<select id="checkLoginUser" parameterType="java.util.HashMap" resultType="com.local.web.common.domain.SessionVo">
-		/* UserMapper.checkLoginUser */
+	/* UserMapper.checkLoginUser */
 		SELECT 
 				  USER_IDX AS user_idx
 				, USER_ID AS user_id 
@@ -56,11 +67,23 @@
 			TB_USER
 		WHERE 1=1 
 		AND USER_ID = #{user_id}
-		AND USER_PWD = MD5(#{user_pwd})
+		AND USER_PWD = #{user_pwd}
+	</select>
+	
+	<select id="changeUser" parameterType="hashMap" resultType="com.local.web.common.domain.SessionVo">
+	/* UserMapper.changeUser */
+		SELECT
+			  USER_IDX AS user_idx
+			, USER_ID AS user_id
+			, USER_PWD AS user_pwd
+			, USER_NM AS user_nm
+		FROM TB_USER
+		WHERE 1=1
+		AND USER_IDX = #{user_idx}		
 	</select>
 
 	<insert id="createloginHist" parameterType="hashMap">
-		/* UserMapper.createloginHist */
+	/* UserMapper.createloginHist */
 		INSERT INTO
 		TB_LOGIN_LOG(LOG_USER_ID, LOG_USER_IP, LOG_USER_NM, LOG_TP_YN , LOG_DATE)
 		VALUES(
@@ -72,7 +95,7 @@
 			   )
 	</insert>
 	<select id="selectLoginHist" parameterType="hashMap" resultType="hashMap">
-		/* UserMapper.selectLoginHist */
+	/* UserMapper.selectLoginHist */
 		SELECT  SQL_CALC_FOUND_ROWS
 				LOG.*
 		FROM 
@@ -97,20 +120,28 @@
 				<when test="srch_log.equals('srch_log_tp_yn')">
 					AND LOG_TP_YN = #{srch_text}
 				</when>
+				<when test="srch_log.equals('srch_all')">
+					AND LOG_USER_NM LIKE CONCAT('%', #{srch_text} ,'%')
+					OR LOG_USER_ID LIKE CONCAT('%', #{srch_text} ,'%')
+					OR LOG_TP_YN = #{srch_text}
+				</when>
 			</choose>
 		</if>
+		<if test="sidx != '' and sord != '' ">
+			ORDER BY ${sidx} ${sord}
+		</if>		
 		LIMIT ${start}, ${end}
 	</select>
 
 	<update id="updateUser" parameterType="hashMap">
-		/* UserMapper.updateUser */
+	/* UserMapper.updateUser */
 		UPDATE TB_USER
 		SET
 		<if test="user_nm != null and user_nm != ''">
 		  USER_NM = #{user_nm}
 		</if>
 		<if test="user_pwd != null and user_pwd  != ''">
-		, USER_PWD = MD5(#{user_pwd})
+		, USER_PWD = #{user_pwd}
 		</if> 
 		<if test="user_id != null and user_id != ''">
 		, USER_ID = #{user_id}
@@ -121,17 +152,58 @@
 	</update>
 
 	<delete id="deleteUser" parameterType="hashMap">
-		/* UserMapper.deleteUser */
+	/* UserMapper.deleteUser */
 		DELETE FROM TB_USER
 		WHERE USER_IDX = #{user_idx}
 	</delete>
 	
+	<select id="getLogRetrieve" parameterType="hashMap" resultType="hashMap">
+	/* UserMapper.getLogRetrieve */
+		<if test="delData != null and delData != ''">
+			<choose>
+				<when test="delData=='failed'">
+					SELECT 
+						LOG_ID AS log_id
+					FROM TB_LOGIN_LOG
+					WHERE 1=1
+					AND LOG_TP_YN = 'N'
+				</when>
+				<otherwise>
+					SELECT 
+						LOG_ID AS log_id
+					FROM TB_LOGIN_LOG
+					GROUP BY LOG_DATE
+					<if test="delData=='DAY'">
+						HAVING DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-%d'), INTERVAL -1 DAY) <![CDATA[<=]]> DATE_FORMAT(LOG_DATE, '%Y-%m-%d')
+					</if>
+					<if test="delData=='WEEK'">
+						HAVING DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-%d'), INTERVAL -1 WEEK) <![CDATA[<=]]> DATE_FORMAT(LOG_DATE, '%Y-%m-%d')
+					</if>
+					<if test="delData=='MONTH'">
+						HAVING DATE_ADD(DATE_FORMAT(NOW(), '%Y-%m-%d'), INTERVAL -1 MONTH) <![CDATA[<=]]> DATE_FORMAT(LOG_DATE, '%Y-%m-%d')
+					</if>
+				</otherwise>
+			</choose>
+		</if>
+	</select>
+
+	<delete id="deleteLoginHist" parameterType="hashMap">
+	/* UserMapper.deleteLoginHist */
+		DELETE FROM TB_LOGIN_LOG
+		WHERE LOG_ID = #{log_id}
+	</delete>
+	
+	<delete id="allDeleteLoginHist">
+	/* UserMapper.allDeleteLoginHist */
+		DELETE FROM TB_LOGIN_LOG
+	</delete>
+	
 	<select id="chkUserNm" parameterType="hashMap" resultType="int">
-		/* UserMapper.chkUserNm */
+	/* UserMapper.chkUserNm */
 		SELECT 
 			COUNT(1)
 		FROM TB_USER
-		WHERE USER_NM = CONCAT('유저_' , #{user_nm})
+		WHERE USER_NM = #{user_nm}
 	</select>
 	
 </mapper>
