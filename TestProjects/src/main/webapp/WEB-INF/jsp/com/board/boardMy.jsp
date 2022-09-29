@@ -43,7 +43,7 @@ $(function(){
 		loadtext:"로딩 중...",
 		datatype:"json",
 		mtype:"POST",
-		height:650,
+		height:645,
 		width:800,
 		shrinkToFit: true,
 		colNames:['번호', '닉네임', '제목', '내용', 'b_date', 'b_upd_date', 'user_idx'],
@@ -78,13 +78,24 @@ $(function(){
 	    },
 		loadComplete: function() {
 			$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
-            var rows = $("#mainGrid").jqGrid('getGridParam', 'records');        
-            if(rows == 0){          
-            	$("#mainGrid > tbody").append("<tr><td align='center' colspan='10' style=''>조회된 데이터가 없습니다.</td></tr>");       
-           	}
+
+			var rows = $("#mainGrid").jqGrid('getGridParam', 'records');        
+            if(rows == 0 ){          
+            	$("#mainGrid > tbody").append("<tr><td align='center' colspan='7' style=''>조회된 데이터가 없습니다.</td></tr>");
+            	//$("#srch_user_board option:eq(0)").prop("selected", true);
+           		//$("#srch_text").val('');
+            }
 		}
 	});
 });
+
+/* Keep Pageing Function */
+function fn_keep_page() {
+	var scrollPosition = "";
+	var pageing = $("#mainGrid").jqGrid("getGridParam");
+	pageing.scrollTopPosition = $("#mainGrid").closest(".ui-jqgrid-bdiv").scrollTop();
+	scrollPosition = pageing.scrollPosition;
+}
 
 /* Create Button Click */
 function fn_board_clear() {
@@ -137,7 +148,7 @@ function fn_mng_board(type) {
 function fn_result(data) {
 	if(data.resultCode=="S000") {
 		
-		$("#mainGrid").setGridParam({url:"/board/main/selectMyBoard", page:1, datatype:"json"}).trigger("reloadGrid");
+		$("#mainGrid").setGridParam({url:"/board/main/selectMyBoard", page:fn_keep_page(), datatype:"json"}).trigger("reloadGrid");
 		fn_board_clear();
 	
 	}else {

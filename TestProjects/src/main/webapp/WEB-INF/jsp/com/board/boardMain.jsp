@@ -13,6 +13,7 @@ input:button {
 </style>
 <script type="text/javascript">
 $(function(){
+	
 	/* Create Board Enter key Event */
 	$("#view_b_subject").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
@@ -47,7 +48,7 @@ $(function(){
 		loadtext:"로딩 중...",
 		datatype:"json",
 		mtype:"POST",
-		height:650,
+		height:645,
 		width:830,
 		pagerpos:'center',
 		shrinkToFit: true,
@@ -68,6 +69,13 @@ $(function(){
 		rowList : [20, 40, 60],
 		loadComplete: function(data) {
 			$(".ui-state-default.jqgrid-rownum").removeClass('ui-state-default jqgrid-rownum');
+
+			var rows = $("#mainGrid").jqGrid('getGridParam', 'records');        
+            if(rows == 0 ){          
+            	$("#mainGrid > tbody").append("<tr><td align='center' colspan='7' style=''>조회된 데이터가 없습니다.</td></tr>");
+            	//$("#srch_user_board option:eq(0)").prop("selected", true);
+           		//$("#srch_text").val('');
+            }
 		},
  		onSelectRow: function(index, row) {
  			if(index) {
@@ -103,6 +111,14 @@ function formatOpt_like(cellvalue, options, rowObject) {
 	return str;
 }
 
+/* Keep Pageing Function */
+function fn_keep_page() {
+	var scrollPosition = "";
+	var pageing = $("#mainGrid").jqGrid("getGridParam");
+	pageing.scrollTopPosition = $("#mainGrid").closest(".ui-jqgrid-bdiv").scrollTop();
+	scrollPosition = pageing.scrollPosition;
+}
+
 /* Click Like Button */
 function fn_like(board_id, like_tp) {
 	var user_idx = '${sessionVo.user_idx}';
@@ -112,7 +128,7 @@ function fn_like(board_id, like_tp) {
 /* Ajax updateLike Callback Function */
 function fn_update_like(data) {
 	if(data.resultCode=="S000") {
-		$("#mainGrid").setGridParam({url:"/board/main/selectAllBoard", page:1, datatype:"json"}).trigger("reloadGrid");		
+		$("#mainGrid").setGridParam({url:"/board/main/selectAllBoard", page:fn_keep_page(), datatype:"json"}).trigger("reloadGrid");		
 	}else {
 		alert("좋아요 실패");
 	}
@@ -182,8 +198,7 @@ function fn_mng_board(type) {
 /* Ajax Callback Function */
 function fn_result(data) {
 	if(data.resultCode=="S000") {
-		
-		$("#mainGrid").setGridParam({url:"/board/main/selectAllBoard", page:1, datatype:"json"}).trigger("reloadGrid");		
+		$("#mainGrid").setGridParam({url:"/board/main/selectAllBoard", page:fn_keep_page(), datatype:"json"}).trigger("reloadGrid");		
 		fn_board_clear();
 	
 	}else {

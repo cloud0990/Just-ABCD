@@ -23,8 +23,11 @@ public class UserService {
 	public int signUpUser(HashMap<String, Object> hashmapParam) {
 		return mapper.signUpUser(hashmapParam);
 	}
-	public SessionVo checkLoginUser(HashMap<String, String> hashmapParam) {
+	public SessionVo checkLoginUser(HashMap<String, Object> hashmapParam) {
 		return mapper.checkLoginUser(hashmapParam);
+	}
+	public SessionVo changeUser(HashMap<String, Object> hashmapParam) {
+		return mapper.changeUser(hashmapParam);
 	}
 	public List<HashMap<String, Object>> selectUserList(HashMap<String, Object> hashmapParam) {
 		return mapper.selectUserList(hashmapParam);
@@ -40,6 +43,15 @@ public class UserService {
 	}
 	public int deleteUser(HashMap<String, Object> hashmapParam) {
 		return mapper.deleteUser(hashmapParam);
+	}
+	public int deleteLoginHist(HashMap<String, Object> hashmapParam) {
+		return mapper.deleteLoginHist(hashmapParam);
+	}
+	public int allDeleteLoginHist() {
+		return mapper.allDeleteLoginHist();
+	}
+	public List<HashMap<String, Object>> getLogRetrieve(HashMap<String, Object> hashmapParam) {
+		return mapper.getLogRetrieve(hashmapParam);
 	}
 	public int updateUser(HashMap<String, Object> hashmapParam) {
 		return mapper.updateUser(hashmapParam);

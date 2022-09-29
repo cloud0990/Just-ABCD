@@ -30,25 +30,30 @@ height: calc(100% - 73px);
 </style>
 <script type="text/javascript">
 $(function(){
-	/* 로그인 엔터 이벤트 */
-	$("#user_pwd").keypress(function(e){
+	/* Login Enter key Event */
+	$("#user_id").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
-			$("#login").trigger('click'); //trigger() : 이벤트 강제 발생
+			$("#login").trigger('click');
 		}
 	});
-	/* 아이디 저장 엔터 이벤트 */
+	$("#user_pwd").keypress(function(e){
+		if(e.keyCode && e.keyCode == 13) {
+			$("#login").trigger('click');
+		}
+	});
+	/* Remember Id Enter key Event */
 	$("#rememberId").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
-			$("#rememberId").trigger('click'); //trigger() : 이벤트 강제 발생
+			$("#rememberId").trigger('click');
 		}
 	});
 	
+	/* Login Button Click Event */
 	$("#login").click(function(){
 		user_id  = $("#user_id").val();
 		user_pwd = $("#user_pwd").val();
 		
 		if(user_id == '') {
-			//$('input[type="text"], input[type="password"]').css("border", "2px solid red");
 			$("#user_id").css("border", "2px solid red");
 			$("#user_id").css("box-shadow", "0 0 3px red");
 			alert('아이디를 입력해주세요');	
@@ -81,6 +86,8 @@ $(function(){
 </script>
 <script type="text/javascript">
 $(function(){
+	/* Remember Id related to Function */
+	
 	//저장된 쿠키값을 가져온다. 없으면 공백
 	var key = getCookie("key");
 	$("#user_id").val(key);
@@ -103,23 +110,23 @@ $(function(){
 		}
 	});
 });
-//쿠키저장 : 쿠키는 window.document.cookie에 저장된다.
+//Insert Cookie : Cookie is stored to window.document.cookie
 function setCookie(cookieName, value, exdays) {
 	var exdate = new Date();
 	exdate.setDate(exdate.getDate() + exdays);
 	var cookieValue = escape(value) + ((exdays==null) ? "" : "; expires=" + exdate.toGMTString()); //escape() : 한글깨짐 막기
 	document.cookie = cookieName + "=" + cookieValue;
 }
-//쿠키삭제
+//Delete Cookie
 function deleteCookie(cookieName) {
 	var expire = new Date(); //현재시간 불러오기
 	expire.setDate(expire.getDate() - 1);
 	document.cookie = cookieName + "=" + "; expires=" + expire.toGMTString();
 }
-//쿠키가져오기
+//Get Cookie
 function getCookie(cookieName) {
 	cookieName = cookieName + "=";
-	var cookieData = document.cookie; //현재 cookie값 불러오기
+	var cookieData = document.cookie; //Get Current Cookie Value 
 	var start = cookieData.indexOf(cookieName);
 	var cookieValue = '';
 	if(start != -1) {
@@ -131,9 +138,9 @@ function getCookie(cookieName) {
 	return unescape(cookieValue);	
 }
 </script>
-<!-- 구글 로그인 API -->
+<!-- Google Login API -->
 <script>
-/* 처음 실행하는 함수 
+/* Init Function
 function init() {
 	gapi.load('auth2', function() {
 		gapi.auth2.init();
@@ -146,7 +153,6 @@ function init() {
 		gapi.auth2.getAuthInstance().attachClickHandler('google_login_btn', options, onSignIn, onSignInFailure);
 	})
 }
-
 function onSignIn(googleUser) {
 	var access_token = googleUser.getAuthResponse().access_token
 	$.ajax({
@@ -165,12 +171,11 @@ function onSignInFailure(t){
 	console.log(t);
 } */
 </script>
-<!-- 구글 api 사용을 위한 스크립트 
+<!-- Using for Google API
 <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>-->
-
 </head>
 <body>
-<!-- 로그인폼 -->
+
 <section class="vh-100">
   <div class="container-fluid h-custom">
     <div class="row d-flex justify-content-center align-items-center h-100">
@@ -179,7 +184,7 @@ function onSignInFailure(t){
       </div>
       <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
         <form class="form-horizontal" id="frm_login_info">
-		  <!-- 로그인 API -->        
+		  <!-- Google Login API -->        
           <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
             <button type="button" class="btn btn-lg btn-block btn-primary" id="google_login_btn" style="background-color: #dd4b39;">
             	<i class="fab fa-google me-2"></i> 구글 로그인</button>
@@ -189,7 +194,7 @@ function onSignInFailure(t){
           <div class="divider d-flex align-items-center my-4">
             <p class="text-center fw-bold mx-3 mb-0">Or</p>
           </div>
-          <!-- ID input -->
+
           <div class="form-outline mb-4">
             <label class="form-label" for="user_id">아이디</label>
             <input type="text" id="user_id" class="form-control form-control-lg" style="border:1px solid gray;"/>
@@ -199,7 +204,6 @@ function onSignInFailure(t){
             <input class="form-check-input me-2" type="checkbox" value="" id="rememberId" />
           </div>
           <br>
-          <!-- Password input -->
           <div class="form-outline mb-3">
             <label class="form-label" for="user_pwd">비밀번호</label>
             <input type="password" id="user_pwd" class="form-control form-control-lg" style="border:1px solid gray;"/>
@@ -215,7 +219,6 @@ function onSignInFailure(t){
       </div>
     </div>
   </div>
-  <!-- footer -->
   <div class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
     <div class="text-white mb-3 mb-md-0">Copyright © 2020. All rights reserved.</div>
   </div>

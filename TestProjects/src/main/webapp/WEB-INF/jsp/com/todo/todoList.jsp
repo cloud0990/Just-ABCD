@@ -23,9 +23,6 @@ $(function(){
 	$("#view_td_nm").keypress(function(e){
 		if(e.keyCode && e.keyCode == 13) {
 			fn_mng('add');
-			
-			//trigger() : 이벤트 강제 발생
-			//$("#btn").trigger('click'); 
 		}
 	});	
  	$("input:radio[name='td_tp']").keypress(function(e){
