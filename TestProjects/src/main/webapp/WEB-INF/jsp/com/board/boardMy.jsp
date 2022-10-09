@@ -126,21 +126,21 @@ function fn_mng_board(type) {
 		if($("#status").val()=="create") {
 			
 			if(!confirm("등록하시겠습니까?")) return;
-			callAjax("/board/createItem", $("#frm_update_board").serialize(), fn_result);
+			callAjax("/board/main/createItem", $("#frm_update_board").serialize(), fn_result);
 			
 		}else if($("#status").val()=="update") {
 			
 			$("#status").val("create");
 			
 			if(!confirm("수정하시겠습니까?")) return;
-			callAjax("/board/updateItem", $("#frm_update_board").serialize(), fn_result);
+			callAjax("/board/main/updateItem", $("#frm_update_board").serialize(), fn_result);
 		}
 		
 	/* Delete Board */
 	}else if(type=="delete") {
 		
 		if(!confirm("삭제하시겠습니까?")) return;
-		callAjax("/board/deleteItem", $("#frm_update_board").serialize(), fn_result);
+		callAjax("/board/main/deleteItem", $("#frm_update_board").serialize(), fn_result);
 	}
 }
 
@@ -169,11 +169,16 @@ function fn_user_board_srch() {
 	}).trigger('reloadGrid');
 }
 </script>
+<style type="text/css">
+#gbox_mainGrid {
+	margin-right:-50px;
+}
+</style>
 </head>
 <body>
 <div id="content" style="float:left;">
 	<div role="content">
-		<div class="widget-body" style="padding:30px;">
+		<div class="widget-body" style="padding:25px; margin-left:20px;">
 			<fieldset>
 				<div class="form-group" style="flex:center; float:left;">
 					<label><span class="widget-icon"><i class="fa fa-list-ul"></i>&nbsp;&nbsp;&nbsp;내 게시글</span></label>
@@ -192,9 +197,8 @@ function fn_user_board_srch() {
 				  </button>
 				</div>
 			</fieldset>
-			<hr style="margin-top:0px;">
 			<fieldset>		
-				<div class="row" id="tableWrap">
+				<div class="row" id="tableWrap" style="margin-top:10px;">
 					<table id="mainGrid"></table>
 					<div id="pager"></div>
 				</div>
@@ -203,14 +207,14 @@ function fn_user_board_srch() {
 	</div>
 </div>
 <form class="form-horizontal" id="frm_update_board" name="frm_update_board" onsubmit="return false">
-	<div class="board_info" id="content" style="width:700px; float:right;">
+	<div class="board_info" id="content" style="width:730px; float:right;">
 		<div class="widget-body" style="padding:30px;">
 			<fieldset>
 				<div style="flex:center;">
 					<label><span class="widget-icon"><i class="fa fa-list-alt txt-color-white"></i>&nbsp;&nbsp;&nbsp;내 게시글 상세정보</span></label>
 				</div>
 			</fieldset>
-			<hr style="margin-top:0px;">
+			<hr style="margin-top:20px;">
 			<input type="hidden" id="view_board_id" name="board_id">
 			<input type="hidden" id="status" value="create">
 			<fieldset>	
@@ -222,11 +226,11 @@ function fn_user_board_srch() {
 				<div>
 					<input class="form-control input-sm" id="view_b_content" name="b_content"/>					
 				</div>
-				<div style="float:left; width:320px;">
+				<div style="float:left; width:335px;">
 				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">작성일</legend>
 					<input class="form-control input-sm" id="view_b_date" disabled="disabled"/>					
 				</div>
-				<div style="float:right; width:320px;">
+				<div style="float:left; width:335px;">
 				<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">수정일</legend>
 					<input class="form-control input-sm" id="view_b_upd_date" disabled="disabled"/>					
 				</div>

@@ -20,7 +20,7 @@
 				  , USER_NM AS user_nm
 				  , USER_IDX AS user_idx
 			FROM TB_TODO
-			ORDER BY TD_DATE DESC) AS TODO	
+			ORDER BY TD_LAST_DATE) AS TODO	
 		WHERE 1=1
 		AND USER_IDX = #{user_idx}
 		AND TD_TP = '00'
@@ -45,7 +45,7 @@
 				  , USER_NM AS user_nm
 				  , USER_IDX AS user_idx
 			FROM TB_TODO
-			ORDER BY TD_DATE DESC) AS TODO	
+			ORDER BY TD_LAST_DATE) AS TODO	
 		WHERE 1=1
 		AND USER_IDX = #{user_idx}
 		AND TD_TP = '01'
@@ -70,7 +70,7 @@
 				  , USER_NM AS user_nm
 				  , USER_IDX AS user_idx
 			FROM TB_TODO
-			ORDER BY TD_DATE DESC) AS TODO	
+			ORDER BY TD_LAST_DATE) AS TODO	
 		WHERE 1=1
 		AND USER_IDX = #{user_idx}
 		AND TD_TP = '02'
@@ -95,7 +95,7 @@
 				  , USER_NM AS user_nm
 				  , USER_IDX AS user_idx
 			FROM TB_TODO
-			ORDER BY TD_DATE DESC) AS TODO	
+			ORDER BY TD_LAST_DATE) AS TODO	
 		WHERE 1=1
 		AND USER_IDX = #{user_idx}
 		AND TD_TP = '99'

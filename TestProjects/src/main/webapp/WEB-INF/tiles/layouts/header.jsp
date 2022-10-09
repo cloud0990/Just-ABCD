@@ -15,17 +15,18 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
      <nav aria-label="breadcrumb">
 	     <ol class="breadcrumb">
-	        <li class="breadcrumb-item"><a href="/main/loginhist">LOGIN HISTORY</a></li>
-	        <li class="breadcrumb-item"><a href="/main/view">USERS</a></li>
-	        <li class="breadcrumb-item"><a href="/board/main">MAIN CONTENTS</a></li>
-	        <li class="breadcrumb-item"><a href="/board/main/myMain">MY CONTENT</a></li>
-	        <li class="breadcrumb-item"><a href="/todo/main/view">❤TODO LIST❤</a></li>
+	        <li class="breadcrumb-item"><a href="/main/loginhist">Login History</a></li>
+	        <li class="breadcrumb-item"><a href="/main/view">Users</a></li>
+	        <li class="breadcrumb-item"><a href="/board/main/view">Main Contents</a></li>
+	        <li class="breadcrumb-item"><a href="/board/main/myMain">My Contents</a></li>
+	        <li class="breadcrumb-item"><a href="/todo/main/view">To do List</a></li>
+	        <li class="breadcrumb-item"><a href="/chat/main/view">❤Chat❤</a></li>
 	      </ol>
       </nav>
     </div>
     <div class="d-flex align-items-center">
       <div class="d-flex align-items-center">
-        <button type="button" class="btn btn-link px-3 me-2">❤닉네임&nbsp;&nbsp;: &nbsp;[ ${sessionVo.user_nm} ] 님❤</button>
+        <button type="button" class="btn btn-link px-3 me-2">❤ 닉네임&nbsp;&nbsp;: &nbsp;[ ${sessionVo.user_nm} ] 님 ❤</button>
         <a class="btn btn-dark px-3" href="https://github.com/cloud0990" role="button" style="margin-right:5px;"><i class="fab fa-github"></i></a>
         <button type="button" class="btn btn-primary me-3" onclick="location.href='/logout';">LOGOUT</button>
       </div>

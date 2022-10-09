@@ -48,8 +48,8 @@ $(function(){
 	    loadtext:"로딩 중..",
 		datatype:"json", //데이터 타입(그리드를 채우는 데이터의 형식)
 		mtype:"POST",    //데이터 전송방식(요청메소드 정의)
-		height : 645,    //'auto' : 자동 높이 설정
-		width : 800,
+		height : 650,    //'auto' : 자동 높이 설정
+		width : 820,
 		shrinkToFit: true,
 		colNames:['번호', '닉네임', '접속 아이디', '접속여부', '접속시도일', 'log_user_ip'],
 		colModel: [
@@ -119,12 +119,20 @@ function fn_log_srch() {
 	}).trigger('reloadGrid');
 }
 </script>
+<style type="text/css">
+#pager_left {
+	width:185px;
+}
+#gbox_mainGrid {
+	margin-right:-50px;
+}
+</style>
 </head>
 <body>
 
 <div id="content" style="float:left;">
 	<div role="content">
-		<div class="widget-body" style="padding:30px;">
+		<div class="widget-body" style="padding:25px; margin-left:20px;">
 			<fieldset>
 				<div class="form-group" style="flex:center; float:left;">
 					<label><span class="widget-icon"><i class="fa fa-list-ul"></i>&nbsp;&nbsp;&nbsp;로그인 기록</span></label>
@@ -143,9 +151,9 @@ function fn_log_srch() {
 			  </button>
 			</div>
 			</fieldset>
-			<hr style="margin-top:0px;">
+			<!-- <hr style="margin-top:0px;"> -->
 			<fieldset>		
-				<div class="row" id="tableWrap">
+				<div class="row" id="tableWrap" style="margin-top : 10px;">
 					<table id="mainGrid"></table>
 					<div id="pager"></div>
 				</div>
@@ -160,7 +168,7 @@ function fn_log_srch() {
 				<label><span class="widget-icon"><i class="fa fa-list-alt txt-color-white"></i>&nbsp;&nbsp;&nbsp;로그인 상세정보</span></label>
 			</div>
 		</fieldset>
-		<hr style="margin-top:0px;">
+		<hr style="margin-top:10px;">
 		<fieldset>		
 			<legend style="padding-top:0px; font-size:14px; margin-bottom:5px; margin-top:15px;">닉네임</legend>
 			<div>
@@ -192,7 +200,7 @@ function fn_log_srch() {
 				<label><span class="widget-icon"><i class="fa fa-list-alt txt-color-white"></i>&nbsp;&nbsp;&nbsp;로그인 데이터 관리</span></label>
 			</div>
 		</fieldset>
-		<hr style="margin-top:0px;">
+		<hr style="margin-top:10px;">
 		<div style="margin-top:30px;">
 			<div style="margin-right:30px; display: inline-block;">
 				<input type="radio" class="form-check-input" name="delData" id="day" value="DAY" checked/>

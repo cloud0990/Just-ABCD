@@ -194,7 +194,7 @@ function onSignInFailure(t){
             </div>
             <hr class="my-4">
             <button class="btn btn-lg btn-block btn-primary" id="google_login_btn" style="background-color: #dd4b39;" type="submit"><i class="fab fa-google me-2"></i> 구글 회원가입</button>
-            <button class="btn btn-lg btn-block btn-primary mb-2" id="facebook_login_btn" style="background-color: #3b5998;" type="submit"><i class="fab fa-facebook-f me-2"></i> 페이스북 회원가입</button>
+           <!--  <button class="btn btn-lg btn-block btn-primary mb-2" id="facebook_login_btn" style="background-color: #3b5998;" type="submit"><i class="fab fa-facebook-f me-2"></i> 페이스북 회원가입</button> -->
           </div>
         </div>
       </div>

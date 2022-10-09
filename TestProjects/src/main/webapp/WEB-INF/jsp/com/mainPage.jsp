@@ -303,11 +303,16 @@ function fn_user_srch() {
 	}).trigger('reloadGrid');
 }
 </script>
+<style type="text/css">
+#gbox_mainGrid {
+	margin-right:-50px;
+}
+</style>
 </head>
 <body>
 <div id="content" style="float:left;">
 	<div role="content">
-		<div class="widget-body" style="padding:30px;">
+		<div class="widget-body" style="padding:25px; margin-left:20px;">
 			<fieldset>
 				<div class="form-group" style="flex:center;">
 					<label style="float:left;"><span class="widget-icon"><i class="fa fa-list-ul"></i>&nbsp;&nbsp;&nbsp;사용자</span></label>
@@ -325,9 +330,8 @@ function fn_user_srch() {
 				  </button>
 				</div>
 			</fieldset>
-			<hr style="margin-top:0px;">
 			<fieldset>		
-				<div class="row" id="tableWrap">
+				<div class="row" id="tableWrap" style="margin-top:10px;">
 					<table id="mainGrid"></table>
 					<div id="pager"></div>
 				</div>
@@ -344,7 +348,7 @@ function fn_user_srch() {
 					<label><span class="widget-icon"><i class="fa fa-list-alt txt-color-white"></i>&nbsp;&nbsp;&nbsp;사용자 상세정보</span></label>
 				</div>
 			</fieldset>
-			<hr style="margin-top:0px;">
+			<hr style="margin-top:20px;">
 			<input type="hidden" id="view_user_idx" name="user_idx">
 			<input type="hidden" id="curr_user_idx" name="curr_user_idx">
 			<input type="hidden" id="type">

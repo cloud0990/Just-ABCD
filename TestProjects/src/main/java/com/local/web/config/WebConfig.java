@@ -1,7 +1,6 @@
 package com.local.web.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -18,13 +17,13 @@ import com.local.web.common.interceptor.TestInterceptor;
 //@EnableWebMvc : 스프링부트의 기본적인 웹 MVC기능들을 제외하고 처음부터 생성한다.
 public class WebConfig extends WebMvcConfigurerAdapter implements WebMvcConfigurer {
 
-	@Value("${spring.profiles.active}")
-	String profiles;
-	
+//	@Value("${spring.profiles.active}")
+//	String profiles;
+//	
 //	@Override
 //	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 //		
-//		if("local".equals(profiles)) {
+//		if("local".equals(profiles)) { //환경설정이 local인 경우
 //			registry.addResourceHandler("/assets/plugin/**").addResourceLocations("/assets/dev/js/");
 //			registry.addResourceHandler("/assets/css/**").addResourceLocations("/assets/dev/css/");
 //		}else {
