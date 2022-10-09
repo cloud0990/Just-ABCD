@@ -47,9 +47,14 @@
 				</when>
 			</choose>
 		</if>
-		<if test="sidx != '' and sord != '' ">
-			ORDER BY ${sidx} ${sord}
-		</if>
+		<choose>
+			<when test="sidx != '' and sord != ''">
+				ORDER BY ${sidx} ${sord}
+			</when>
+			<otherwise>
+				ORDER BY BOARD.B_DATE DESC
+			</otherwise>
+		</choose>
    	    LIMIT ${start}, ${end}
 	</select>
 	

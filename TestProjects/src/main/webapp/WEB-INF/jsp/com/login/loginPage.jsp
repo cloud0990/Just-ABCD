@@ -188,8 +188,8 @@ function onSignInFailure(t){
           <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
             <button type="button" class="btn btn-lg btn-block btn-primary" id="google_login_btn" style="background-color: #dd4b39;">
             	<i class="fab fa-google me-2"></i> 구글 로그인</button>
-            <button type="button" class="btn btn-lg btn-block btn-primary mb-2" id="facebook_login_btn" style="background-color: #3b5998;">
-            	<i class="fab fa-facebook-f me-2"></i> 페이스북 로그인</button>
+           <!--  <button type="button" class="btn btn-lg btn-block btn-primary mb-2" id="facebook_login_btn" style="background-color: #3b5998;">
+            	<i class="fab fa-facebook-f me-2"></i> 페이스북 로그인</button> -->
           </div> 
           <div class="divider d-flex align-items-center my-4">
             <p class="text-center fw-bold mx-3 mb-0">Or</p>

@@ -22,7 +22,7 @@ import com.local.web.common.domain.SessionVo;
 import com.local.web.like.service.LikeService;
 
 @Controller
-@RequestMapping("/board")
+@RequestMapping("/board/main")
 public class BoardController {
 	
 	@Resource(name="boardService")
@@ -32,11 +32,11 @@ public class BoardController {
 	private LikeService likeMapper;
 	
 	
-	@RequestMapping("/main")
+	@RequestMapping("/view")
 	public String boardPage() {
 		return "board/boardMain"; //view jsp 위치
 	}
-	@RequestMapping("/main/myMain")
+	@RequestMapping("/myMain")
 	public String myMainPage() {
 		return "board/boardMy";
 	}
@@ -47,7 +47,7 @@ public class BoardController {
 	 * @param PageingVo
 	 * @return HashMap
 	 */
-	@RequestMapping(value="/main/selectMyBoard", method=RequestMethod.POST)
+	@RequestMapping(value="/selectMyBoard", method=RequestMethod.POST)
 	public @ResponseBody HashMap<String, Object> selectMyBoard(@ModelAttribute("pageing") PageingVo pageing, @RequestParam HashMap<String, Object> hashmapParam, HttpSession session) {
 		List<HashMap<String, Object>> resultList = new ArrayList<>();
 		HashMap<String, Object> hashmapResult = new HashMap<>();
@@ -87,7 +87,7 @@ public class BoardController {
 	 * @return HashMap
 	 */
 	//@PostMapping(value="/main/selectAllBoard")
-	@RequestMapping(value="/main/selectAllBoard", method=RequestMethod.POST)
+	@RequestMapping(value="/selectAllBoard", method=RequestMethod.POST)
 	public @ResponseBody HashMap<String, Object> selectAllBoard(@ModelAttribute("pageing") PageingVo pageing
 															  , @RequestParam HashMap<String, Object> hashmapParam
 															  , HttpSession session) {

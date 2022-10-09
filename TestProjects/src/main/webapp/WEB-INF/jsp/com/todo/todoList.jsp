@@ -30,7 +30,7 @@ $(function(){
 			fn_mng('add');
 		}
 	});
-
+ 	
 	/* Set Current Time */
 	$("#view_td_last_date").val(getToday());	
 	$("#view_td_date").val(getToday());	
