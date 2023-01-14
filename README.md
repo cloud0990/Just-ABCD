@@ -14,8 +14,5 @@ Here are some ideas to get you started:
 -->
 
 - - -
-### ⚡ Hi there 👋
+### ⚡ Hello i am cloud0990 ⚡
 - - -
-<img src="https://github-readme-stats.vercel.app/api/top-langs/?username=seondal&theme=dracula&exclude_repo=Computer-Science-Engineering&layout=compact&langs_count=10"/>
-<img src="https://github-readme-stats.vercel.app/api?username=cloud0990&show_icons=true&theme=radical"/>
-
