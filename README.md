@@ -13,6 +13,10 @@ Here are some ideas to get you started:
 - ⚡ Fun fact: ...
 -->
 
+
+### ⚡ Tasks I Learnt and Review with Java ⚡
 - - -
-### ⚡ Hello i am cloud0990 ⚡
-- - -
+**Projects Described**
+- JavaCodeProject : java util class Test
+- JavaScriptTest  : javaScript Review
+- TestProject     : made Community Application for using SpringBoot
