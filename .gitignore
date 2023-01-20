@@ -98,20 +98,10 @@ replay_pid*
 /mvnw
 /mvnw.cmd
 /pom.xml
-.gitignore
 .properties
-TestProjects/target/
-TestProjects/mvnw.cmd
-TestProjects/pom.xml
-TestProjects/mvnw
-TestProjects/logs/
 *.project
-JavaScriptTest/mvnw
-JavaScriptTest/mvnw.cmd
-JavaScriptTest/pom.xml
 
 application.properties
 application-local.properties
-application-real.properties
 log4jdbc.log4jdbc.properties
 logback-spring.xml
