@@ -1,8 +1,4 @@
-<h3>⚡ Tasks I Learnt and Reviewed with Java SpringBoot ⚡<h3>
-<br>
-
->Tech Stack
-
+<h3>⚡ Just a ABCD ⚡<h3>
 <h5><strong> Language</strong></h5>
 <div>
 	<img src="https://img.shields.io/badge/Java-007396?style=flat&logo=Conda-Forge&logoColor=white" />
