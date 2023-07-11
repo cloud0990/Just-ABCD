@@ -1,4 +1,4 @@
-## ⚡ Just a ABCD ⚡
+## ⚡ just-crud Project ⚡
 
 <br>
 
